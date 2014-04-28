@@ -1,92 +1,42 @@
 ##
-## Makefile for Makefile in /home/Epitech
+## Makefile for Make in /home/moriss
 ##
-## Made by moriss_h
+## Made by hugues morisset
 ## Login   <moriss_h@epitech.net>
 ##
-## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Tue Apr 22 11:11:42 2014 Hugues
+## Started on  Mon Oct 22 09:20:28 2012 hugues morisset
+## Last update Sun Mar 30 16:01:40 2014 hugues morisset
 ##
 
-SRC		=	main.c
+NAME	=	zappy
 
-CC		=	gcc
-FILETYPE	=	.c
+SUBDIRS	=	server \
+			ia \
+			gui
 
-RM		=	rm -f
+RULES	=	server \
+			gui
 
-NAME		=	zappy
+RM	=	rm -f
 
-OBJDIR		=	obj/
-SRCDIR		=	src/
-INCDIR		=	inc/
+$(NAME):
+	@for dir in $(SUBDIRS); do \
+	echo "--- $$dir ---"; make --no-print-directory -C $$dir all; \
+	done
 
-CFLAGS		+=	-I$(INCDIR)
-CFLAGS		+=	-Wall -Wextra -Winit-self
-CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
-
-LDFLAGS		+=	-Wl,-O1
-
-OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
-
-PRINTFLAGS	=	0
-
-dummy		:=	$(shell test -d $(OBJDIR) || mkdir -p $(OBJDIR))
-dummy		:=	$(shell test -d $(SRCDIR) || mkdir -p $(SRCDIR))
-dummy		:=	$(shell test -d $(INCDIR) || mkdir -p $(INCDIR))
-
-$(OBJDIR)%.o:		$(patsubst %${FILETYPE},${SRCDIR}%${FILETYPE}, %${FILETYPE})
-			@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
-ifneq ("$(shell tty)", "not a tty")
-			@if [ $(PRINTFLAGS) = "0" ]; then \
-			echo -e "Compile flags { $(CFLAGS) }" | sed 's/^-e //' \
-			| sed 's/[-a-zA-Z]\+/\x1B[31m&\x1B[0m/g' \
-			| sed 's/[A-Z]\+/\x1B[32m&\x1B[0m/g' \
-			| sed 's/[{}]/\x1B[34m&\x1B[0m/g'; fi
-			$(eval PRINTFLAGS = 1)
-			@echo -e "Compiling $<" | sed 's/^-e //' \
-			| sed 's/[-a-zA-Z]\+/\x1B[31m&\x1B[0m/g' \
-			| sed 's/[A-Z]\+/\x1B[32m&\x1B[0m/g'
-			@$(CC) $(CFLAGS) -c $< -o $@
-else
-			$(CC) $(CFLAGS) -c $< -o $@
-endif
-
-$(NAME):	$(OBJ)
-ifneq ("$(shell tty)", "not a tty")
-		@echo -e "Linking $@ { $(LDFLAGS) }" | sed 's/^-e //' \
-		| sed 's/[-a-zA-Z]\+/\x1B[34m&\x1B[0m/g'
-		@$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
-		@cp -f $(NAME) ../$(NAME)
-else
-		$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
-		@cp -f $(NAME) ../$(NAME)
-endif
-
-all:	$(NAME)
+all: $(NAME)
 
 clean:
-ifneq ("$(shell tty)", "not a tty")
-	@echo -e "Removing object !" | sed 's/^-e //' \
-	| sed 's/[-a-zA-Z]\+/\x1B[35m&\x1B[0m/g'
-	@$(RM) $(OBJ)
-else
-	$(RM) $(OBJ)
-endif
+	@for dir in $(SUBDIRS); do \
+	echo "--- $$dir ---"; make --no-print-directory -C $$dir clean; \
+	done
 
-fclean:	clean
-ifneq ("$(shell tty)", "not a tty")
-	@echo -e "Removing ${NAME} !" | sed 's/^-e //' \
-	| sed 's/[-a-zA-Z]\+/\x1B[36m&\x1B[0m/g'
-	@$(RM) $(NAME)
-else
-	$(RM) $(NAME)
-endif
+fclean:
+	$(RM) $(RULES)
+	@for dir in $(SUBDIRS); do \
+	echo "--- $$dir ---"; make --no-print-directory -C $$dir fclean; \
+	done
 
-re:	fclean all
+re: fclean all
 
-help:
-	@echo -e "\033[37mTarget available: all, ${NAME}, clean, fclean\033[00m" | sed 's/^-e //'
-
-.PHONY:	all clean fclean re help
-
+.PHONY:	all clean fclean re $(SUBDIRS)
