@@ -10,7 +10,11 @@
 
 typedef struct	s_server
 {
+  int		quit;
+  t_net		**listener;
   t_list	*watch;
 }		t_server;
+
+int	listen_on_port(t_server *serv, char *port);
 
 #endif /* !SERVER_H_INCLUDED */
