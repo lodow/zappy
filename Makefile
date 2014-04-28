@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Mon Oct 22 09:20:28 2012 hugues morisset
-## Last update Sun Mar 30 16:01:40 2014 hugues morisset
+## Last update Mon Apr 28 16:10:38 2014 Hugues
 ##
 
 NAME	=	zappy
@@ -14,8 +14,8 @@ SUBDIRS	=	server \
 			ia \
 			gui
 
-RULES	=	server \
-			gui
+RULES	=	zappy \
+			client
 
 RM	=	rm -f
 
