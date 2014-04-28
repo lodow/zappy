@@ -8,7 +8,13 @@
 ## Last update Tue Apr 22 11:11:42 2014 Hugues
 ##
 
-SRC		=	main.c
+SRC		=	main.c \
+			inet.c \
+			inet_accept.c \
+			liste.c \
+			liste_find.c \
+			ptr_tab.c \
+			select.c
 
 CC		=	gcc
 FILETYPE	=	.c
