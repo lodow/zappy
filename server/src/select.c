@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon Oct  8 16:20:21 2012 hugues morisset
+** Last update Tue Apr 29 14:46:51 2014 Nicolas Bridoux
 */
 
 #include "select.h"
@@ -56,6 +56,12 @@ t_selfd	*create_fd(int fd, void *data, void (*call)())
   res->checktype = FDREAD;
   res->data = data;
   res->callback = call;
+
+  res->type_cli = UNKNOWN;
+  res->rb_r = NULL;
+  res->len_r = 0;
+  res->rb_w = NULL;
+  res->len_w = 0;
   return (res);
 }
 

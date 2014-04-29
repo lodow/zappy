@@ -15,13 +15,11 @@ typedef struct	s_server
   t_list	*watch;
 }		t_server;
 
-typedef struct	s_dumb_client
+typedef struct	s_client
 {
   t_net		*sock;
-  //this struct is only used to decide if it's a ai or a gui client
-
-//ring buffers here
-}		t_dumb_client;
+  // pour toutes les infos relatives à un client
+}		t_client;
 
 int	listen_on_port(t_server *serv, char *port, int socktype);
 void	close_server_binds(t_server *serv);

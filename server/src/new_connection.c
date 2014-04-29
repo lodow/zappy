@@ -5,38 +5,38 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Dec 13 13:14:01 2012 Hugues
+** Last update Tue Apr 29 16:59:47 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-/********************************/
-/*** Utilization examples !!! ***/
-/********************************/
-void			dumb_client(t_selfd *fd, t_server *serv)
+void		handle_client(t_selfd *fd, t_server *serv)
 {
-  t_dumb_client	*client;
+  t_client	*client;
+  int		r;
 
-//here you have the dumb client
-  client = (t_dumb_client*)(fd->data);
+  client = (t_client *)(fd->data);
+  if (ISREADABLE(fd))
+    {
+      // on add dans le ring buffer de lecture
+      if ((r = read_from_client(fd)) > 0)
+	{
+	  // on voit si on peux executer une commande et décaler le ring buffer
+	  check_command(fd);
+	}
+    }
+  if (fd->len_w && ISWRITEABLE(fd))
+    {
+      // si on a des trucs dans le ring buffer d'écriture, on écrit
+    }
 
-  //check if you can read/write into it
-  ISREADABLE(fd);
-  ISWRITEABLE(fd);
-
-  //this is just an example we should use ring buffers here !
-  int tmp;
-  char buff[4096];
-  tmp = read(fd->fd, buff, sizeof(buff));
-  if (tmp)
-    write(fd->fd, buff, tmp);
-
-  //to set if the fd should be monitored for read/write
+  // on attend toujours une nouvelle commande ou la suite de celle en cours
   CHECKREAD(fd);
-  CHECKWRITE(fd);
 
-
-  if (tmp == 0) //Mean connection is closed
+  // on monitore  uniquement si le ring buffer d'écriture n'est pas vide
+  if (fd->len_w)
+    CHECKWRITE(fd);
+  if (r == 0) // quand la connexion est coupée
     {
       log_connection(client->sock, "Client disconnected from:");
       close_connection(client->sock);
@@ -63,20 +63,20 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   t_net			*bind_sock;
   t_net			*nsock;
   t_selfd		*tmpfd;
-  t_dumb_client	*connection;
+  t_client		*client;
 
   CHECKREAD(fd);
   bind_sock = (t_net*)fd->data;
   if (!(nsock = accept_connection(bind_sock->socket)))
     return ;
-  if ((!(connection = malloc(1 * sizeof(t_dumb_client))))
-      || !(tmpfd = create_fd(nsock->socket, connection, &dumb_client)))
+  if ((!(client = malloc(sizeof(t_client))))
+      || !(tmpfd = create_fd(nsock->socket, client, &handle_client)))
     {
-      free(connection);
+      free(client);
       close_connection(nsock);
       return ;
     }
-  connection->sock = nsock;
+  client->sock = nsock;
   log_connection(nsock, "Client connected from:");
   add_to_list(&(serv->watch), tmpfd);
 }
