@@ -59,35 +59,46 @@ t_selfd	*create_fd(int fd, void *data, void (*call)())
   return (res);
 }
 
-/*
-** Return a list of t_selfd wich changed state
-*/
-
-t_selfd	*do_select(t_list *fds)
+t_list	*select_fd_set(t_list *fds, fd_set *setr, fd_set *setw)
 {
-  fd_set		setr;
-  fd_set		setw;
-  t_list		*tmp;
-  t_selfd		*fd;
-
-  set_fdset(fds, &setr, &setw);
-  if ((select(max_fd_plusone(fds), &setr, &setw, NULL, NULL) == -1))
+  set_fdset(fds, setr, setw);
+  if ((select(max_fd_plusone(fds), setr, setw, NULL, NULL) == -1))
     {
       if (errno != EINTR)
         perror("Select");
       return (NULL);
     }
-  tmp = fds;
-  while (tmp)
+  return (fds);
+}
+
+/*
+** Return a list of t_selfd which changed state
+*/
+
+void		do_select(t_list *fds, void *global_arg)
+{
+  fd_set		setr;
+  fd_set		setw;
+  t_list		*tmp;
+  t_list		*nexttmp;
+  t_selfd	*fd;
+
+  nexttmp = NULL;
+  if ((tmp = select_fd_set(fds, &setr, &setw)))
     {
-      fd = (t_selfd*)tmp->data;
-      if (FD_ISSET(fd->fd, &setr) || (FD_ISSET(fd->fd, &setw)))
+      nexttmp = tmp ? tmp->next : NULL;
+      while (tmp || nexttmp)
         {
-          fd->etype = (FD_ISSET(fd->fd, &setr)) | (FD_ISSET(fd->fd, &setw));
-          fd->checktype = 0;
-          return (fd);
+          fd = (t_selfd*)tmp->data;
+          if (FD_ISSET(fd->fd, &setr) || (FD_ISSET(fd->fd, &setw)))
+            {
+              fd->etype = (FD_ISSET(fd->fd, &setr))
+                          | (FD_ISSET(fd->fd, &setw));
+              fd->checktype = 0;
+              fd->callback(fd, global_arg);
+            }
+          tmp = nexttmp;
+          nexttmp = tmp ? tmp->next : NULL;
         }
-      tmp = tmp->next;
     }
-  return (NULL);
 }

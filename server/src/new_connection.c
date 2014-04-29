@@ -28,7 +28,8 @@ void			dumb_client(t_selfd *fd, t_server *serv)
   int tmp;
   char buff[4096];
   tmp = read(fd->fd, buff, sizeof(buff));
-  write(fd->fd, buff, tmp);
+  if (tmp)
+    write(fd->fd, buff, tmp);
 
   //to set if the fd should be monitored for read/write
   CHECKREAD(fd);

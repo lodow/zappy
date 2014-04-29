@@ -35,7 +35,7 @@ typedef struct	s_selfd
   void		(*callback)(struct s_selfd *this, void *data);
 }		t_selfd;
 
-t_selfd	*do_select(t_list *fds);
+void	do_select(t_list *fds, void *global_arg);
 t_selfd	*create_fd(int fd, void *data, void (*call)());
 
 #endif /* !SELECT_H_INCLUDED */
