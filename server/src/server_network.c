@@ -10,29 +10,61 @@
 
 #include "server.h"
 
-void	serv_verbose()
+void	serv_verbose(t_server *serv)
 {
-  char	*ip[2];
+  t_net	*tmp;
+  char	*ip;
+  int	i;
 
-  ip[0] = get_ip_addr(g_server4);
-  ip[1] = get_ip_addr(g_server6);
-  if (ip[0] && ip[1])
-    printf("Listening on:\n %s:%d\n %s:%d\n",
-           ip[0], port_number(g_server4), ip[1], port_number(g_server6));
-  free(ip[0]);
-  free(ip[1]);
+  i = 0;
+  if (serv->listener)
+    while (serv->listener[i])
+      {
+        tmp = serv->listener[i];
+        ip = get_ip_addr(tmp);
+        if (ip)
+          printf("Listening on %s:%d\n", ip, port_number(tmp));
+        free(ip);
+      }
 }
 
-int	listen_on_port(t_server *serv, char *port)
+void	close_server_binds(t_server *serv)
 {
-  if (port)
+  int	i;
+
+  i = 0;
+  if (serv->listener)
+    while (serv->listener[i])
+      {
+        close_connection(serv->listener[i]);
+        rm_ptr_f_tab((void**)(serv->listener), (void*)(serv->listener[i]));
+        i++;
+      }
+}
+
+int	listen_on_port(t_server *serv, char *port, int socktype)
+{
+  t_net	*bind4;
+  t_net	*bind6;
+
+  bind4 = NULL;
+  bind6 = NULL;
+  if (!port || !(bind4 = create_connection(listening(AF_INET), port,
+                           socktype, &bind))
+      || !(bind6 = create_connection(listening(AF_INET6), port,
+                                     socktype, &bind))
+      || (listen(bind4->socket, MAX_QUEUE) == -1)
+      || (listen(bind6->socket, MAX_QUEUE) == -1))
     {
-      if (!(server4 = create_connection(listening(AF_INET), port, SOCK_STREAM, &bind))
-          || !(server6 = create_connection(listening(AF_INET6), port, SOCK_STREAM, &bind)))
-        listen(g_server4->socket, MAX_CLIENTS);
-      i++;
+      if (bind4 && bind6)
+        perror("Listen");
+      close_connection(bind4);
+      close_connection(bind6);
+      return (1);
     }
-  else
-    return (1);
+  serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
+                                          (void*)bind4);
+  serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
+                                          (void*)bind6);
   return (0);
 }

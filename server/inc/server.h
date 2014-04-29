@@ -4,7 +4,7 @@
 # include <signal.h>
 # include <string.h>
 
-# include "include.h"
+# include "tab.h"
 # include "network.h"
 # include "select.h"
 
@@ -15,6 +15,8 @@ typedef struct	s_server
   t_list	*watch;
 }		t_server;
 
-int	listen_on_port(t_server *serv, char *port);
+int	listen_on_port(t_server *serv, char *port, int socktype);
+void	close_server_binds(t_server *serv);
+void	serv_verbose(t_server *serv);
 
 #endif /* !SERVER_H_INCLUDED */

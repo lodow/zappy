@@ -21,7 +21,7 @@
 # include <netdb.h>
 # include <arpa/inet.h>
 
-# define MAX_CLIENTS 50
+# define MAX_QUEUE 50
 
 typedef struct			s_net
 {

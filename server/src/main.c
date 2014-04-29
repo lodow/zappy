@@ -10,23 +10,14 @@
 
 #include "server.h"
 
+static t_server	g_serv;
+
 void	sig_handler(int sig)
 {
   if (sig == SIGQUIT || sig == SIGINT || sig == SIGTERM)
     {
-      if (g_server4)
-        {
-          if (g_server4->socket != -1)
-            close(g_server4->socket);
-          g_server4->socket = -1;
-        }
-      if (g_server6)
-        {
-          if (g_server6->socket != -1)
-            close(g_server6->socket);
-          g_server6->socket = -1;
-        }
-      quit = 1;
+      close_server_binds(&g_serv);
+      g_serv.quit = 1;
     }
 }
 
@@ -53,19 +44,22 @@ void	sig_handler(int sig)
 //  free_ptr_tab((void**)(serv.channels), &destroy_chan);
 //}
 
-
-int		main(UNSEDP int ac, char **av)
+int		main(UNSEDP int ac, UNSEDP char **av)
 {
-  t_server	serv;
-
-  serv.listener = NULL;
-  serv.watch = NULL;
-  serv.quit = 0;
+  g_serv.listener = NULL;
+  g_serv.watch = NULL;
+  g_serv.quit = 0;
   signal(SIGPIPE, SIG_IGN);
   signal(SIGINT, &sig_handler);
   signal(SIGQUIT, &sig_handler);
   signal(SIGTERM, &sig_handler);
-  if (!listen_on_arr(&serv, "4242"))
-    return (1);
+  if (!listen_on_port(&g_serv, "4242", SOCK_STREAM))
+    {
+      close_server_binds(&g_serv);
+      return (1);
+    }
+  serv_verbose(&g_serv);
+  close_server_binds(&g_serv);
   return (0);
 }
+
