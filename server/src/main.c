@@ -21,18 +21,10 @@ void	sig_handler(int sig)
     }
 }
 
-void		handle_server(t_server *serv)
+void	handle_server(t_server *serv)
 {
-  t_selfd	*event;
-
   while (!serv->quit)
-    {
-      if ((event = do_select(serv->watch)))
-        {
-          if (event->callback)
-            event->callback(event, serv);
-        }
-    }
+    do_select(serv->watch, serv);
 }
 
 int	main(UNSEDP int ac, UNSEDP char **av)

@@ -74,10 +74,21 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
   return (0);
 }
 
-void	quit_server(t_server *serv)
+void		quit_server(t_server *serv)
 {
-  (void)serv;
-//rm_list();
+  t_list		*tmp;
+  t_selfd		*tmpfd;
+
+  tmp = serv->watch;
+  while (tmp)
+    {
+      if ((tmpfd = (t_selfd*)tmp->data))
+        {
+          free(tmpfd->data);
+          free(tmpfd);
+        }
+      tmp = tmp->next;
+    }
 }
 
 void		server_setup_select(t_server *serv)
