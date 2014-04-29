@@ -19,14 +19,18 @@
 
 # include "liste.h"
 
-# define FDREAD 0
-# define FDWRITE 1
+# define FDREAD 1
+# define FDWRITE 2
+# define ISREADABLE(x) (((x)->etype & FDREAD) == FDREAD)
+# define ISWRITEABLE(x) (((x)->etype & FDWRITE) == FDWRITE)
+# define CHECKREAD(x) ((x)->checktype |= FDREAD)
+# define CHECKWRITE(x) ((x)->checktype |= FDWRITE)
 
 typedef struct	s_selfd
 {
   int		fd;
   int		etype;
-  int		checkwrite;
+  int		checktype;
   void		*data;
   void		(*callback)(struct s_selfd *this, void *data);
 }		t_selfd;
