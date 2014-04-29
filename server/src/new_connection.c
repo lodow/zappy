@@ -10,7 +10,6 @@
 
 #include "server.h"
 
-
 /********************************/
 /*** Utilization examples !!! ***/
 /********************************/
@@ -38,12 +37,13 @@ void			dumb_client(t_selfd *fd, t_server *serv)
 
   if (tmp == 0) //Mean connection is closed
     {
-    //  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd),
-    //               &close_client_connection);
+      log_connection(client->sock, "Client disconnected from:");
+      close_connection(client->sock);
+      rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
     }
 }
 
-void		log_new_connection(t_net *sock)
+void		log_connection(t_net *sock, char *message)
 {
   t_net		*tmp;
   char		*ip;
@@ -51,7 +51,7 @@ void		log_new_connection(t_net *sock)
   if ((tmp = peer(sock)))
     {
       if ((ip = get_ip_addr(tmp)))
-        printf("Client connected from: %s:%d\n", ip, port_number(tmp));
+        printf("%s %s:%d\n", message, ip, port_number(tmp));
       free(ip);
       close_connection(tmp);
     }
@@ -64,6 +64,7 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   t_selfd		*tmpfd;
   t_dumb_client	*connection;
 
+  CHECKREAD(fd);
   bind_sock = (t_net*)fd->data;
   if (!(nsock = accept_connection(bind_sock->socket)))
     return ;
@@ -74,6 +75,7 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
       close_connection(nsock);
       return ;
     }
-  log_new_connection(nsock);
+  connection->sock = nsock;
+  log_connection(nsock, "Client connected from:");
   add_to_list(&(serv->watch), tmpfd);
 }
