@@ -92,8 +92,8 @@ void		do_select(t_list *fds, void *global_arg)
           fd = (t_selfd*)tmp->data;
           if (FD_ISSET(fd->fd, &setr) || (FD_ISSET(fd->fd, &setw)))
             {
-              fd->etype = (FD_ISSET(fd->fd, &setr))
-                          | (FD_ISSET(fd->fd, &setw));
+              fd->etype = (FD_ISSET(fd->fd, &setr)) * FDREAD
+                          + (FD_ISSET(fd->fd, &setw)) * FDWRITE;
               fd->checktype = 0;
               fd->callback(fd, global_arg);
             }
