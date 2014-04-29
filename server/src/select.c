@@ -38,8 +38,9 @@ static void	set_fdset(t_list *fds, fd_set *setr, fd_set *setw)
   while (tmp)
     {
       fd = (t_selfd*)tmp->data;
-      FD_SET(fd->fd, setr);
-      if (fd->checkwrite)
+      if ((fd->checktype & FDREAD) == FDREAD)
+        FD_SET(fd->fd, setr);
+      if ((fd->checktype & FDWRITE) == FDWRITE)
         FD_SET(fd->fd, setw);
       tmp = tmp->next;
     }
@@ -52,7 +53,7 @@ t_selfd	*create_fd(int fd, void *data, void (*call)())
   if ((res = malloc(1 * sizeof(t_selfd))) == NULL)
     return (NULL);
   res->fd = fd;
-  res->checkwrite = 0;
+  res->checktype = FDREAD;
   res->data = data;
   res->callback = call;
   return (res);
@@ -83,6 +84,7 @@ t_selfd	*do_select(t_list *fds)
       if (FD_ISSET(fd->fd, &setr) || (FD_ISSET(fd->fd, &setw)))
         {
           fd->etype = (FD_ISSET(fd->fd, &setr)) | (FD_ISSET(fd->fd, &setw));
+          fd->checktype = 0;
           return (fd);
         }
       tmp = tmp->next;

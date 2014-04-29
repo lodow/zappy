@@ -10,6 +10,32 @@
 
 #include "server.h"
 
+
+/********************************/
+/*** Utilisation examples !!! ***/
+/********************************/
+void			dumb_client(t_selfd *fd, t_server *serv)
+{
+  t_dumb_client	*client;
+
+//here you have the dumb client
+  client = (t_dumb_client*)(fd->data);
+
+  //check if you can read/write into it
+  ISREADABLE(fd);
+  ISWRITEABLE(fd);
+
+  //this is just an example we should use ring buffers here !
+  int tmp;
+  char buff[4096];
+  tmp = read(fd->fd, buff, sizeof(buff));
+  write(fd->fd, buff, tmp);
+
+  //to set if the fd should be monitored for read/write
+  CHECKREAD(fd);
+  CHECKWRITE(fd);
+}
+
 void		log_new_connection(t_net *sock)
 {
   t_net		*tmp;
@@ -24,17 +50,20 @@ void		log_new_connection(t_net *sock)
     }
 }
 
-void		handle_newconnection(t_selfd *fd, t_server *serv)
+void			handle_newconnection(t_selfd *fd, t_server *serv)
 {
-  t_net		*bind_sock;
-  t_net		*nsock;
-  t_selfd	*tmpfd;
+  t_net			*bind_sock;
+  t_net			*nsock;
+  t_selfd		*tmpfd;
+  t_dumb_client	*connection;
 
   bind_sock = (t_net*)fd->data;
   if (!(nsock = accept_connection(bind_sock->socket)))
     return ;
-  if (!(tmpfd = create_fd(nsock->socket, NULL, NULL)))
+  if ((!(connection = malloc(1 * sizeof(t_dumb_client))))
+      || !(tmpfd = create_fd(nsock->socket, connection, &dumb_client)))
     {
+      free(connection);
       close_connection(nsock);
       return ;
     }
