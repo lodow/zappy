@@ -25,6 +25,7 @@ void	serv_verbose(t_server *serv)
         if (ip)
           printf("Listening on %s:%d\n", ip, port_number(tmp));
         free(ip);
+        ++i;
       }
 }
 

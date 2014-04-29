@@ -47,7 +47,7 @@ int	main(UNSEDP int ac, UNSEDP char **av)
   signal(SIGINT, &sig_handler);
   signal(SIGQUIT, &sig_handler);
   signal(SIGTERM, &sig_handler);
-  if (!listen_on_port(&g_serv, "4242", SOCK_STREAM))
+  if (listen_on_port(&g_serv, "4242", SOCK_STREAM))
     {
       close_server_binds(&g_serv);
       ret = 1;

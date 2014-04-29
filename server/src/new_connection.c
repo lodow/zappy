@@ -12,7 +12,7 @@
 
 
 /********************************/
-/*** Utilisation examples !!! ***/
+/*** Utilization examples !!! ***/
 /********************************/
 void			dumb_client(t_selfd *fd, t_server *serv)
 {
@@ -34,6 +34,13 @@ void			dumb_client(t_selfd *fd, t_server *serv)
   //to set if the fd should be monitored for read/write
   CHECKREAD(fd);
   CHECKWRITE(fd);
+
+
+  if (tmp == 0) //Mean connection is closed
+    {
+    //  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd),
+    //               &close_client_connection);
+    }
 }
 
 void		log_new_connection(t_net *sock)
