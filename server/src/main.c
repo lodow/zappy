@@ -21,31 +21,25 @@ void	sig_handler(int sig)
     }
 }
 
-//void		do_server()
-//{
-//  t_server	serv;
-//  t_selfd	*fd[2];
-//  t_list	*tmp;
-//
-//  serv_verbose();
-//  serv.watch  = NULL;
-//  fd[0] = create_fd(g_server4->socket, g_server4, &handle_newconnection);
-//  fd[1] = create_fd(g_server6->socket, g_server6, &handle_newconnection);
-//  add_to_list(&(serv.watch), fd[0]);
-//  add_to_list(&(serv.watch), fd[1]);
-//  if ((tmp = serv.watch))
-//    while (tmp->next)
-//      tmp = tmp->next;
-//  while (!quit)
-//    handle_server(&serv);
-//  rm_from_list(&(serv.watch), find_in_list(serv.watch, fd[0]), &free);
-//  rm_from_list(&(serv.watch), find_in_list(serv.watch, fd[1]), &free);
-//  rm_list(serv.watch, &close_client_connection);
-//  free_ptr_tab((void**)(serv.channels), &destroy_chan);
-//}
-
-int		main(UNSEDP int ac, UNSEDP char **av)
+void		handle_server(t_server *serv)
 {
+  t_selfd	*event;
+
+  while (!serv->quit)
+    {
+      if ((event = do_select(serv->watch)))
+        {
+          if (event->callback)
+            event->callback(event, serv);
+        }
+    }
+}
+
+int	main(UNSEDP int ac, UNSEDP char **av)
+{
+  int	ret;
+
+  ret = 0;
   g_serv.listener = NULL;
   g_serv.watch = NULL;
   g_serv.quit = 0;
@@ -56,10 +50,14 @@ int		main(UNSEDP int ac, UNSEDP char **av)
   if (!listen_on_port(&g_serv, "4242", SOCK_STREAM))
     {
       close_server_binds(&g_serv);
-      return (1);
+      ret = 1;
     }
-  serv_verbose(&g_serv);
-  close_server_binds(&g_serv);
-  return (0);
+  else
+    {
+      serv_verbose(&g_serv);
+      server_setup_select(&g_serv);
+      handle_server(&g_serv);
+    }
+  quit_server(&g_serv);
+  return (ret);
 }
-

@@ -19,8 +19,10 @@
 
 # include "liste.h"
 
-# define FDREAD 0
-# define FDWRITE 1
+# define FDREAD 1
+# define FDWRITE 2
+# define ISREADABLE(x) (((x)->etype & FDREAD) == FDREAD)
+# define ISWRITEABLE(x) (((x)->etype & FDWRITE) == FDWRITE)
 
 typedef struct	s_selfd
 {

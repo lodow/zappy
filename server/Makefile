@@ -15,7 +15,8 @@ SRC		=	main.c \
 			liste_find.c \
 			ptr_tab.c \
 			select.c \
-			server_network.c
+			server_network.c \
+			new_connection.c
 
 CC		=	gcc
 FILETYPE	=	.c

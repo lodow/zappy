@@ -59,7 +59,7 @@ t_selfd	*create_fd(int fd, void *data, void (*call)())
 }
 
 /*
-** Return the fd which changed his state
+** Return a list of t_selfd wich changed state
 */
 
 t_selfd	*do_select(t_list *fds)
@@ -82,7 +82,7 @@ t_selfd	*do_select(t_list *fds)
       fd = (t_selfd*)tmp->data;
       if (FD_ISSET(fd->fd, &setr) || (FD_ISSET(fd->fd, &setw)))
         {
-          fd->etype = FD_ISSET(fd->fd, &setr) ? FDREAD : FDWRITE;
+          fd->etype = (FD_ISSET(fd->fd, &setr)) | (FD_ISSET(fd->fd, &setw));
           return (fd);
         }
       tmp = tmp->next;
