@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Dec 13 13:14:01 2012 Hugues
+** Last update Tue Apr 29 20:18:49 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -76,8 +76,8 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
 
 void		quit_server(t_server *serv)
 {
-  t_list		*tmp;
-  t_selfd		*tmpfd;
+  t_list	*tmp;
+  t_selfd	*tmpfd;
 
   tmp = serv->watch;
   while (tmp)
@@ -94,8 +94,8 @@ void		quit_server(t_server *serv)
 void		server_setup_select(t_server *serv)
 {
   t_selfd	*fd;
-  t_net	*tmp;
-  int	i;
+  t_net		*tmp;
+  int		i;
 
   i = 0;
   if (serv->listener)

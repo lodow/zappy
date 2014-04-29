@@ -18,6 +18,8 @@ typedef struct	s_server
 typedef struct	s_client
 {
   t_net		*sock;
+  char		type_cli;
+  char		*teamname;
   // pour toutes les infos relatives à un client
 }		t_client;
 
@@ -28,5 +30,7 @@ void	server_setup_select(t_server *serv);
 void	handle_newconnection(t_selfd *fd, t_server *serv);
 void	quit_server(t_server *serv);
 void	log_connection(t_net *sock, char *message);
+
+void	handle_exec_cmd(t_selfd *fd, char *cmd);
 
 #endif /* !SERVER_H_INCLUDED */

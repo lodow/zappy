@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Tue Apr 29 14:39:19 2014 Nicolas Bridoux
+## Last update Tue Apr 29 21:15:43 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -17,6 +17,7 @@ SRC		=	main.c \
 			select.c \
 			server_network.c \
 			new_connection.c \
+			exec_cmd.c \
 			ring_buffers.c
 
 CC		=	gcc

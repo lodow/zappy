@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue Apr 29 16:50:42 2014 Nicolas Bridoux
+** Last update Tue Apr 29 21:26:14 2014 Nicolas Bridoux
 */
 
 #ifndef SELECT_H_INCLUDED
@@ -39,7 +39,6 @@ typedef struct	s_selfd
   void		*data;
   void		(*callback)(struct s_selfd *this, void *data);
 
-  char		type_cli;
   char		*rb_r;
   size_t	len_r;
 
@@ -50,7 +49,13 @@ typedef struct	s_selfd
 void	do_select(t_list *fds, void *global_arg);
 t_selfd	*create_fd(int fd, void *data, void (*call)());
 
+/*
+** ring_buffers.c
+*/
+
 int	read_from_client(t_selfd *fd);
-void	check_command(t_selfd *fd);
+int	write_to_client(t_selfd *fd);
+char	*get_command(t_selfd *fd);
+void	send_response(t_selfd *fd, char *to_send);
 
 #endif /* !SELECT_H_INCLUDED */

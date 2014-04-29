@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue Apr 29 14:46:51 2014 Nicolas Bridoux
+** Last update Tue Apr 29 20:18:16 2014 Nicolas Bridoux
 */
 
 #include "select.h"
@@ -13,8 +13,8 @@
 static int	max_fd_plusone(t_list *fds)
 {
   int		max;
-  t_list		*tmp;
-  t_selfd		*fd;
+  t_list	*tmp;
+  t_selfd	*fd;
 
   max = -1;
   tmp = fds;
@@ -29,8 +29,8 @@ static int	max_fd_plusone(t_list *fds)
 
 static void	set_fdset(t_list *fds, fd_set *setr, fd_set *setw)
 {
-  t_list		*tmp;
-  t_selfd		*fd;
+  t_list	*tmp;
+  t_selfd	*fd;
 
   FD_ZERO(setr);
   FD_ZERO(setw);
@@ -46,7 +46,7 @@ static void	set_fdset(t_list *fds, fd_set *setr, fd_set *setw)
     }
 }
 
-t_selfd	*create_fd(int fd, void *data, void (*call)())
+t_selfd		*create_fd(int fd, void *data, void (*call)())
 {
   t_selfd	*res;
 
@@ -56,8 +56,6 @@ t_selfd	*create_fd(int fd, void *data, void (*call)())
   res->checktype = FDREAD;
   res->data = data;
   res->callback = call;
-
-  res->type_cli = UNKNOWN;
   res->rb_r = NULL;
   res->len_r = 0;
   res->rb_w = NULL;
