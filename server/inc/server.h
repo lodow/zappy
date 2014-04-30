@@ -7,12 +7,14 @@
 # include "tab.h"
 # include "network.h"
 # include "select.h"
+# include "game.h"
 
 typedef struct	s_server
 {
   int		quit;
   t_net		**listener;
   t_list	*watch;
+  t_game	game;
 }		t_server;
 
 typedef struct	s_client
@@ -31,6 +33,16 @@ void	handle_newconnection(t_selfd *fd, t_server *serv);
 void	quit_server(t_server *serv);
 void	log_connection(t_net *sock, char *message);
 
+/*
+** exec_cmd.c
+*/
+
 void	handle_exec_cmd(t_selfd *fd, char *cmd);
+
+/*
+** parse_command_line.c
+*/
+
+int	parse_command_line(t_server *server, int ac, char *av[]);
 
 #endif /* !SERVER_H_INCLUDED */

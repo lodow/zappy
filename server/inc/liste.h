@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon Oct  8 16:20:21 2012 hugues morisset
+** Last update Wed Apr 30 18:02:34 2014 Nicolas Bridoux
 */
 
 #ifndef _LISTE_H
@@ -16,7 +16,7 @@
 typedef struct		s_list
 {
   void			*data;
-  struct s_list	*next;
+  struct s_list		*next;
 }			t_list;
 
 void	add_to_list(t_list **begin, void *data);
