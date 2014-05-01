@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Wed Apr 30 17:32:44 2014 Nicolas Bridoux
+** Last update Thu May  1 17:24:56 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -46,7 +46,7 @@ int	main(int ac, char **av)
     }
   else
     {
-      serv_verbose(&g_serv);
+      display_start(&g_serv);
       server_setup_select(&g_serv);
       handle_server(&g_serv);
     }

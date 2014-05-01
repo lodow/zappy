@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue Apr 29 20:18:49 2014 Nicolas Bridoux
+** Last update Thu May  1 18:05:05 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -23,7 +23,8 @@ void	serv_verbose(t_server *serv)
         tmp = serv->listener[i];
         ip = get_ip_addr(tmp);
         if (ip)
-          printf("Listening on %s:%d\n", ip, port_number(tmp));
+          printf("Listening on %s:%s%d%s\n", ip, GREEN,
+		 port_number(tmp), WHITE);
         free(ip);
         ++i;
       }
