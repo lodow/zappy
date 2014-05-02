@@ -5,43 +5,44 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Dec 13 13:14:01 2012 Hugues
+** Last update Tue Apr 29 22:12:33 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-/********************************/
-/*** Utilization examples !!! ***/
-/********************************/
-void			dumb_client(t_selfd *fd, t_server *serv)
+void		handle_client(t_selfd *fd, t_server *serv)
 {
-  t_dumb_client	*client;
+  t_client	*client;
+  char		*cmd;
+  int		r;
 
-//here you have the dumb client
-  client = (t_dumb_client*)(fd->data);
-
-  //check if you can read/write into it
-  ISREADABLE(fd);
-  ISWRITEABLE(fd);
-
-  //this is just an example we should use ring buffers here !
-  int tmp;
-  char buff[4096];
-  tmp = read(fd->fd, buff, sizeof(buff));
-  if (tmp)
-    write(fd->fd, buff, tmp);
-
-  //to set if the fd should be monitored for read/write
-  CHECKREAD(fd);
-  CHECKWRITE(fd);
-
-
-  if (tmp == 0) //Mean connection is closed
+  client = (t_client *)(fd->data);
+  if (ISREADABLE(fd))
     {
-      log_connection(client->sock, "Client disconnected from:");
-      close_connection(client->sock);
-      rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
+      if ((r = read_from_client(fd)) < 0)
+	{
+	  // erreur appropriée
+	}
+      if (!r)
+	{
+	  log_connection(client->sock, "Client disconnected from:");
+	  close_connection(client->sock);
+	  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
+	  return ;
+	}
     }
+  if (fd->len_w && ISWRITEABLE(fd) && (r = write_to_client(fd)) < 0)
+    {
+      // erreur appropriée
+    }
+  if (fd->len_r && (cmd = get_command(fd)))
+    {
+      handle_exec_cmd(fd, cmd);
+      free(cmd);
+    }
+  if (fd->len_w)
+    CHECKWRITE(fd);
+  CHECKREAD(fd);
 }
 
 void		log_connection(t_net *sock, char *message)
@@ -63,20 +64,22 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   t_net			*bind_sock;
   t_net			*nsock;
   t_selfd		*tmpfd;
-  t_dumb_client	*connection;
+  t_client		*client;
 
   CHECKREAD(fd);
   bind_sock = (t_net*)fd->data;
   if (!(nsock = accept_connection(bind_sock->socket)))
     return ;
-  if ((!(connection = malloc(1 * sizeof(t_dumb_client))))
-      || !(tmpfd = create_fd(nsock->socket, connection, &dumb_client)))
+  if ((!(client = malloc(sizeof(t_client))))
+      || !(tmpfd = create_fd(nsock->socket, client, &handle_client)))
     {
-      free(connection);
+      free(client);
       close_connection(nsock);
       return ;
     }
-  connection->sock = nsock;
+  client->sock = nsock;
+  client->type_cli = UNKNOWN;
+  client->teamname = NULL;
   log_connection(nsock, "Client connected from:");
   add_to_list(&(serv->watch), tmpfd);
 }

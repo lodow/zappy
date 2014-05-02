@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Dec 13 13:14:01 2012 Hugues
+** Last update Thu May  1 18:05:05 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -23,7 +23,8 @@ void	serv_verbose(t_server *serv)
         tmp = serv->listener[i];
         ip = get_ip_addr(tmp);
         if (ip)
-          printf("Listening on %s:%d\n", ip, port_number(tmp));
+          printf("Listening on %s:%s%d%s\n", ip, GREEN,
+		 port_number(tmp), WHITE);
         free(ip);
         ++i;
       }
@@ -76,8 +77,8 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
 
 void		quit_server(t_server *serv)
 {
-  t_list		*tmp;
-  t_selfd		*tmpfd;
+  t_list	*tmp;
+  t_selfd	*tmpfd;
 
   tmp = serv->watch;
   while (tmp)
@@ -94,8 +95,8 @@ void		quit_server(t_server *serv)
 void		server_setup_select(t_server *serv)
 {
   t_selfd	*fd;
-  t_net	*tmp;
-  int	i;
+  t_net		*tmp;
+  int		i;
 
   i = 0;
   if (serv->listener)

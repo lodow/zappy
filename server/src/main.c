@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Dec 13 13:14:01 2012 Hugues
+** Last update Thu May  1 17:24:56 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -27,7 +27,7 @@ void	handle_server(t_server *serv)
     do_select(serv->watch, serv);
 }
 
-int	main(UNSEDP int ac, UNSEDP char **av)
+int	main(int ac, char **av)
 {
   int	ret;
 
@@ -39,14 +39,14 @@ int	main(UNSEDP int ac, UNSEDP char **av)
   signal(SIGINT, &sig_handler);
   signal(SIGQUIT, &sig_handler);
   signal(SIGTERM, &sig_handler);
-  if (listen_on_port(&g_serv, "4242", SOCK_STREAM))
+  if (parse_command_line(&g_serv, ac, av))
     {
       close_server_binds(&g_serv);
       ret = 1;
     }
   else
     {
-      serv_verbose(&g_serv);
+      display_start(&g_serv);
       server_setup_select(&g_serv);
       handle_server(&g_serv);
     }

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon Oct  8 16:20:21 2012 hugues morisset
+** Last update Tue Apr 29 20:18:16 2014 Nicolas Bridoux
 */
 
 #include "select.h"
@@ -13,8 +13,8 @@
 static int	max_fd_plusone(t_list *fds)
 {
   int		max;
-  t_list		*tmp;
-  t_selfd		*fd;
+  t_list	*tmp;
+  t_selfd	*fd;
 
   max = -1;
   tmp = fds;
@@ -29,8 +29,8 @@ static int	max_fd_plusone(t_list *fds)
 
 static void	set_fdset(t_list *fds, fd_set *setr, fd_set *setw)
 {
-  t_list		*tmp;
-  t_selfd		*fd;
+  t_list	*tmp;
+  t_selfd	*fd;
 
   FD_ZERO(setr);
   FD_ZERO(setw);
@@ -46,7 +46,7 @@ static void	set_fdset(t_list *fds, fd_set *setr, fd_set *setw)
     }
 }
 
-t_selfd	*create_fd(int fd, void *data, void (*call)())
+t_selfd		*create_fd(int fd, void *data, void (*call)())
 {
   t_selfd	*res;
 
@@ -56,6 +56,10 @@ t_selfd	*create_fd(int fd, void *data, void (*call)())
   res->checktype = FDREAD;
   res->data = data;
   res->callback = call;
+  res->rb_r = NULL;
+  res->len_r = 0;
+  res->rb_w = NULL;
+  res->len_w = 0;
   return (res);
 }
 
@@ -92,8 +96,8 @@ void		do_select(t_list *fds, void *global_arg)
           fd = (t_selfd*)tmp->data;
           if (FD_ISSET(fd->fd, &setr) || (FD_ISSET(fd->fd, &setw)))
             {
-              fd->etype = (FD_ISSET(fd->fd, &setr))
-                          | (FD_ISSET(fd->fd, &setw));
+              fd->etype = (FD_ISSET(fd->fd, &setr)) * FDREAD
+                          + (FD_ISSET(fd->fd, &setw)) * FDWRITE;
               fd->checktype = 0;
               fd->callback(fd, global_arg);
             }
