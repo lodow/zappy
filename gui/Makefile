@@ -5,27 +5,27 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Tue Apr 22 11:11:42 2014 Hugues
+## Last update Fri May  2 09:51:52 2014 fabien.linardon
 ##
 
-SRC		=	main.c
+SRC		=	main.cpp	\
+			Sfml.cpp	\
 
-CC		=	gcc
-FILETYPE	=	.c
+CC		=	g++
+FILETYPE	=	.cpp
 
 RM		=	rm -f
 
-NAME		=	gui
+NAME		=	graphic
 
 OBJDIR		=	obj/
 SRCDIR		=	src/
 INCDIR		=	inc/
 
-CFLAGS		+=	-I$(INCDIR)
-CFLAGS		+=	-Wall -Wextra -Winit-self
-CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
+CXXFLAGS	+=	-I$(INCDIR)
+CXXFLAGS	+=	-Wall -Wextra -W
 
-LDFLAGS		+=	-Wl,-O1
+LDFLAGS		+=	-Wl,-O1 -lsfml-graphics -lsfml-window -lsfml-system
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
 
@@ -39,7 +39,7 @@ $(OBJDIR)%.o:		$(patsubst %${FILETYPE},${SRCDIR}%${FILETYPE}, %${FILETYPE})
 			@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 ifneq ("$(shell tty)", "not a tty")
 			@if [ $(PRINTFLAGS) = "0" ]; then \
-			echo -e "Compile flags { $(CFLAGS) }" | sed 's/^-e //' \
+			echo -e "Compile flags { $(CXXFLAGS) }" | sed 's/^-e //' \
 			| sed 's/[-a-zA-Z]\+/\x1B[31m&\x1B[0m/g' \
 			| sed 's/[A-Z]\+/\x1B[32m&\x1B[0m/g' \
 			| sed 's/[{}]/\x1B[34m&\x1B[0m/g'; fi
@@ -47,9 +47,9 @@ ifneq ("$(shell tty)", "not a tty")
 			@echo -e "Compiling $<" | sed 's/^-e //' \
 			| sed 's/[-a-zA-Z]\+/\x1B[31m&\x1B[0m/g' \
 			| sed 's/[A-Z]\+/\x1B[32m&\x1B[0m/g'
-			@$(CC) $(CFLAGS) -c $< -o $@
+			@$(CC) $(CXXFLAGS) -c $< -o $@
 else
-			$(CC) $(CFLAGS) -c $< -o $@
+			$(CC) $(CXXFLAGS) -c $< -o $@
 endif
 
 $(NAME):	$(OBJ)
