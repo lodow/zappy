@@ -49,7 +49,7 @@ while ($i < $argc)
       }
 if ($team == "" || $port == -1)
    {
-	echo "USAGE ./$argv[0] -n team_name -p port [-h host]\n";
+	echo "USAGE $argv[0] -n team_name -p port [-h host]\n";
 	exit(0);
    }
 $fp = fsockopen($host, $port, $errno, $errstr);
