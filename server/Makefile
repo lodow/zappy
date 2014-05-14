@@ -40,6 +40,7 @@ CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
 LDFLAGS		+=	-Wl,-O1
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
+DEPS		=	$(patsubst %${FILETYPE}, ${OBJDIR}%.d, $(SRC))
 
 PRINTFLAGS	=	0
 
@@ -47,7 +48,7 @@ dummy		:=	$(shell test -d $(OBJDIR) || mkdir -p $(OBJDIR))
 dummy		:=	$(shell test -d $(SRCDIR) || mkdir -p $(SRCDIR))
 dummy		:=	$(shell test -d $(INCDIR) || mkdir -p $(INCDIR))
 
-$(OBJDIR)%.o:		$(patsubst %${FILETYPE},${SRCDIR}%${FILETYPE}, %${FILETYPE})
+$(OBJDIR)%.o:		$(patsubst %${FILETYPE}, ${SRCDIR}%${FILETYPE}, %${FILETYPE})
 			@if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 ifneq ("$(shell tty)", "not a tty")
 			@if [ $(PRINTFLAGS) = "0" ]; then \
@@ -56,12 +57,14 @@ ifneq ("$(shell tty)", "not a tty")
 			| sed 's/[A-Z]\+/\x1B[32m&\x1B[0m/g' \
 			| sed 's/[{}]/\x1B[34m&\x1B[0m/g'; fi
 			$(eval PRINTFLAGS = 1)
-			@echo -e "Compiling $<" | sed 's/^-e //' \
+			@echo -e "Compiling $< $(patsubst %.o, %.d, $@)" | sed 's/^-e //' \
 			| sed 's/[-a-zA-Z]\+/\x1B[31m&\x1B[0m/g' \
-			| sed 's/[A-Z]\+/\x1B[32m&\x1B[0m/g'
+			| sed 's/[A-Z]\+/\x1B[32m&\x1B[0m/g' | sed 's/d/\x1B[35m&\x1B[0m/'
 			@$(CC) $(CFLAGS) -c $< -o $@
+			@$(CC) $(CFLAGS) -MM -MF $(patsubst %.o, %.d, $@) -MT $@ -MT $(patsubst %.o, %.d, $@) -c $<
 else
 			$(CC) $(CFLAGS) -c $< -o $@
+			$(CC) $(CFLAGS) -MM -MF $(patsubst %.o, %.d, $@) -MT $@ -MT $(patsubst %.o, %.d, $@) -c $<
 endif
 
 $(NAME):	$(OBJ)
@@ -75,15 +78,17 @@ else
 		@cp -f $(NAME) ../$(NAME)
 endif
 
+-include $(DEPS)
+
 all:	$(NAME)
 
 clean:
 ifneq ("$(shell tty)", "not a tty")
 	@echo -e "Removing object !" | sed 's/^-e //' \
 	| sed 's/[-a-zA-Z]\+/\x1B[35m&\x1B[0m/g'
-	@$(RM) $(OBJ)
+	@$(RM) $(OBJ) $(DEPS)
 else
-	$(RM) $(OBJ)
+	$(RM) $(OBJ) $(DEPS)
 endif
 
 fclean:	clean

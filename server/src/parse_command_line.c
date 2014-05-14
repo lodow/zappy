@@ -1,9 +1,9 @@
 /*
 ** parse_command_line.c for parse_command_line.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
 ** Last update Thu May  1 17:34:45 2014 Nicolas Bridoux
 */
