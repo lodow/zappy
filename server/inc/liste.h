@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Wed Apr 30 18:02:34 2014 Nicolas Bridoux
+** Last update Mon May 19 21:49:46 2014 Nicolas Bridoux
 */
 
 #ifndef _LISTE_H
@@ -25,5 +25,8 @@ void	apply_on_list(t_list *begin, int (*f)(void*, void*), void *arg);
 void	rm_from_list(t_list **begin, t_list *trm, void (*f)(void*));
 int	list_size(t_list *begin);
 t_list	*find_in_list(t_list *begin, void *data);
+int	enqueue(t_list **begin, void *data);
+t_list	*dequeue(t_list **begin);
+t_list	*top(t_list *begin);
 
 #endif /* !_LISTE_H */

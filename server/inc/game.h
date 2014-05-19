@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Mon May 19 11:54:30 2014 Nicolas Bridoux
+** Last update Mon May 19 22:03:22 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -14,12 +14,19 @@
 # include "liste.h"
 
 # define MAX_ITEM_MAP	2
+# define UP		0
+# define DOWN		1
+# define LEFT		2
+# define RIGHT		3
+# define NO_ACTION	-1
+# define ACTION		1
+# define LIFE		2
 
 typedef struct	s_game
 {
   size_t	width;
   size_t	height;
-  size_t	time;
+  suseconds_t	time;
   size_t	max_cli;
   size_t	cli_num;
   t_list	*teams;
@@ -27,6 +34,7 @@ typedef struct	s_game
 
 typedef struct	s_map
 {
+  size_t	food;
   size_t	linemate;
   size_t	deraumere;
   size_t	sibur;
@@ -39,11 +47,14 @@ typedef struct	s_client
 {
   t_net		*sock;
   char		type_cli;
-  size_t	cli_num;
   char		*teamname;
   size_t	x;
   size_t	y;
   char		orientation;
+  suseconds_t	action; // prochaine action
+  suseconds_t	life;   // prochain retrait de vie
+  t_map		inv;    // inventaire
+  t_list	*cmds;
 }		t_client;
 
 typedef struct	s_team

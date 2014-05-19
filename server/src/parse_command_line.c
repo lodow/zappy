@@ -5,12 +5,13 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
-** Last update Mon May 19 11:56:22 2014 Nicolas Bridoux
+** Last update Mon May 19 23:17:15 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-static int	check_team_names(t_list *list, char *progname, t_server *server)
+static int	check_team_names(t_list *list, char *progname,
+				 t_server *server)
 {
   t_list	*tmp;
   t_list	*team_names;
@@ -19,16 +20,16 @@ static int	check_team_names(t_list *list, char *progname, t_server *server)
   while (list)
     {
       tmp = team_names;
+      if (!strcmp(((t_team *)list->data)->name, "GRAPHIC"))
+	return (fprintf(stderr, "%s: \"GRAPHIC\" is "
+			"not a valid team-name\n", progname));
       ((t_team *)list->data)->max_cli = server->game.max_cli;
       while (tmp)
 	{
 	  if (tmp != list && !strcmp(((t_team *)tmp->data)->name,
 				     ((t_team *)list->data)->name))
-	    {
-	      fprintf(stderr, "%s: each team-name "
-		      "must be unique\n", progname);
-	      return (EXIT_FAILURE);
-	    }
+	    return (fprintf(stderr,
+			    "%s: each team-name must be unique\n", progname));
 	  tmp = tmp->next;
 	}
       list = list->next;
@@ -67,7 +68,7 @@ static int	add_numbers(char c, t_server *server, char *arg)
 	  return (EXIT_FAILURE);
 	}
       if (c == 't')
-	server->game.time = nb;
+	server->game.time = USEC(1) / nb;
       if (c == 'c')
 	server->game.max_cli = nb;
       if (c == 'x')
@@ -85,7 +86,7 @@ static void	init_serv(t_server *server)
   server->game.height = 20;
   server->game.time = 100;
   server->game.max_cli = 1;
-  server->game.cli_num = 0;
+  server->game.cli_num = 1;
 }
 
 int		parse_command_line(t_server *server, int ac, char *av[])

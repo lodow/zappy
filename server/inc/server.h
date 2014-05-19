@@ -5,6 +5,7 @@
 # include <string.h>
 # include <stdarg.h>
 # include <time.h>
+# include <sys/time.h>
 
 # include "tab.h"
 # include "network.h"
@@ -28,6 +29,9 @@
 # define ERROR		2
 # define SENDING	3
 # define RECEIVING	4
+# define NOT_ALLOWED	1
+# define NOT_KNOWN	2
+# define USEC(x)	(1000000 * x)
 
 typedef struct	s_server
 {
@@ -50,7 +54,7 @@ void	log_connection(t_net *sock, char *message);
 ** exec_cmd.c
 */
 
-void	handle_exec_cmd(t_selfd *fd, char *cmd);
+void	handle_add_cmd(t_server *server, t_selfd *fd, char *cmd);
 
 /*
 ** parse_command_line.c
@@ -64,5 +68,13 @@ int	parse_command_line(t_server *server, int ac, char *av[]);
 
 void	server_log(char warn_level, const char *fmt, ...);
 int	handle_start(t_server *server);
+
+/*
+** timeout.c
+*/
+
+void	set_timeout(t_client *client, char type, suseconds_t time);
+void	handle_timeout(t_server *serv, t_selfd *fd);
+struct timeval *get_min_timeout(t_list *fds);
 
 #endif /* !SERVER_H_INCLUDED */

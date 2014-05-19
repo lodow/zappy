@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue Apr 29 21:26:14 2014 Nicolas Bridoux
+** Last update Mon May 19 23:40:27 2014 Nicolas Bridoux
 */
 
 #ifndef SELECT_H_INCLUDED
@@ -30,10 +30,16 @@
 # define GUI		2
 # define READ_SIZE	5
 # define EOT_CHAR	'\n'
+# define BUFF_SIZE	4096
+# define FD_SERV	1
+# define FD_CLI		2
 
 typedef struct	s_selfd
 {
   int		fd;
+  char		fd_type;
+  size_t	cli_num;
+  char		to_close;
   int		etype;
   int		checktype;
   void		*data;

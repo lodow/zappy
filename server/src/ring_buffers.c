@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 14:37:39 2014 Nicolas Bridoux
-** Last update Tue Apr 29 22:11:50 2014 Nicolas Bridoux
+** Last update Mon May 19 23:20:46 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -86,6 +86,8 @@ char		*get_command(t_selfd *fd)
 	  fd->rb_r = new_rb;
 	  fd->len_r -= size_cmd + 1;
 	}
+      server_log(RECEIVING, "%d:%d\t\tReceived \"%s\" from %d",
+		 time(NULL), 42, cmd, fd->cli_num);
       return (cmd);
     }
   return (NULL);
@@ -100,16 +102,20 @@ void		send_response(t_selfd *fd, char *to_send)
   char		*new_rb;
   size_t	len;
 
-  if (!to_send)
+  if (!to_send || fd->to_close)
     return ;
+  server_log(SENDING, "%d:%d\t\tSending \"%s\" to %d",
+	     time(NULL), 42, to_send, fd->cli_num);
   len = strlen(to_send);
-  if ((new_rb = malloc(sizeof(char) * (fd->len_w + len + 1))))
+  if ((new_rb = malloc(sizeof(char) * (fd->len_w + len + 2))))
     {
       if (fd->len_w)
 	memcpy(new_rb, fd->rb_w, fd->len_w);
-      memcpy(&new_rb[fd->len_w], to_send, len + 1);
+      memcpy(&new_rb[fd->len_w], to_send, len);
+      new_rb[fd->len_w + len] = '\n';
+      new_rb[fd->len_w + len + 1] = '\0';
       free(fd->rb_w);
       fd->rb_w = new_rb;
-      fd->len_w += len;
+      fd->len_w += len + 1;
     }
 }

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon May 19 11:32:10 2014 Nicolas Bridoux
+** Last update Mon May 19 23:43:20 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -36,10 +36,16 @@ void		handle_client(t_selfd *fd, t_server *serv)
       // erreur appropriée
     }
   if (fd->len_r && (cmd = get_command(fd)))
+    handle_add_cmd(serv, fd, cmd);
+
+  if (!fd->len_w && fd->to_close)
     {
-      handle_exec_cmd(fd, cmd);
-      free(cmd);
+      server_log(WARNING, "Deleting player %zu", fd->cli_num);
+      close_connection(client->sock);
+      rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
+      return ;
     }
+  handle_timeout(serv, fd);
   if (fd->len_w)
     CHECKWRITE(fd);
   CHECKREAD(fd);
@@ -67,6 +73,8 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   t_client		*client;
 
   CHECKREAD(fd);
+  if (!ISREADABLE(fd))
+    return ;
   bind_sock = (t_net*)fd->data;
   if (!(nsock = accept_connection(bind_sock->socket)))
     return ;
@@ -80,6 +88,13 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   client->sock = nsock;
   client->type_cli = UNKNOWN;
   client->teamname = NULL;
+  client->action = NO_ACTION;
+  client->life = NO_ACTION;
+  client->cmds = NULL;
+  tmpfd->fd_type = FD_CLI;
+  tmpfd->cli_num = serv->game.cli_num++;
   log_connection(nsock, "New connection from:");
   add_to_list(&(serv->watch), tmpfd);
+  send_response(tmpfd, "BIENVENUE");
+  handle_client(tmpfd, serv);
 }
