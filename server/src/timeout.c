@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 19 20:49:41 2014 Nicolas Bridoux
-** Last update Mon May 19 23:55:46 2014 Nicolas Bridoux
+** Last update Tue May 20 00:27:59 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -15,15 +15,18 @@ void			set_timeout(t_client *client, char type, suseconds_t time)
   struct timeval	t;
 
   gettimeofday(&t, NULL);
+  server_log(WARNING, "time = %ld", time);
   if (type == LIFE)
     {
-      server_log(WARNING, "setting life timeout (%ld:%ld)", t.tv_sec, t.tv_usec + time);
-      client->life = USEC(t.tv_sec) + t.tv_usec + time;
+      server_log(WARNING, "setting life timeout (%ld:%ld)", t.tv_sec + time / 1000000,
+		 t.tv_usec + time % 1000000);
+      client->life = USEC(t.tv_sec + (time / 1000000)) + t.tv_usec + time % 1000000;
     }
   else
     {
-      server_log(WARNING, "setting action timeout (%ld:%ld)", t.tv_sec, t.tv_usec + time);
-      client->action = USEC(t.tv_sec) + t.tv_usec + time;
+      server_log(WARNING, "setting action timeout (%ld:%ld)", t.tv_sec + time / 1000000,
+		 t.tv_usec + time % 1000000);
+      client->action = USEC(t.tv_sec + (time / 1000000)) + t.tv_usec + time % 1000000;
     }
 }
 
@@ -49,7 +52,7 @@ struct timeval		*get_min_timeout(t_list *fds)
 	  if (client->action != NO_ACTION)
 	    {
 	      if (tv->tv_usec == NO_ACTION || client->life < tv->tv_usec)
-		tv->tv_usec = client->life;
+		tv->tv_usec = client->action;
 	    }
 	  if (client->life != NO_ACTION)
 	    {
@@ -59,11 +62,14 @@ struct timeval		*get_min_timeout(t_list *fds)
 	}
       tmp = tmp->next;
     }
-  gettimeofday(&now, NULL);
-  if (tv->tv_usec != NO_ACTION)
-    tv->tv_usec -= now.tv_usec;
-  server_log(WARNING, "current timeout: %ld:%ld",
+  gettimeofday(&now, NULL); // si le temps d'exec > temps attente, retourner NULL
+  server_log(WARNING, "current timeout: (%ld) %ld:%ld", tv->tv_usec,
 	     tv->tv_usec / 1000000, tv->tv_usec % 1000000);
+  if (tv->tv_usec != NO_ACTION)
+    {
+      tv->tv_sec = tv->tv_usec / 1000000;
+      tv->tv_usec %= 1000000;
+    }
   return (tv->tv_usec == NO_ACTION ? NULL : tv);
 }
 
@@ -78,7 +84,7 @@ void			handle_timeout(t_server *serv, t_selfd *fd)
   if (client->cmds && client->action == NO_ACTION)
     {
       cmd = top(client->cmds);
-      // si la cmd est valide : set_timeout(ACTION, now.tv_usec + temps de la cmd)
+      // si la cmd est valide : set_timeout(client, ACTION, temps de la cmd)
       // sinon "ko"
     }
   if (client->action != NO_ACTION && client->action <= USEC(now.tv_sec) + now.tv_usec)

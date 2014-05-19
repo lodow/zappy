@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon May 19 23:43:20 2014 Nicolas Bridoux
+** Last update Tue May 20 00:10:13 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -96,5 +96,9 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   log_connection(nsock, "New connection from:");
   add_to_list(&(serv->watch), tmpfd);
   send_response(tmpfd, "BIENVENUE");
+
+  // just for testing
+  client->inv.food = 10;
+
   handle_client(tmpfd, serv);
 }
