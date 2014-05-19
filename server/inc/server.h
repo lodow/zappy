@@ -4,6 +4,7 @@
 # include <signal.h>
 # include <string.h>
 # include <stdarg.h>
+# include <time.h>
 
 # include "tab.h"
 # include "network.h"
@@ -34,15 +35,8 @@ typedef struct	s_server
   t_net		**listener;
   t_list	*watch;
   t_game	game;
+  t_map		**map;
 }		t_server;
-
-typedef struct	s_client
-{
-  t_net		*sock;
-  char		type_cli;
-  char		*teamname;
-  // pour toutes les infos relatives à un client
-}		t_client;
 
 int	listen_on_port(t_server *serv, char *port, int socktype);
 void	close_server_binds(t_server *serv);
@@ -69,6 +63,6 @@ int	parse_command_line(t_server *server, int ac, char *av[]);
 */
 
 void	server_log(char warn_level, const char *fmt, ...);
-void	display_start(t_server *server);
+int	handle_start(t_server *server);
 
 #endif /* !SERVER_H_INCLUDED */

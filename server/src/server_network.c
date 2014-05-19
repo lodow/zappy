@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May  1 18:05:05 2014 Nicolas Bridoux
+** Last update Mon May 19 11:59:35 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -79,6 +79,7 @@ void		quit_server(t_server *serv)
 {
   t_list	*tmp;
   t_selfd	*tmpfd;
+  size_t	i;
 
   tmp = serv->watch;
   while (tmp)
@@ -90,6 +91,11 @@ void		quit_server(t_server *serv)
         }
       tmp = tmp->next;
     }
+  rm_list(serv->game.teams, &free);
+  i = 0;
+  while (serv->map && i < serv->game.height)
+    free(serv->map[i++]);
+  free(serv->map);
 }
 
 void		server_setup_select(t_server *serv)

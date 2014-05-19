@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May  1 17:24:56 2014 Nicolas Bridoux
+** Last update Sun May 18 14:43:41 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -46,9 +46,11 @@ int	main(int ac, char **av)
     }
   else
     {
-      display_start(&g_serv);
-      server_setup_select(&g_serv);
-      handle_server(&g_serv);
+      if (!handle_start(&g_serv))
+	{
+	  server_setup_select(&g_serv);
+	  handle_server(&g_serv);
+	}
     }
   quit_server(&g_serv);
   return (ret);

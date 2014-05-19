@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue Apr 29 22:12:33 2014 Nicolas Bridoux
+** Last update Mon May 19 11:32:10 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -53,7 +53,7 @@ void		log_connection(t_net *sock, char *message)
   if ((tmp = peer(sock)))
     {
       if ((ip = get_ip_addr(tmp)))
-        printf("%s %s:%d\n", message, ip, port_number(tmp));
+        server_log(WARNING, "%s %s:%d", message, ip, port_number(tmp));
       free(ip);
       close_connection(tmp);
     }
@@ -80,6 +80,6 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   client->sock = nsock;
   client->type_cli = UNKNOWN;
   client->teamname = NULL;
-  log_connection(nsock, "Client connected from:");
+  log_connection(nsock, "New connection from:");
   add_to_list(&(serv->watch), tmpfd);
 }

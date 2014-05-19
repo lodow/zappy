@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Thu May  1 18:05:48 2014 Nicolas Bridoux
+** Last update Mon May 19 11:55:31 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -28,7 +28,7 @@ void		server_log(char warn_level, const char *fmt, ...)
   va_end(ap);
 }
 
-void		display_start(t_server *server)
+static void	display_start(t_server *server)
 {
   t_list	*tmp;
 
@@ -40,17 +40,54 @@ void		display_start(t_server *server)
 	 GREEN, server->game.height, WHITE,
 	 GREEN, server->game.time, WHITE);
   printf("Teams:");
-  tmp = server->game.team_names;
+  tmp = server->game.teams;
   while (tmp)
     {
-      printf("\t%s%s%s\t\t (%s%zu%s)\n", YELLOW, (char *)tmp->data,
-	     WHITE, GREEN, server->game.max_cli, WHITE);
+      printf("\t%s%s%s\t\t (%s%zu%s)\n", YELLOW, ((t_team *)tmp->data)->name,
+	     WHITE, GREEN, ((t_team *)tmp->data)->max_cli, WHITE);
       tmp = tmp->next;
     }
-  printf("Generating world...%sdone%s\n\n", GREEN, WHITE);
+  srand(time(NULL));
+  printf("Generating world...");
+  fflush(stdout);
+}
 
-  server_log(WARNING, "Warning message");
-  server_log(ERROR, "Error message");
-  server_log(SENDING, "Sending some data");
-  server_log(RECEIVING, "Receiving some data");
+static int	gen_world(t_server *server)
+{
+  size_t	y;
+  size_t	x;
+
+  if (!(server->map = malloc(sizeof(t_map *) * (server->game.height + 1))))
+    return (EXIT_FAILURE);
+  y = 0;
+  while (y < server->game.height)
+    {
+      x = 0;
+      if (!(server->map[y] = malloc(sizeof(t_map) * (server->game.width))))
+	return (EXIT_FAILURE);
+      while (x < server->game.width)
+	{
+	  server->map[y][x].linemate = rand() % MAX_ITEM_MAP;
+	  server->map[y][x].deraumere = rand() % MAX_ITEM_MAP;
+	  server->map[y][x].sibur = rand() % MAX_ITEM_MAP;
+	  server->map[y][x].mendiane = rand() % MAX_ITEM_MAP;
+	  server->map[y][x].phiras = rand() % MAX_ITEM_MAP;
+	  server->map[y][x].thystame = rand() % MAX_ITEM_MAP;
+	  ++x;
+	}
+      ++y;
+    }
+  return (EXIT_SUCCESS);
+}
+
+int	handle_start(t_server *server)
+{
+  display_start(server);
+  if (gen_world(server))
+    {
+      printf("%serror (not enough memory), exiting%s\n\n", RED, WHITE);
+      return (EXIT_FAILURE);
+    }
+  printf("%sdone%s\n\n", GREEN, WHITE);
+  return (EXIT_SUCCESS);
 }

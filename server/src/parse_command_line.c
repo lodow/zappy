@@ -5,20 +5,12 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
-** Last update Thu May  1 17:34:45 2014 Nicolas Bridoux
+** Last update Mon May 19 11:56:22 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-static int	usage(char *av[])
-{
-  fprintf(stderr, "usage: %s [[[-p port] -p port] ...]"
-	  " [-x world_x] [-y world_y] [-c max_clients]"
-	  " [-t speed] -n team_name_1 team_name_2 ...\n", av[0]);
-  return (EXIT_FAILURE);
-}
-
-static int	check_team_names(t_list *list, char *progname)
+static int	check_team_names(t_list *list, char *progname, t_server *server)
 {
   t_list	*tmp;
   t_list	*team_names;
@@ -27,9 +19,11 @@ static int	check_team_names(t_list *list, char *progname)
   while (list)
     {
       tmp = team_names;
+      ((t_team *)list->data)->max_cli = server->game.max_cli;
       while (tmp)
 	{
-	  if (tmp != list && !strcmp(tmp->data, list->data))
+	  if (tmp != list && !strcmp(((t_team *)tmp->data)->name,
+				     ((t_team *)list->data)->name))
 	    {
 	      fprintf(stderr, "%s: each team-name "
 		      "must be unique\n", progname);
@@ -45,15 +39,20 @@ static int	check_team_names(t_list *list, char *progname)
 static int	check_options(t_server *server, int ac, char *av[])
 {
   if (ac == 1 || ac > optind)
-    return (usage(av));
+    {
+      fprintf(stderr, "usage: %s [[[-p port] -p port] ...]"
+	      " [-x world_x] [-y world_y] [-c max_clients]"
+	      " [-t speed] -n team_name_1 team_name_2 ...\n", av[0]);
+      return (EXIT_FAILURE);
+    }
   if (!server->listener && listen_on_port(server, "4242", SOCK_STREAM))
     return (EXIT_FAILURE);
-  if (list_size(server->game.team_names) <= 1)
+  if (list_size(server->game.teams) <= 1)
     {
       fprintf(stderr, "%s: you must create at least two teams\n", av[0]);
       return (EXIT_FAILURE);
     }
-  return (check_team_names(server->game.team_names, av[0]));
+  return (check_team_names(server->game.teams, av[0], server));
 }
 
 static int	add_numbers(char c, t_server *server, char *arg)
@@ -79,15 +78,22 @@ static int	add_numbers(char c, t_server *server, char *arg)
   return (EXIT_SUCCESS);
 }
 
-int	parse_command_line(t_server *server, int ac, char *av[])
+static void	init_serv(t_server *server)
 {
-  char	c;
-
-  server->game.team_names = NULL;
+  server->game.teams = NULL;
   server->game.width = 20;
   server->game.height = 20;
   server->game.time = 100;
   server->game.max_cli = 1;
+  server->game.cli_num = 0;
+}
+
+int		parse_command_line(t_server *server, int ac, char *av[])
+{
+  char		c;
+  t_team	*t;
+
+  init_serv(server);
   while ((c = getopt(ac, av, "p:x:y:c:t:n:")) != -1)
     {
       if (c == '?')
@@ -96,11 +102,17 @@ int	parse_command_line(t_server *server, int ac, char *av[])
 	return (EXIT_FAILURE);
       if (add_numbers(c, server, optarg))
 	return (EXIT_FAILURE);
-      if (c == 'n')
+      if (c == 'n' && (t = malloc(sizeof(t_team))))
 	{
-	  add_to_list(&(server->game.team_names), optarg);
-	  while (optind < ac && av[optind][0] != '-')
-	    add_to_list(&(server->game.team_names), av[optind++]);
+	  t->name = optarg;
+	  t->max_cli = server->game.max_cli;
+	  add_to_list(&(server->game.teams), t);
+	  while (optind < ac && av[optind][0] != '-' && (t = malloc(sizeof(t_team))))
+	    {
+	      t->name = av[optind++];
+	      t->max_cli = server->game.max_cli;
+	      add_to_list(&(server->game.teams), t);
+	    }
 	}
     }
   return (check_options(server, ac, av));
