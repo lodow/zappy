@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:21:31 2014 Nicolas Bridoux
-** Last update Tue May 20 17:31:12 2014 Nicolas Bridoux
+** Last update Wed May 21 00:01:48 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -30,7 +30,7 @@ static void	get_min_timeout(t_list *fds, struct timeval *tv)
 	  client = (t_client *)fd->data;
 	  if (client->action != NO_ACTION)
 	    {
-	      if (tv->tv_usec == NO_ACTION || client->life < tv->tv_usec)
+	      if (tv->tv_usec == NO_ACTION || client->action < tv->tv_usec)
 		tv->tv_usec = client->action;
 	    }
 	  if (client->life != NO_ACTION)

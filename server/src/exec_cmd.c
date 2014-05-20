@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Tue May 20 18:29:20 2014 Nicolas Bridoux
+** Last update Tue May 20 23:47:16 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -23,7 +23,7 @@ static t_cmd	g_ia_cmd[] =
     {"broadcast", 1, 7, NULL},
     {"incantation", 0, 300, NULL},
     {"fork", 0, 42, NULL},
-    {"connect_nbr", 0, 0, NULL},
+    {"connect_nbr", 0, 0, &connect_nbr},
     {NULL, 0, 0, NULL}
   };
 
