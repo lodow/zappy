@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 19 20:49:41 2014 Nicolas Bridoux
-** Last update Tue May 20 14:54:30 2014 Nicolas Bridoux
+** Last update Tue May 20 15:43:36 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -27,12 +27,7 @@ void			set_timeout(t_client *client, char type, suseconds_t time)
       t.tv_usec + time % 1000000;
 }
 
-/*
-** check if there is a timeout for an action, set it if it's the case
-*/
-
-static int	timeout_cmd(struct timeval *now, t_selfd *fd,
-			    t_client *client, t_server *serv)
+static void	set_timeout_cmd(t_selfd *fd, t_client *client, t_server *serv)
 {
   t_list	*cmd;
   int		delay;
@@ -43,12 +38,24 @@ static int	timeout_cmd(struct timeval *now, t_selfd *fd,
 	{
 	  if ((delay = is_cmd_valid(fd, (char *)cmd->data)) >= 0)
 	    {
-	      server_log(WARNING, "Setting delay of %ld for %d",
-			 USEC(delay / serv->game.time), fd->cli_num);
-	      set_timeout(client, ACTION, USEC(delay / serv->game.time));
+	      //  server_log(WARNING, "Setting delay of %f for %d",
+	      //		 (float)USEC((float)delay / (float)serv->game.time), fd->cli_num);
+	      set_timeout(client, ACTION, (float)USEC((float)delay / (float)serv->game.time));
 	    }
 	}
     }
+}
+
+/*
+** check if there is a timeout for an action, set it if it's the case
+*/
+
+static int	timeout_cmd(struct timeval *now, t_selfd *fd,
+			    t_client *client, t_server *serv)
+{
+  t_list	*cmd;
+
+  set_timeout_cmd(fd, client, serv);
   if (client->action != NO_ACTION && client->action <= USEC(now->tv_sec) + now->tv_usec)
     {
       if (!(cmd = dequeue(&(client->cmds))))
@@ -56,8 +63,12 @@ static int	timeout_cmd(struct timeval *now, t_selfd *fd,
 	  close_connection(serv, fd);
 	  return (EXIT_FAILURE);
 	}
+      server_log(WARNING, "End of (\"%s\") of %d", (char *)cmd->data, fd->cli_num);
+
+      send_response(fd, "ok");
       // executer la cmd
       client->action = NO_ACTION;
+      set_timeout_cmd(fd, client, serv);
     }
   return (EXIT_SUCCESS);
 }

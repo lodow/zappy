@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 21:13:41 2014 Nicolas Bridoux
-** Last update Tue May 20 12:07:38 2014 Nicolas Bridoux
+** Last update Tue May 20 15:18:21 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -90,6 +90,6 @@ void		handle_add_cmd(t_server *server, t_selfd *fd, char *cmd)
       first_message(server, fd, cmd);
       free(cmd);
     }
-  else
+  else if (list_size(client->cmds) < 10)
     enqueue(&((t_client *)fd->data)->cmds, cmd);
 }
