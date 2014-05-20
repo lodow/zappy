@@ -1,3 +1,13 @@
+/*
+** server.h for server.h in /home/bridou_n/projets/zappy/server
+** 
+** Made by Nicolas Bridoux
+** Login   <bridou_n@epitech.net>
+** 
+** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
+** Last update Tue May 20 18:21:37 2014 Nicolas Bridoux
+*/
+
 #ifndef SERVER_H_INCLUDED
 # define SERVER_H_INCLUDED
 
@@ -47,7 +57,7 @@ typedef struct	s_cmd
   const char	*name;
   char		args;
   int		delay;
-  void		(*ptr)(t_server *serv, t_client *client);
+  void		(*ptr)(t_server *serv, t_selfd *fd, char **arg);
 }		t_cmd;
 
 int	listen_on_port(t_server *serv, char *port, int socktype);
@@ -96,6 +106,7 @@ struct timeval *get_timeout(t_list *fds);
 */
 
 int	is_cmd_valid(t_selfd *fd, char *cmd);
+void	exec_cmd(t_server *serv, t_selfd *fd, char *cmd);
 
 /*
 ** my_str_to_wordtab.c
@@ -103,5 +114,22 @@ int	is_cmd_valid(t_selfd *fd, char *cmd);
 
 void	free_tab(char **tab);
 char	**my_str_to_wordtab(char *str, char delim);
+
+/*
+** functions for ia client in "cmd_ia" directory
+*/
+
+void	avance(t_server *serv, t_selfd *fd, char **args);
+void	droite(t_server *serv, t_selfd *fd, char **args);
+void	gauche(t_server *serv, t_selfd *fd, char **args);
+void	voir(t_server *serv, t_selfd *fd, char **args);
+void	inventaire(t_server *serv, t_selfd *fd, char **args);
+void	prend(t_server *serv, t_selfd *fd, char **args);
+void	pose(t_server *serv, t_selfd *fd, char **args);
+void	expulse(t_server *serv, t_selfd *fd, char **args);
+void	broadcast(t_server *serv, t_selfd *fd, char **args);
+void	incantation(t_server *serv, t_selfd *fd, char **args);
+void	ia_fork(t_server *serv, t_selfd *fd, char **args);
+void	connect_nbr(t_server *serv, t_selfd *fd, char **args);
 
 #endif /* !SERVER_H_INCLUDED */

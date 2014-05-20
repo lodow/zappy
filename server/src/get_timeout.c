@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:21:31 2014 Nicolas Bridoux
-** Last update Tue May 20 15:45:42 2014 Nicolas Bridoux
+** Last update Tue May 20 17:31:12 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -63,7 +63,6 @@ static void		get_real_timeout(struct timeval *tv)
 	{
 	  tv->tv_sec = tv->tv_usec / 1000000;
 	  tv->tv_usec %= 1000000;
-	  // server_log(WARNING, "setting timeout (%ld:%ld)", tv->tv_sec, tv->tv_usec);
 	}
       else
 	{

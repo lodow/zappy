@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 19 20:49:41 2014 Nicolas Bridoux
-** Last update Tue May 20 15:43:36 2014 Nicolas Bridoux
+** Last update Tue May 20 17:38:32 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -63,10 +63,7 @@ static int	timeout_cmd(struct timeval *now, t_selfd *fd,
 	  close_connection(serv, fd);
 	  return (EXIT_FAILURE);
 	}
-      server_log(WARNING, "End of (\"%s\") of %d", (char *)cmd->data, fd->cli_num);
-
-      send_response(fd, "ok");
-      // executer la cmd
+      exec_cmd(serv, fd, (char *)cmd->data);
       client->action = NO_ACTION;
       set_timeout_cmd(fd, client, serv);
     }
@@ -87,8 +84,8 @@ static void	timeout_life(struct timeval *now, t_selfd *fd,
       if (client->inv.food)
 	{
 	  --client->inv.food;
-	  server_log(WARNING, "Player %d lost 1 food (%zu remaining)",
-		     fd->cli_num, client->inv.food);
+	  // server_log(WARNING, "Player %d lost 1 food (%zu remaining)",
+	  //	     fd->cli_num, client->inv.food);
 	  set_timeout(client, LIFE, 126 * (USEC(1) / serv->game.time));
 	}
       else
