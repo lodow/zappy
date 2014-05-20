@@ -5,10 +5,10 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Apr 10 21:07:46 2014 Hugues
+** Last update Tue May 20 14:41:49 2014 Nicolas Bridoux
 */
 
-#include "network.h"
+#include "server.h"
 
 char			*get_ip_addr(t_net *net)
 {
@@ -105,10 +105,24 @@ t_net		*create_connection(const char *host, const char *port,
   return (res);
 }
 
-void		close_connection(t_net *net)
+void		close_connection(t_server *serv, t_selfd *fd)
 {
-  if (net)
-    if (net->socket != -1 && close(net->socket) == -1)
-      perror("close");
+  t_net		*net;
+  t_list	*tmp;
+
+  server_log(WARNING, "Deleting player %zu", fd->cli_num);
+  net = ((t_client *)fd->data)->sock;
+  if (net->socket != -1 && close(net->socket) == -1)
+    perror("close");
   free(net);
+  tmp = serv->game.teams;
+  while (tmp)
+    {
+      if (((t_client*)fd->data)->teamname &&
+	  !strcmp(((t_team *)tmp->data)->name, ((t_client*)fd->data)->teamname))
+	++((t_team *)tmp->data)->max_cli;
+      tmp = tmp->next;
+    }
+  free(((t_client *)fd->data)->teamname);
+  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
 }

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon Oct  8 16:20:21 2012 hugues morisset
+** Last update Tue May 20 14:26:27 2014 Nicolas Bridoux
 */
 
 #ifndef NETWORK_H_INCLUDED
@@ -35,7 +35,6 @@ t_net		*create_connection(const char *host, const char *port,
                            int socktype, int	(*f)(int sockfd,
                                const struct sockaddr *addr,
                                socklen_t addrlen));
-void		close_connection(t_net *net);
 t_net	*accept_connection(int sockfd);
 char		*get_ip_addr(t_net *net);
 t_net	*peer(t_net *net);

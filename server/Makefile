@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Mon May 19 21:33:01 2014 Nicolas Bridoux
+## Last update Tue May 20 13:53:33 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -17,11 +17,14 @@ SRC		=	main.c \
 			select.c \
 			server_network.c \
 			new_connection.c \
-			exec_cmd.c \
+			add_cmd.c \
 			log.c \
 			parse_command_line.c \
+			get_timeout.c \
 			timeout.c \
-			ring_buffers.c
+			exec_cmd.c \
+			ring_buffers.c \
+			my_str_to_wordtab.c
 
 CC		=	gcc
 FILETYPE	=	.c

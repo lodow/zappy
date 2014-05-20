@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 14:37:39 2014 Nicolas Bridoux
-** Last update Mon May 19 23:20:46 2014 Nicolas Bridoux
+** Last update Tue May 20 10:32:06 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -70,6 +70,7 @@ char		*get_command(t_selfd *fd)
   char		*new_rb;
   char		*cmd;
   size_t	size_cmd;
+  struct timeval tv;
 
   if (fd->len_r && (ptr = memchr(fd->rb_r, EOT_CHAR, fd->len_r)))
     {
@@ -86,8 +87,9 @@ char		*get_command(t_selfd *fd)
 	  fd->rb_r = new_rb;
 	  fd->len_r -= size_cmd + 1;
 	}
-      server_log(RECEIVING, "%d:%d\t\tReceived \"%s\" from %d",
-		 time(NULL), 42, cmd, fd->cli_num);
+      gettimeofday(&tv, NULL);
+      server_log(RECEIVING, "%ld:%ld\t\tReceived \"%s\" from %d",
+		 tv.tv_sec, tv.tv_usec, cmd, fd->cli_num);
       return (cmd);
     }
   return (NULL);
@@ -101,11 +103,13 @@ void		send_response(t_selfd *fd, char *to_send)
 {
   char		*new_rb;
   size_t	len;
+  struct timeval tv;
 
   if (!to_send || fd->to_close)
     return ;
-  server_log(SENDING, "%d:%d\t\tSending \"%s\" to %d",
-	     time(NULL), 42, to_send, fd->cli_num);
+  gettimeofday(&tv, NULL);
+  server_log(SENDING, "%ld:%ld\t\tSending \"%s\" to %d",
+	     tv.tv_sec, tv.tv_usec, to_send, fd->cli_num);
   len = strlen(to_send);
   if ((new_rb = malloc(sizeof(char) * (fd->len_w + len + 2))))
     {

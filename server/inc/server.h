@@ -31,7 +31,7 @@
 # define RECEIVING	4
 # define NOT_ALLOWED	1
 # define NOT_KNOWN	2
-# define USEC(x)	(1000000 * x)
+# define USEC(x)	(1000000 * (x))
 
 typedef struct	s_server
 {
@@ -42,6 +42,14 @@ typedef struct	s_server
   t_map		**map;
 }		t_server;
 
+typedef struct	s_cmd
+{
+  const char	*name;
+  char		args;
+  int		delay;
+  void		(*ptr)(t_server *serv, t_client *client);
+}		t_cmd;
+
 int	listen_on_port(t_server *serv, char *port, int socktype);
 void	close_server_binds(t_server *serv);
 void	serv_verbose(t_server *serv);
@@ -49,9 +57,10 @@ void	server_setup_select(t_server *serv);
 void	handle_newconnection(t_selfd *fd, t_server *serv);
 void	quit_server(t_server *serv);
 void	log_connection(t_net *sock, char *message);
+void	close_connection(t_server *serv, t_selfd *fd);
 
 /*
-** exec_cmd.c
+** add_cmd.c
 */
 
 void	handle_add_cmd(t_server *server, t_selfd *fd, char *cmd);
@@ -75,6 +84,24 @@ int	handle_start(t_server *server);
 
 void	set_timeout(t_client *client, char type, suseconds_t time);
 void	handle_timeout(t_server *serv, t_selfd *fd);
-struct timeval *get_min_timeout(t_list *fds);
+
+/*
+** get_timeout.c
+*/
+
+struct timeval *get_timeout(t_list *fds);
+
+/*
+** exec_cmd.c
+*/
+
+int	is_cmd_valid(t_selfd *fd, char *cmd);
+
+/*
+** my_str_to_wordtab.c
+*/
+
+void	free_tab(char **tab);
+char	**my_str_to_wordtab(char *str, char delim);
 
 #endif /* !SERVER_H_INCLUDED */

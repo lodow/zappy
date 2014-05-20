@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue May 20 00:10:13 2014 Nicolas Bridoux
+** Last update Tue May 20 15:07:59 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -26,9 +26,7 @@ void		handle_client(t_selfd *fd, t_server *serv)
       if (!r)
 	{
 	  log_connection(client->sock, "Client disconnected from:");
-	  close_connection(client->sock);
-	  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
-	  return ;
+	  return (close_connection(serv, fd));
 	}
     }
   if (fd->len_w && ISWRITEABLE(fd) && (r = write_to_client(fd)) < 0)
@@ -37,14 +35,8 @@ void		handle_client(t_selfd *fd, t_server *serv)
     }
   if (fd->len_r && (cmd = get_command(fd)))
     handle_add_cmd(serv, fd, cmd);
-
   if (!fd->len_w && fd->to_close)
-    {
-      server_log(WARNING, "Deleting player %zu", fd->cli_num);
-      close_connection(client->sock);
-      rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
-      return ;
-    }
+    return (close_connection(serv, fd));
   handle_timeout(serv, fd);
   if (fd->len_w)
     CHECKWRITE(fd);
@@ -61,7 +53,8 @@ void		log_connection(t_net *sock, char *message)
       if ((ip = get_ip_addr(tmp)))
         server_log(WARNING, "%s %s:%d", message, ip, port_number(tmp));
       free(ip);
-      close_connection(tmp);
+      if (tmp && tmp->socket != -1 && close(tmp->socket) == -1)
+	perror("close");
     }
 }
 
@@ -82,7 +75,8 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
       || !(tmpfd = create_fd(nsock->socket, client, &handle_client)))
     {
       free(client);
-      close_connection(nsock);
+      if (nsock && nsock->socket != -1 && close(nsock->socket) == -1)
+	perror("close");
       return ;
     }
   client->sock = nsock;
@@ -96,9 +90,6 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   log_connection(nsock, "New connection from:");
   add_to_list(&(serv->watch), tmpfd);
   send_response(tmpfd, "BIENVENUE");
-
-  // just for testing
-  client->inv.food = 10;
-
+  set_timeout(client, ACTION, USEC(INIT_TIMEOUT));
   handle_client(tmpfd, serv);
 }

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon May 19 23:43:14 2014 Nicolas Bridoux
+** Last update Tue May 20 11:22:53 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -92,7 +92,7 @@ void		do_select(t_list *fds, void *global_arg)
   t_selfd	*fd;
 
   nexttmp = NULL;
-  if ((tmp = select_fd_set(fds, &setr, &setw, get_min_timeout(fds))))
+  if ((tmp = select_fd_set(fds, &setr, &setw, get_timeout(fds))))
     {
       nexttmp = tmp ? tmp->next : NULL;
       while (tmp || nexttmp)

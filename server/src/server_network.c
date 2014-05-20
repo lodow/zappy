@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon May 19 23:42:07 2014 Nicolas Bridoux
+** Last update Tue May 20 14:33:57 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -64,8 +64,10 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
     {
       if (bind4 && bind6)
         perror("Listen");
-      close_connection(bind4);
-      close_connection(bind6);
+      if (bind4 && bind4->socket != -1 && close(bind4->socket) == -1)
+	perror("close");
+      if (bind6 && bind6->socket != -1 && close(bind6->socket) == -1)
+	perror("close");
       return (1);
     }
   serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
-** Last update Mon May 19 23:17:15 2014 Nicolas Bridoux
+** Last update Tue May 20 12:06:31 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -68,7 +68,7 @@ static int	add_numbers(char c, t_server *server, char *arg)
 	  return (EXIT_FAILURE);
 	}
       if (c == 't')
-	server->game.time = USEC(1) / nb;
+	server->game.time = nb;
       if (c == 'c')
 	server->game.max_cli = nb;
       if (c == 'x')

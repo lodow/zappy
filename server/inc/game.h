@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Mon May 19 22:03:22 2014 Nicolas Bridoux
+** Last update Tue May 20 13:36:08 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -21,6 +21,7 @@
 # define NO_ACTION	-1
 # define ACTION		1
 # define LIFE		2
+# define INIT_TIMEOUT	10
 
 typedef struct	s_game
 {
@@ -51,9 +52,9 @@ typedef struct	s_client
   size_t	x;
   size_t	y;
   char		orientation;
-  suseconds_t	action; // prochaine action
-  suseconds_t	life;   // prochain retrait de vie
-  t_map		inv;    // inventaire
+  suseconds_t	action;
+  suseconds_t	life;
+  t_map		inv;
   t_list	*cmds;
 }		t_client;
 
