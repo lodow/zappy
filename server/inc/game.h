@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Tue May 20 13:36:08 2014 Nicolas Bridoux
+** Last update Wed May 21 14:16:06 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -51,6 +51,7 @@ typedef struct	s_client
   char		*teamname;
   size_t	x;
   size_t	y;
+  char		level;
   char		orientation;
   suseconds_t	action;
   suseconds_t	life;

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue May 20 14:33:57 2014 Nicolas Bridoux
+** Last update Wed May 21 14:33:53 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -112,10 +112,7 @@ void		server_setup_select(t_server *serv)
       {
         tmp = serv->listener[i];
         if ((fd = create_fd(tmp->socket, tmp, &handle_newconnection)))
-          {
-	    fd->fd_type = FD_SERV;
-	    add_to_list(&(serv->watch), fd);
-	  }
+	  add_to_list(&(serv->watch), fd);
         i++;
       }
 }

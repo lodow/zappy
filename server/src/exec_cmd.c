@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Tue May 20 23:47:16 2014 Nicolas Bridoux
+** Last update Wed May 21 15:08:31 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -15,7 +15,7 @@ static t_cmd	g_ia_cmd[] =
     {"avance", 0, 7, &avance},
     {"droite", 0, 7, &droite},
     {"gauche", 0, 7, &gauche},
-    {"voir", 0, 7, NULL},
+    {"voir", 0, 7, &voir},
     {"inventaire", 0, 1, &inventaire},
     {"prend", 1, 7, &prend},
     {"pose", 1, 7, &pose},

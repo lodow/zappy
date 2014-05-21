@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Tue May 20 18:21:37 2014 Nicolas Bridoux
+** Last update Wed May 21 14:30:25 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -64,10 +64,12 @@ int	listen_on_port(t_server *serv, char *port, int socktype);
 void	close_server_binds(t_server *serv);
 void	serv_verbose(t_server *serv);
 void	server_setup_select(t_server *serv);
-void	handle_newconnection(t_selfd *fd, t_server *serv);
 void	quit_server(t_server *serv);
 void	log_connection(t_net *sock, char *message);
 void	close_connection(t_server *serv, t_selfd *fd);
+
+void	handle_newconnection(t_selfd *fd, t_server *serv);
+void	handle_client(t_selfd *fd, t_server *serv);
 
 /*
 ** add_cmd.c

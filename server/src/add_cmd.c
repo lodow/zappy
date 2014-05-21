@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 21:13:41 2014 Nicolas Bridoux
-** Last update Tue May 20 15:18:21 2014 Nicolas Bridoux
+** Last update Wed May 21 15:13:07 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -25,12 +25,13 @@ static int	init_ia(t_server *serv, t_client *client, char *cmd)
 {
   client->type_cli = IA;
   client->teamname = strdup(cmd);
+
   client->x = rand() % serv->game.width;
   client->y = rand() % serv->game.height;
   client->orientation = rand() % 4;
+
   memset(&(client->inv), 0, sizeof(t_map));
   client->inv.food = 10;
-
   client->action = NO_ACTION;
   set_timeout(client, LIFE, 126 * (USEC(1) / serv->game.time));
   return (0);

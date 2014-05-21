@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Mon May 19 23:40:27 2014 Nicolas Bridoux
+** Last update Wed May 21 14:34:12 2014 Nicolas Bridoux
 */
 
 #ifndef SELECT_H_INCLUDED
@@ -37,7 +37,6 @@
 typedef struct	s_selfd
 {
   int		fd;
-  char		fd_type;
   size_t	cli_num;
   char		to_close;
   int		etype;

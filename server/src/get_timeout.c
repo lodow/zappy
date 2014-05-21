@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:21:31 2014 Nicolas Bridoux
-** Last update Wed May 21 00:01:48 2014 Nicolas Bridoux
+** Last update Wed May 21 14:53:44 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -25,7 +25,7 @@ static void	get_min_timeout(t_list *fds, struct timeval *tv)
   while (tmp)
     {
       fd = (t_selfd *)tmp->data;
-      if (fd->fd_type == FD_CLI)
+      if (fd->callback == (void *)&handle_client)
 	{
 	  client = (t_client *)fd->data;
 	  if (client->action != NO_ACTION)

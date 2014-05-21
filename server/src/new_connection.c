@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue May 20 15:07:59 2014 Nicolas Bridoux
+** Last update Wed May 21 14:33:59 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -82,10 +82,14 @@ void			handle_newconnection(t_selfd *fd, t_server *serv)
   client->sock = nsock;
   client->type_cli = UNKNOWN;
   client->teamname = NULL;
+  client->cmds = NULL;
+  client->x = 0;
+  client->y = 0;
+  client->level = 1;
+  client->orientation = DOWN;
   client->action = NO_ACTION;
   client->life = NO_ACTION;
-  client->cmds = NULL;
-  tmpfd->fd_type = FD_CLI;
+  memset(&(client->inv), 0, sizeof(t_map));
   tmpfd->cli_num = serv->game.cli_num++;
   log_connection(nsock, "New connection from:");
   add_to_list(&(serv->watch), tmpfd);

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:18:19 2014 Nicolas Bridoux
-** Last update Tue May 20 23:08:00 2014 Nicolas Bridoux
+** Last update Wed May 21 14:37:05 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -32,6 +32,8 @@ void		pose(t_server *serv, t_selfd *fd, char **args)
 	      }
 	    else
 	      send_response(fd, "ko");
+	    return ;
 	  }
+      send_response(fd, "ko");
     }
 }

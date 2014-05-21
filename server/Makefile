@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Tue May 20 23:41:40 2014 Nicolas Bridoux
+## Last update Wed May 21 15:07:27 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -32,6 +32,7 @@ SRC		=	main.c \
 			cmd_ia/prend.c \
 			cmd_ia/pose.c \
 			cmd_ia/connect_nbr.c \
+			cmd_ia/voir.c \
 
 CC		=	gcc
 FILETYPE	=	.c
