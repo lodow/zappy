@@ -1,0 +1,100 @@
+/*
+** manage_instr.c for manage_instr.c in /home/bridou_n/projets/zappy/server
+** 
+** Made by Nicolas Bridoux
+** Login   <bridou_n@epitech.net>
+** 
+** Started on  Thu May 22 11:02:39 2014 Nicolas Bridoux
+** Last update Thu May 22 18:16:02 2014 Nicolas Bridoux
+*/
+
+#include "server.h"
+
+static void	add_connection_slot(t_server *serv, char *teamname)
+{
+  t_list	*tmp;
+
+  if (teamname)
+    {
+      tmp = serv->game.teams;
+      while (tmp)
+	{
+	  if (tmp->data && ((t_team *)tmp->data)->name &&
+	      !strcmp(((t_team *)tmp->data)->name, teamname))
+	    ++(((t_team *)tmp->data)->max_cli);
+	  tmp = tmp->next;
+	}
+    }
+}
+
+static void	handle_special_timeout(t_server *serv, t_selfd *fd, char *cmd)
+{
+  t_client	*client;
+
+  client = (t_client *)fd->data;
+  if (!strcmp(cmd, "timeout") && client->type_cli == UNKNOWN)
+    close_connection(serv, fd);
+  else if (!strcmp(cmd, "life"))
+    {
+      if (client->inv.food > 0)
+	{
+	  --(client->inv.food);
+	  set_timeout(serv, fd, "life", 126 * (USEC(1) / serv->game.time));
+	}
+      else
+	{
+	  send_response(fd, "mort");
+	  fd->to_close = 1;
+	}
+    }
+  else
+    add_connection_slot(serv, client->teamname);
+}
+
+void			exec_instruction(t_server *serv)
+{
+  struct timeval	now;
+  t_instr		*next;
+
+  gettimeofday(&now, NULL);
+  now.tv_usec += USEC(now.tv_sec);
+  if (serv->instr && (next = (t_instr *)serv->instr->data))
+    {
+      if (next->time <= now.tv_usec)
+	{
+	  if (!strcmp(next->cmd, "timeout") || !strcmp(next->cmd, "life") ||
+	      !strcmp(next->cmd, "born"))
+	    {
+	      handle_special_timeout(serv, next->fd, next->cmd);
+	      rm_from_list(&(serv->instr), serv->instr, &free);
+	      return ;
+	    }
+	  exec_cmd(serv, next->fd, next->cmd);
+	  ((t_client *)next->fd->data)->flag = OK;
+	  rm_from_list(&(serv->instr), serv->instr, &free);
+	}
+    }
+}
+
+void		push_instruction(t_server *serv, t_selfd *fd)
+{
+  t_client	*client;
+  t_list	*cmd;
+  float		delay;
+
+  if (fd && fd->callback == (void *)&handle_client)
+    {
+      client = (t_client *)fd->data;
+      if (client->flag == OK && client->cmds)
+	{
+	  if ((cmd = dequeue(&(client->cmds))) &&
+	      (delay = is_cmd_valid(fd, (char *)cmd->data)) >= 0)
+	    {
+	      set_timeout(serv, fd, (char *)cmd->data,
+			  USEC(delay / (float)serv->game.time));
+	      client->flag = KO;
+	    }
+	  free(cmd);
+	}
+    }
+}

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Wed May 21 14:30:25 2014 Nicolas Bridoux
+** Last update Thu May 22 16:53:47 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -50,6 +50,7 @@ typedef struct	s_server
   t_list	*watch;
   t_game	game;
   t_map		**map;
+  t_list	*instr;
 }		t_server;
 
 typedef struct	s_cmd
@@ -60,16 +61,23 @@ typedef struct	s_cmd
   void		(*ptr)(t_server *serv, t_selfd *fd, char **arg);
 }		t_cmd;
 
+typedef struct	s_instr
+{
+  char		*cmd;
+  suseconds_t	time;
+  t_selfd	*fd;
+}		t_instr;
+
 int	listen_on_port(t_server *serv, char *port, int socktype);
 void	close_server_binds(t_server *serv);
 void	serv_verbose(t_server *serv);
 void	server_setup_select(t_server *serv);
 void	quit_server(t_server *serv);
 void	log_connection(t_net *sock, char *message);
-void	close_connection(t_server *serv, t_selfd *fd);
+int	close_connection(t_server *serv, t_selfd *fd);
 
-void	handle_newconnection(t_selfd *fd, t_server *serv);
-void	handle_client(t_selfd *fd, t_server *serv);
+int	handle_newconnection(t_selfd *fd, t_server *serv);
+int	handle_client(t_selfd *fd, t_server *serv);
 
 /*
 ** add_cmd.c
@@ -94,14 +102,30 @@ int	handle_start(t_server *server);
 ** timeout.c
 */
 
-void	set_timeout(t_client *client, char type, suseconds_t time);
-void	handle_timeout(t_server *serv, t_selfd *fd);
+void	display_serv_queue(t_server *serv); // just for debug
+
+void	set_timeout(t_server *serv, t_selfd *fd, char *cmd, suseconds_t time);
+struct timeval *get_timeout(t_server *serv);
 
 /*
-** get_timeout.c
+** liste_instr.c
 */
 
-struct timeval *get_timeout(t_list *fds);
+void	add_to_ordered_list(t_list **list, void *data, int (*sort)(void *, void *));
+int	sort_instr(void *a, void *b);
+
+/*
+** manage_instr.c
+*/
+
+void	exec_instruction(t_server *serv);
+void	push_instruction(t_server *serv, t_selfd *fd);
+
+/*
+** clean.c
+*/
+
+void	clean_client(t_server *serv, t_selfd *fd);
 
 /*
 ** exec_cmd.c

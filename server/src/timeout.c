@@ -5,111 +5,69 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 19 20:49:41 2014 Nicolas Bridoux
-** Last update Tue May 20 22:31:39 2014 Nicolas Bridoux
+** Last update Thu May 22 16:59:15 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-/*
-** set "type" timeout for "client", for "time" usecs
-*/
-
-void			set_timeout(t_client *client, char type, suseconds_t time)
+void	display_serv_queue(t_server *serv)
 {
-  struct timeval	t;
+  t_list	*tmp;
+  t_instr	*new;
 
-  gettimeofday(&t, NULL);
-  if (type == LIFE)
-    client->life = USEC(t.tv_sec + (time / 1000000)) +
-      t.tv_usec + time % 1000000;
-  else
-    client->action = USEC(t.tv_sec + (time / 1000000)) +
-      t.tv_usec + time % 1000000;
-}
-
-static void	set_timeout_cmd(t_selfd *fd, t_client *client, t_server *serv)
-{
-  t_list	*cmd;
-  int		delay;
-
-  if (client->cmds && client->action == NO_ACTION && client->type_cli != UNKNOWN)
+  tmp = serv->instr;
+  while (tmp)
     {
-      if ((cmd = top(client->cmds)))
-	{
-	  if ((delay = is_cmd_valid(fd, (char *)cmd->data)) >= 0)
-	    {
-	      //  server_log(WARNING, "Setting delay of %f for %d",
-	      //		 (float)USEC((float)delay / (float)serv->game.time), fd->cli_num);
-	      set_timeout(client, ACTION, (float)USEC((float)delay / (float)serv->game.time));
-	    }
-	}
+      new = (t_instr *)tmp->data;
+      server_log(WARNING, " %d => \"%s\" => (%ld:%ld)", new->fd->cli_num, new->cmd,
+		 new->time / 1000000, new->time % 1000000);
+      tmp = tmp->next;
     }
+  server_log(WARNING, "");
 }
 
-/*
-** check if there is a timeout for an action, set it if it's the case
-*/
-
-static int	timeout_cmd(struct timeval *now, t_selfd *fd,
-			    t_client *client, t_server *serv)
+void			set_timeout(t_server *serv, t_selfd *fd,
+				    char *cmd, suseconds_t time)
 {
-  t_list	*cmd;
+  struct timeval	now;
+  t_instr		*new;
 
-  set_timeout_cmd(fd, client, serv);
-  if (client->action != NO_ACTION && client->action <= USEC(now->tv_sec) + now->tv_usec)
-    {
-      if (!(cmd = dequeue(&(client->cmds))))
-	{
-	  close_connection(serv, fd);
-	  return (EXIT_FAILURE);
-	}
-      exec_cmd(serv, fd, (char *)cmd->data);
-      client->action = NO_ACTION;
-      set_timeout_cmd(fd, client, serv);
-    }
-  return (EXIT_SUCCESS);
+  if (!(new = malloc(sizeof(t_instr))))
+    return ;
+  gettimeofday(&now, NULL);
+  now.tv_usec += USEC(now.tv_sec) + time;
+  new->fd = fd;
+  new->time = now.tv_usec;
+  new->cmd = cmd;
+  // server_log(WARNING, "adding timeout (%ld:%lds)", new->time / 1000000, new->time % 1000000);
+  add_to_ordered_list(&(serv->instr), new, &sort_instr);
 }
 
-/*
-** check if the client is still alive and set his next life timeout
-*/
-
-static void	timeout_life(struct timeval *now, t_selfd *fd,
-			     t_client *client, t_server *serv)
+struct timeval		*get_timeout(t_server *serv)
 {
-  if (client->type_cli == IA &&
-      client->life != NO_ACTION &&
-      client->life <= USEC(now->tv_sec) + now->tv_usec)
+  struct timeval	*tv;
+  t_instr		*next;
+
+  if (serv->instr && (next = (t_instr *)serv->instr->data))
     {
-      if (client->inv.food)
+      if (!(tv = malloc(sizeof(struct timeval))))
+	return (NULL);
+      gettimeofday(tv, NULL);
+      tv->tv_usec += USEC(tv->tv_sec);
+      tv->tv_usec = next->time - tv->tv_usec;
+      if (tv->tv_usec > 0)
 	{
-	  --client->inv.food;
-	  // server_log(WARNING, "Player %d lost 1 food (%zu remaining)",
-	  //	     fd->cli_num, client->inv.food);
-	  set_timeout(client, LIFE, 126 * (USEC(1) / serv->game.time));
+	  tv->tv_sec = tv->tv_usec / 1000000;
+	  tv->tv_usec %= 1000000;
 	}
       else
 	{
-	  send_response(fd, "mort");
-	  fd->to_close = 1;
-	  client->life = NO_ACTION;
-	  client->action = NO_ACTION;
+	  tv->tv_sec = 0;
+	  tv->tv_usec = 0;
 	}
+      server_log(WARNING, "real_timeout : %ld:%ld", tv->tv_sec, tv->tv_usec);
+      return (tv);
     }
+  return (NULL);
 }
 
-/*
-** this function handle the life and command timeouts
-** it's called by every client fd
-*/
-
-void			handle_timeout(t_server *serv, t_selfd *fd)
-{
-  struct timeval	now;
-  t_client		*client;
-
-  client = (t_client *)fd->data;
-  gettimeofday(&now, NULL);
-  if (!timeout_cmd(&now, fd, client, serv))
-    timeout_life(&now, fd, client, serv);
-}

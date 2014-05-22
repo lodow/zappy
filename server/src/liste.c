@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Dec 13 13:14:01 2012 Hugues
+** Last update Thu May 22 16:06:59 2014 Nicolas Bridoux
 */
 
 #include "liste.h"
@@ -23,21 +23,23 @@ int	list_size(t_list *begin)
   return (i);
 }
 
-void	rm_from_list(t_list **begin, t_list *trm, void (*f)(void*))
+void		rm_from_list(t_list **begin, t_list *trm, void (*f)(void*))
 {
-  if (begin)
-    while ((*begin))
-      {
-        if ((*begin) == trm)
-          {
-            (*begin) = (*begin)->next;
-            if (f)
-              f(trm->data);
-            free(trm);
-            return ;
-          }
-        begin = &((*begin)->next);
-      }
+  while ((*begin))
+    {
+      if ((*begin) == trm)
+	{
+	  (*begin) = (*begin)->next;
+	  if (f)
+	    {
+	      f(trm->data);
+	      trm->data = NULL;
+	    }
+	  free(trm);
+	  return ;
+	}
+      begin = &((*begin)->next);
+    }
 }
 
 void		apply_on_list(t_list *begin,

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Tue May 20 14:41:49 2014 Nicolas Bridoux
+** Last update Thu May 22 16:46:55 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -105,7 +105,7 @@ t_net		*create_connection(const char *host, const char *port,
   return (res);
 }
 
-void		close_connection(t_server *serv, t_selfd *fd)
+int		close_connection(t_server *serv, t_selfd *fd)
 {
   t_net		*net;
   t_list	*tmp;
@@ -124,5 +124,6 @@ void		close_connection(t_server *serv, t_selfd *fd)
       tmp = tmp->next;
     }
   free(((t_client *)fd->data)->teamname);
-  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
+  clean_client(serv, fd);
+  return (1);
 }

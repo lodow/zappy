@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Wed May 21 15:08:31 2014 Nicolas Bridoux
+** Last update Thu May 22 17:50:00 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -41,20 +41,12 @@ static int	check_gui(__attribute__((unused))t_selfd *fd,
 static int	check_ia(t_selfd *fd, char **tab)
 {
   int		i;
-  t_list	*cmd;
-  t_client	*client;
 
   i = -1;
-  client = (t_client *)fd->data;
   while (g_ia_cmd[++i].name)
     if (tab[0] && !strcmp(g_ia_cmd[i].name, tab[0]))
       if (!g_ia_cmd[i].args || (g_ia_cmd[i].args && tab[1]))
 	return (g_ia_cmd[i].delay);
-  if ((cmd = dequeue(&(client->cmds))))
-    {
-      free(cmd->data);
-      free(cmd);
-    }
   send_response(fd, "ko");
   return (-1);
 }
@@ -88,5 +80,4 @@ void	exec_cmd(t_server *serv, t_selfd *fd, char *cmd)
     if (tab[0] && !strcmp(cmd_tab[i].name, tab[0]))
       cmd_tab[i].ptr(serv, fd, &tab[1]);
   free_tab(tab);
-  free(cmd);
 }

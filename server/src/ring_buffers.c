@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 14:37:39 2014 Nicolas Bridoux
-** Last update Tue May 20 10:32:06 2014 Nicolas Bridoux
+** Last update Thu May 22 18:00:26 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -110,7 +110,8 @@ void		send_response(t_selfd *fd, char *to_send)
   gettimeofday(&tv, NULL);
   server_log(SENDING, "%ld:%ld\t\tSending \"%s\" to %d",
 	     tv.tv_sec, tv.tv_usec, to_send, fd->cli_num);
-  len = strlen(to_send);
+  if ((len = strlen(to_send)))
+    CHECKWRITE(fd);
   if ((new_rb = malloc(sizeof(char) * (fd->len_w + len + 2))))
     {
       if (fd->len_w)

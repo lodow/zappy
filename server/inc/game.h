@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Wed May 21 14:16:06 2014 Nicolas Bridoux
+** Last update Thu May 22 09:39:10 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -18,10 +18,9 @@
 # define DOWN		1
 # define LEFT		2
 # define RIGHT		3
-# define NO_ACTION	-1
-# define ACTION		1
-# define LIFE		2
 # define INIT_TIMEOUT	10
+# define OK		1
+# define KO		2
 
 typedef struct	s_game
 {
@@ -53,8 +52,7 @@ typedef struct	s_client
   size_t	y;
   char		level;
   char		orientation;
-  suseconds_t	action;
-  suseconds_t	life;
+  char		flag;
   t_map		inv;
   t_list	*cmds;
 }		t_client;

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
-** Last update Tue May 20 12:06:31 2014 Nicolas Bridoux
+** Last update Thu May 22 09:42:19 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -82,6 +82,7 @@ static int	add_numbers(char c, t_server *server, char *arg)
 static void	init_serv(t_server *server)
 {
   server->game.teams = NULL;
+  server->instr = NULL;
   server->game.width = 20;
   server->game.height = 20;
   server->game.time = 100;

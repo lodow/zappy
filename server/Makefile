@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Wed May 21 15:07:27 2014 Nicolas Bridoux
+## Last update Thu May 22 16:46:04 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -13,6 +13,7 @@ SRC		=	main.c \
 			inet_accept.c \
 			liste.c \
 			liste_find.c \
+			liste_instr.c \
 			ptr_tab.c \
 			select.c \
 			server_network.c \
@@ -20,8 +21,9 @@ SRC		=	main.c \
 			add_cmd.c \
 			log.c \
 			parse_command_line.c \
-			get_timeout.c \
 			timeout.c \
+			manage_instr.c \
+			clean.c \
 			exec_cmd.c \
 			ring_buffers.c \
 			my_str_to_wordtab.c \
