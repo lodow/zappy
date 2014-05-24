@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 21:13:41 2014 Nicolas Bridoux
-** Last update Thu May 22 12:23:21 2014 Nicolas Bridoux
+** Last update Sat May 24 02:20:07 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -23,13 +23,20 @@ static void	connect_gui(__attribute__((unused))t_server *serv, t_selfd *fd)
 static int	init_ia(t_server *serv, t_selfd *fd, char *cmd)
 {
   t_client	*client;
+  t_egg		*egg;
 
   client = (t_client *)fd->data;
   client->type_cli = IA;
   client->teamname = strdup(cmd);
-  client->x = rand() % serv->game.width;
-  client->y = rand() % serv->game.height;
-  client->orientation = rand() % 4;
+  if ((egg = find_egg(serv->game.eggs, -1, ALIVE, client->teamname)))
+    replace_egg_by_ia(serv, fd, egg);
+  else
+    {
+      client->x = rand() % serv->game.width;
+      client->y = rand() % serv->game.height;
+    }
+  client->orientation = rand() % 5 + 1;
+  client->level = 1;
   memset(&(client->inv), 0, sizeof(t_map));
   client->inv.food = 10;
   set_timeout(serv, fd, "life", 126 * (USEC(1) / serv->game.time));

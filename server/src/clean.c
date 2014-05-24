@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Thu May 22 16:51:27 2014 Nicolas Bridoux
+** Last update Fri May 23 23:20:04 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -26,5 +26,7 @@ void		clean_client(t_server *serv, t_selfd *fd)
 	tmp = tmp->next;
     }
   display_serv_queue(serv);
+  free(fd->rb_r);
+  free(fd->rb_w);
   rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
 }

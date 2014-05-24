@@ -5,36 +5,21 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 11:02:39 2014 Nicolas Bridoux
-** Last update Thu May 22 18:16:02 2014 Nicolas Bridoux
+** Last update Sat May 24 01:51:17 2014 Nicolas Bridoux
 */
 
 #include "server.h"
-
-static void	add_connection_slot(t_server *serv, char *teamname)
-{
-  t_list	*tmp;
-
-  if (teamname)
-    {
-      tmp = serv->game.teams;
-      while (tmp)
-	{
-	  if (tmp->data && ((t_team *)tmp->data)->name &&
-	      !strcmp(((t_team *)tmp->data)->name, teamname))
-	    ++(((t_team *)tmp->data)->max_cli);
-	  tmp = tmp->next;
-	}
-    }
-}
 
 static void	handle_special_timeout(t_server *serv, t_selfd *fd, char *cmd)
 {
   t_client	*client;
 
+  if (!fd)
+    return (handle_eggs(serv, cmd));
   client = (t_client *)fd->data;
   if (!strcmp(cmd, "timeout") && client->type_cli == UNKNOWN)
     close_connection(serv, fd);
-  else if (!strcmp(cmd, "life"))
+  if (!strcmp(cmd, "life"))
     {
       if (client->inv.food > 0)
 	{
@@ -47,8 +32,6 @@ static void	handle_special_timeout(t_server *serv, t_selfd *fd, char *cmd)
 	  fd->to_close = 1;
 	}
     }
-  else
-    add_connection_slot(serv, client->teamname);
 }
 
 void			exec_instruction(t_server *serv)
@@ -63,7 +46,7 @@ void			exec_instruction(t_server *serv)
       if (next->time <= now.tv_usec)
 	{
 	  if (!strcmp(next->cmd, "timeout") || !strcmp(next->cmd, "life") ||
-	      !strcmp(next->cmd, "born"))
+	      !strncmp(next->cmd, "born:", 5) || !strncmp(next->cmd, "moldy:", 6))
 	    {
 	      handle_special_timeout(serv, next->fd, next->cmd);
 	      rm_from_list(&(serv->instr), serv->instr, &free);

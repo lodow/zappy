@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 17:59:33 2014 Nicolas Bridoux
-** Last update Tue May 20 18:00:39 2014 Nicolas Bridoux
+** Last update Fri May 23 19:28:56 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -18,11 +18,11 @@ void		gauche(__attribute__((unused))t_server *serv, t_selfd *fd,
   client = (t_client *)fd->data;
   if (client->orientation == UP)
     client->orientation = LEFT;
-  if (client->orientation == DOWN)
+  else if (client->orientation == DOWN)
     client->orientation = RIGHT;
-  if (client->orientation == LEFT)
+  else if (client->orientation == LEFT)
     client->orientation = DOWN;
-  if (client->orientation == RIGHT)
+  else if (client->orientation == RIGHT)
     client->orientation = UP;
   send_response(fd, "ok");
 }

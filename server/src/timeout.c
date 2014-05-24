@@ -5,12 +5,12 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 19 20:49:41 2014 Nicolas Bridoux
-** Last update Thu May 22 16:59:15 2014 Nicolas Bridoux
+** Last update Sat May 24 01:51:37 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-void	display_serv_queue(t_server *serv)
+void		display_serv_queue(t_server *serv)
 {
   t_list	*tmp;
   t_instr	*new;
@@ -19,8 +19,9 @@ void	display_serv_queue(t_server *serv)
   while (tmp)
     {
       new = (t_instr *)tmp->data;
-      server_log(WARNING, " %d => \"%s\" => (%ld:%ld)", new->fd->cli_num, new->cmd,
-		 new->time / 1000000, new->time % 1000000);
+      if (new->fd)
+	server_log(WARNING, " %d => \"%s\" => (%ld:%ld)", new->fd->cli_num, new->cmd,
+		   new->time / 1000000, new->time % 1000000);
       tmp = tmp->next;
     }
   server_log(WARNING, "");
@@ -32,14 +33,13 @@ void			set_timeout(t_server *serv, t_selfd *fd,
   struct timeval	now;
   t_instr		*new;
 
-  if (!(new = malloc(sizeof(t_instr))))
+  if (!cmd || !(new = malloc(sizeof(t_instr))))
     return ;
   gettimeofday(&now, NULL);
   now.tv_usec += USEC(now.tv_sec) + time;
   new->fd = fd;
   new->time = now.tv_usec;
   new->cmd = cmd;
-  // server_log(WARNING, "adding timeout (%ld:%lds)", new->time / 1000000, new->time % 1000000);
   add_to_ordered_list(&(serv->instr), new, &sort_instr);
 }
 
@@ -65,7 +65,7 @@ struct timeval		*get_timeout(t_server *serv)
 	  tv->tv_sec = 0;
 	  tv->tv_usec = 0;
 	}
-      server_log(WARNING, "real_timeout : %ld:%ld", tv->tv_sec, tv->tv_usec);
+      // server_log(WARNING, "real_timeout : %ld:%ld", tv->tv_sec, tv->tv_usec);
       return (tv);
     }
   return (NULL);

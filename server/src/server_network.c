@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Wed May 21 14:33:53 2014 Nicolas Bridoux
+** Last update Sat May 24 02:40:29 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -94,6 +94,13 @@ void		quit_server(t_server *serv)
       tmp = tmp->next;
     }
   rm_list(serv->game.teams, &free);
+  tmp = serv->game.eggs;
+  while (tmp)
+    {
+      free(((t_egg *)tmp->data)->teamname);
+      tmp = tmp->next;
+    }
+  rm_list(serv->game.eggs, &free);
   i = 0;
   while (serv->map && i < serv->game.height)
     free(serv->map[i++]);

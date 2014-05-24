@@ -5,43 +5,10 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May 22 17:59:53 2014 Nicolas Bridoux
+** Last update Fri May 23 22:14:48 2014 Nicolas Bridoux
 */
 
 #include "server.h"
-
-int		handle_client(t_selfd *fd, t_server *serv)
-{
-  t_client	*client;
-  char		*cmd;
-  int		r;
-
-  client = (t_client *)(fd->data);
-  if (ISREADABLE(fd))
-    {
-      if ((r = read_from_client(fd)) < 0)
-	{
-	  // erreur appropriée
-	}
-      if (!r)
-	{
-	  log_connection(client->sock, "Client disconnected from:");
-	  return (close_connection(serv, fd));
-	}
-    }
-  if (fd->len_w && ISWRITEABLE(fd) && (r = write_to_client(fd)) < 0)
-    {
-      // erreur appropriée
-    }
-  while (fd->len_r && (cmd = get_command(fd)))
-    handle_add_cmd(serv, fd, cmd);
-  if (!fd->len_w && fd->to_close)
-    return (close_connection(serv, fd));
-  if (fd->len_w)
-    CHECKWRITE(fd);
-  CHECKREAD(fd);
-  return (0);
-}
 
 void		log_connection(t_net *sock, char *message)
 {
@@ -55,7 +22,27 @@ void		log_connection(t_net *sock, char *message)
       free(ip);
       if (tmp && tmp->socket != -1 && close(tmp->socket) == -1)
 	perror("close");
+      free(tmp);
     }
+}
+
+static int	init_new_client(t_server *serv, t_selfd *fd, t_client *client)
+{
+  client->type_cli = UNKNOWN;
+  client->teamname = NULL;
+  client->cmds = NULL;
+  client->x = 0;
+  client->y = 0;
+  client->level = 1;
+  client->orientation = DOWN;
+  client->flag = OK;
+  memset(&(client->inv), 0, sizeof(t_map));
+  fd->cli_num = serv->game.cli_num++;
+  add_to_list(&(serv->watch), fd);
+  send_response(fd, "BIENVENUE");
+  set_timeout(serv, fd, "timeout", USEC(INIT_TIMEOUT));
+  handle_client(fd, serv);
+  return (EXIT_SUCCESS);
 }
 
 int			handle_newconnection(t_selfd *fd, t_server *serv)
@@ -80,20 +67,6 @@ int			handle_newconnection(t_selfd *fd, t_server *serv)
       return (EXIT_FAILURE);
     }
   client->sock = nsock;
-  client->type_cli = UNKNOWN;
-  client->teamname = NULL;
-  client->cmds = NULL;
-  client->x = 0;
-  client->y = 0;
-  client->level = 1;
-  client->orientation = DOWN;
-  client->flag = OK;
-  memset(&(client->inv), 0, sizeof(t_map));
-  tmpfd->cli_num = serv->game.cli_num++;
   log_connection(nsock, "New connection from:");
-  add_to_list(&(serv->watch), tmpfd);
-  send_response(tmpfd, "BIENVENUE");
-  set_timeout(serv, tmpfd, "timeout", USEC(INIT_TIMEOUT));
-  handle_client(tmpfd, serv);
-  return (EXIT_SUCCESS);
+  return (init_new_client(serv, tmpfd, client));
 }

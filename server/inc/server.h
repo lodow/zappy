@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Thu May 22 16:53:47 2014 Nicolas Bridoux
+** Last update Sat May 24 02:20:03 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -122,6 +122,14 @@ void	exec_instruction(t_server *serv);
 void	push_instruction(t_server *serv, t_selfd *fd);
 
 /*
+** eggs.c
+*/
+
+void	handle_eggs(t_server *serv, char *cmd);
+t_egg	*find_egg(t_list *list, int num_egg, char state, char *teamname);
+void	replace_egg_by_ia(t_server *serv, t_selfd *fd, t_egg *egg);
+
+/*
 ** clean.c
 */
 
@@ -149,6 +157,8 @@ void	avance(t_server *serv, t_selfd *fd, char **args);
 void	droite(t_server *serv, t_selfd *fd, char **args);
 void	gauche(t_server *serv, t_selfd *fd, char **args);
 void	voir(t_server *serv, t_selfd *fd, char **args);
+char	*add_square_voir(t_server *serv, int x, int y, char *saw);
+char	*concat(char *begin, char *to_add);
 void	inventaire(t_server *serv, t_selfd *fd, char **args);
 void	prend(t_server *serv, t_selfd *fd, char **args);
 void	pose(t_server *serv, t_selfd *fd, char **args);
