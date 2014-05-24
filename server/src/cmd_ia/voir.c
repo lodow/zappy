@@ -5,12 +5,12 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 21 15:06:45 2014 Nicolas Bridoux
-** Last update Fri May 23 22:49:17 2014 Nicolas Bridoux
+** Last update Sat May 24 04:06:36 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-static void	in_front(int *x, int *y,
+static void	in_front(size_t *x, size_t *y,
 			 char orientation, t_server *serv)
 {
   if (orientation == UP)
@@ -23,7 +23,7 @@ static void	in_front(int *x, int *y,
     UP_X(*x);
 }
 
-static void	go_left(int *x, int *y,
+static void	go_left(size_t *x, size_t *y,
 			char orientation, t_server *serv)
 {
   if (orientation == UP)
@@ -36,7 +36,7 @@ static void	go_left(int *x, int *y,
     DOWN_Y(*y);
 }
 
-static void	look_line(int *x, int *y,
+static void	look_line(size_t *x, size_t *y,
 			  char orientation, t_server *serv)
 {
   if (orientation == UP)
@@ -52,8 +52,8 @@ static void	look_line(int *x, int *y,
 static char	*do_voir(t_server *serv, t_client *client,
 			 char *saw, int depth)
 {
-  int		x;
-  int		y;
+  size_t	x;
+  size_t	y;
   int		k;
 
   x = client->x;

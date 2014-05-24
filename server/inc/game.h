@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Sat May 24 01:54:54 2014 Nicolas Bridoux
+** Last update Sat May 24 04:05:59 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -16,18 +16,18 @@
 # define MAX_ITEM_MAP	2
 # define UP		1
 # define DOWN		2
-# define LEFT		4
 # define RIGHT		3
+# define LEFT		4
 # define INIT_TIMEOUT	10
 # define OK		1
 # define KO		2
 # define TO_BORN	1
 # define ALIVE		2
 # define MOLDY_TIME	1200
-# define UP_Y(x)	(x = (x == (int)serv->game.height - 1) ? (0) : (x + 1))
-# define DOWN_Y(x)	(x = (!x) ? ((int)serv->game.height - 1) : (x - 1))
-# define UP_X(x)	(x = (x == (int)serv->game.width - 1) ? (0) : (x + 1))
-# define DOWN_X(x)	(x = (!x) ? ((int)serv->game.width - 1) : (x - 1))
+# define UP_Y(x)	(x = (x == serv->game.height - 1) ? (0) : (x + 1))
+# define DOWN_Y(x)	(x = (!x) ? (serv->game.height - 1) : (x - 1))
+# define UP_X(x)	(x = (x == serv->game.width - 1) ? (0) : (x + 1))
+# define DOWN_X(x)	(x = (!x) ? (serv->game.width - 1) : (x - 1))
 
 typedef struct	s_game
 {

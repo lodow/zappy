@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Sat May 24 01:46:28 2014 Nicolas Bridoux
+## Last update Sat May 24 02:50:11 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -39,6 +39,7 @@ SRC		=	main.c \
 			cmd_ia/voir.c \
 			cmd_ia/fill_square_voir.c \
 			cmd_ia/ia_fork.c \
+			cmd_ia/expulse.c \
 
 CC		=	gcc
 FILETYPE	=	.c

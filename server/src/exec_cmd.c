@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Fri May 23 22:51:23 2014 Nicolas Bridoux
+** Last update Sat May 24 02:51:39 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -19,7 +19,7 @@ static t_cmd	g_ia_cmd[] =
     {"inventaire", 0, 1, &inventaire},
     {"prend", 1, 7, &prend},
     {"pose", 1, 7, &pose},
-    {"expulse", 0, 7, NULL},
+    {"expulse", 0, 7, &expulse},
     {"broadcast", 1, 7, NULL},
     {"incantation", 0, 300, NULL},
     {"fork", 0, 42, &ia_fork},
