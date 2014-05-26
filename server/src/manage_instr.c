@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 11:02:39 2014 Nicolas Bridoux
-** Last update Sat May 24 01:51:17 2014 Nicolas Bridoux
+** Last update Sat May 24 20:08:07 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -71,7 +71,7 @@ void		push_instruction(t_server *serv, t_selfd *fd)
       if (client->flag == OK && client->cmds)
 	{
 	  if ((cmd = dequeue(&(client->cmds))) &&
-	      (delay = is_cmd_valid(fd, (char *)cmd->data)) >= 0)
+	      (delay = is_cmd_valid(serv, fd, (char *)cmd->data)) >= 0)
 	    {
 	      set_timeout(serv, fd, (char *)cmd->data,
 			  USEC(delay / (float)serv->game.time));

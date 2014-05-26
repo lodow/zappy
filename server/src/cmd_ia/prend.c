@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:13:17 2014 Nicolas Bridoux
-** Last update Wed May 21 14:36:52 2014 Nicolas Bridoux
+** Last update Tue May 27 00:43:20 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -18,7 +18,7 @@ char	*g_off[8] =
     "sibur",
     "mendiane",
     "phiras",
-    "thyastame",
+    "thystame",
     NULL
   };
 

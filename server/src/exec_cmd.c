@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Sat May 24 02:51:39 2014 Nicolas Bridoux
+** Last update Tue May 27 00:26:25 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -20,8 +20,8 @@ static t_cmd	g_ia_cmd[] =
     {"prend", 1, 7, &prend},
     {"pose", 1, 7, &pose},
     {"expulse", 0, 7, &expulse},
-    {"broadcast", 1, 7, NULL},
-    {"incantation", 0, 300, NULL},
+    {"broadcast", 1, 7, &broadcast},
+    {"incantation", 0, 300, &incantation},
     {"fork", 0, 42, &ia_fork},
     {"connect_nbr", 0, 0, &connect_nbr},
     {NULL, 0, 0, NULL}
@@ -38,7 +38,7 @@ static int	check_gui(__attribute__((unused))t_selfd *fd,
   return (-1);
 }
 
-static int	check_ia(t_selfd *fd, char **tab)
+static int	check_ia(t_server *serv, t_selfd *fd, char **tab)
 {
   int		i;
 
@@ -46,12 +46,13 @@ static int	check_ia(t_selfd *fd, char **tab)
   while (g_ia_cmd[++i].name)
     if (tab[0] && !strcmp(g_ia_cmd[i].name, tab[0]))
       if (!g_ia_cmd[i].args || (g_ia_cmd[i].args && tab[1]))
-	return (g_ia_cmd[i].delay);
+	if (strcmp(tab[0], "incantation") || check_incant(serv, fd))
+	  return (g_ia_cmd[i].delay);
   send_response(fd, "ko");
   return (-1);
 }
 
-int	is_cmd_valid(t_selfd *fd, char *cmd)
+int	is_cmd_valid(t_server *serv, t_selfd *fd, char *cmd)
 {
   char	**tab;
   int	ret;
@@ -59,7 +60,7 @@ int	is_cmd_valid(t_selfd *fd, char *cmd)
   if (!(tab = my_str_to_wordtab(cmd, ' ')))
     return (-1);
   if (((t_client *)fd->data)->type_cli == IA)
-    ret = check_ia(fd, tab);
+    ret = check_ia(serv, fd, tab);
   else
     ret = check_gui(fd, tab);
   free_tab(tab);
@@ -78,7 +79,10 @@ void	exec_cmd(t_server *serv, t_selfd *fd, char *cmd)
   cmd_tab = (((t_client *)fd->data)->type_cli == IA) ?
     (g_ia_cmd) : (g_gui_cmd);
   while (cmd_tab[++i].name)
-    if (tab[0] && !strcmp(cmd_tab[i].name, tab[0]))
-      cmd_tab[i].ptr(serv, fd, &tab[1]);
+    {
+      if (tab[0] && !strcmp(cmd_tab[i].name, tab[0]))
+	cmd_tab[i].ptr(serv, fd,
+		       !strcmp(tab[0], "broadcast") ? &cmd : &tab[1]);
+    }
   free_tab(tab);
 }

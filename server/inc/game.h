@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Sat May 24 04:05:59 2014 Nicolas Bridoux
+** Last update Mon May 26 23:45:50 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -28,6 +28,7 @@
 # define DOWN_Y(x)	(x = (!x) ? (serv->game.height - 1) : (x - 1))
 # define UP_X(x)	(x = (x == serv->game.width - 1) ? (0) : (x + 1))
 # define DOWN_X(x)	(x = (!x) ? (serv->game.width - 1) : (x - 1))
+# define MIN(x, y)	((x < y) ? (x) : (y))
 
 typedef struct	s_game
 {

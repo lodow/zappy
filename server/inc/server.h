@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Sat May 24 02:20:03 2014 Nicolas Bridoux
+** Last update Tue May 27 00:35:34 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -139,7 +139,7 @@ void	clean_client(t_server *serv, t_selfd *fd);
 ** exec_cmd.c
 */
 
-int	is_cmd_valid(t_selfd *fd, char *cmd);
+int	is_cmd_valid(t_server *serv, t_selfd *fd, char *cmd);
 void	exec_cmd(t_server *serv, t_selfd *fd, char *cmd);
 
 /*
@@ -164,7 +164,9 @@ void	prend(t_server *serv, t_selfd *fd, char **args);
 void	pose(t_server *serv, t_selfd *fd, char **args);
 void	expulse(t_server *serv, t_selfd *fd, char **args);
 void	broadcast(t_server *serv, t_selfd *fd, char **args);
+int	check_incant(t_server *serv, t_selfd *fd);
 void	incantation(t_server *serv, t_selfd *fd, char **args);
+size_t	nb_players_at(t_server *serv, size_t x, size_t y);
 void	ia_fork(t_server *serv, t_selfd *fd, char **args);
 void	connect_nbr(t_server *serv, t_selfd *fd, char **args);
 

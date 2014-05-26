@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Fri May 23 19:49:14 2014 Nicolas Bridoux
-** Last update Fri May 23 22:05:13 2014 Nicolas Bridoux
+** Last update Tue May 27 00:41:15 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -30,20 +30,24 @@ char		*add_square_voir(t_server *serv, int x, int y, char *saw)
 {
   int		i;
   size_t	k;
+  size_t	p;
 
   if (saw)
     saw = concat(saw, ",");
   if (!saw && !(saw = strdup("{")))
     return (NULL);
   i = -1;
+  k = -1;
+  p = nb_players_at(serv, x, y);
+  while (++k < p)
+    saw = concat(saw, " joueur");
   while (g_off[++i])
     {
-      k = 0;
-      while (k < *((size_t *)&serv->map[y][x] + i))
+      k = -1;
+      while (++k < *((size_t *)&serv->map[y][x] + i))
 	{
 	  saw = concat(saw, " ");
 	  saw = concat(saw, g_off[i]);
-	  ++k;
 	}
     }
   return (saw);
