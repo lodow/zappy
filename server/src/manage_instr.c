@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 11:02:39 2014 Nicolas Bridoux
-** Last update Wed May 28 11:12:45 2014 Nicolas Bridoux
+** Last update Wed May 28 15:10:31 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -68,7 +68,7 @@ void		push_instruction(t_server *serv, t_selfd *fd)
   if (fd && fd->callback == (void *)&handle_client)
     {
       client = (t_client *)fd->data;
-      if (client->flag == OK && client->cmds && client->type_cli == IA)
+      if (client->flag == OK && client->cmds)
 	{
 	  if ((cmd = dequeue(&(client->cmds))) &&
 	      (delay = is_cmd_valid(serv, fd, (char *)cmd->data)) >= 0)

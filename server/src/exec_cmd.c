@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Wed May 28 14:27:32 2014 Nicolas Bridoux
+** Last update Wed May 28 18:07:10 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -29,12 +29,31 @@ static t_cmd	g_ia_cmd[] =
 
 static t_cmd	g_gui_cmd[] =
   {
+    {"msz", 0, 0, &msz},
+    {"bct", 1, 0, &bct},
+    {"mct", 0, 0, &mct},
+    {"tna", 0, 0, &tna},
+    {"ppo", 1, 0, &ppo},
+    {"plv", 1, 0, &plv},
+    {"pin", 1, 0, &pin},
+    {"sgt", 0, 0, &sgt},
+    {"sst", 1, 0, &sst},
     {NULL, 0, 0, NULL}
   };
 
-static int	check_gui(__attribute__((unused))t_selfd *fd,
-			  __attribute__((unused))char **tab)
+static int	check_gui(t_selfd *fd, char **tab)
 {
+  int		i;
+
+  i = -1;
+  while (g_gui_cmd[++i].name)
+    {
+      if (tab[0] && !strcmp(g_ia_cmd[i].name, tab[0]))
+	if (!g_ia_cmd[i].args || (g_ia_cmd[i].args == 1 && tab[1]) ||
+	    (g_ia_cmd[i].args == 2 && tab[1] && tab[2]))
+	  return (g_ia_cmd[i].delay);
+    }
+  send_response(fd, "suc");
   return (-1);
 }
 

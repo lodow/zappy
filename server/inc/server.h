@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Wed May 28 15:02:30 2014 Nicolas Bridoux
+** Last update Wed May 28 17:15:57 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -170,5 +170,39 @@ void	incantation(t_server *serv, t_selfd *fd, char **args);
 size_t	nb_players_at(t_server *serv, size_t x, size_t y);
 void	ia_fork(t_server *serv, t_selfd *fd, char **args);
 void	connect_nbr(t_server *serv, t_selfd *fd, char **args);
+
+/*
+** functions for gui client in "cmd_gui" directory
+*/
+
+void	msz(t_server *serv, t_selfd *fd, char **args);
+void	bct(t_server *serv, t_selfd *fd, char **args);
+void	mct(t_server *serv, t_selfd *fd, char **args);
+void	tna(t_server *serv, t_selfd *fd, char **args);
+void	ppo(t_server *serv, t_selfd *fd, char **args);
+void	plv(t_server *serv, t_selfd *fd, char **args);
+void	pin(t_server *serv, t_selfd *fd, char **args);
+void	sgt(t_server *serv, t_selfd *fd, char **args);
+void	sst(t_server *serv, t_selfd *fd, char **args);
+
+/*
+** functions for event handling for gui client
+*/
+
+void	pnw(t_server *serv, t_selfd *fd, char **args);
+void	pex(t_server *serv, t_selfd *fd, char **args);
+void	pbc(t_server *serv, t_selfd *fd, char **args);
+void	pic(t_server *serv, t_selfd *fd, char **args);
+void	pie(t_server *serv, t_selfd *fd, char **args);
+void	pfk(t_server *serv, t_selfd *fd, char **args);
+void	pdr(t_server *serv, t_selfd *fd, char **args);
+void	pgt(t_server *serv, t_selfd *fd, char **args);
+void	pdi(t_server *serv, t_selfd *fd, char **args);
+void	enw(t_server *serv, t_selfd *fd, char **args);
+void	eht(t_server *serv, t_selfd *fd, char **args);
+void	ebo(t_server *serv, t_selfd *fd, char **args);
+void	edi(t_server *serv, t_selfd *fd, char **args);
+void	seg(t_server *serv, t_selfd *fd, char **args);
+void	smg(t_server *serv, t_selfd *fd, char **args);
 
 #endif /* !SERVER_H_INCLUDED */

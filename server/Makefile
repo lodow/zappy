@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Mon May 26 23:24:09 2014 Nicolas Bridoux
+## Last update Wed May 28 15:48:50 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -42,6 +42,15 @@ SRC		=	main.c \
 			cmd_ia/expulse.c \
 			cmd_ia/incantation.c \
 			cmd_ia/broadcast.c \
+			cmd_gui/msz.c \
+			cmd_gui/bct.c \
+			cmd_gui/mct.c \
+			cmd_gui/tna.c \
+			cmd_gui/ppo.c \
+			cmd_gui/plv.c \
+			cmd_gui/pin.c \
+			cmd_gui/sgt.c \
+			cmd_gui/sst.c \
 
 CC		=	gcc
 FILETYPE	=	.c

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 02:49:33 2014 Nicolas Bridoux
-** Last update Sat May 24 04:26:01 2014 Nicolas Bridoux
+** Last update Wed May 28 15:12:55 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -61,7 +61,7 @@ void		expulse(t_server *serv, t_selfd *fd,
       fd_cli = (t_selfd *)tmp->data;
       if (fd_cli->callback == (void *)&handle_client &&
 	  (him = (t_client *)fd_cli->data) && fd_cli != fd &&
-	  me->x == him->x && me->y == him->y)
+	  me->x == him->x && me->y == him->y && him->type_cli == IA)
 	{
 	  expulse_client(serv, (t_client *)fd->data, fd_cli);
 	  ok = OK;

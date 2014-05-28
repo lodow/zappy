@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May 22 14:58:07 2014 Nicolas Bridoux
+** Last update Wed May 28 16:21:56 2014 Nicolas Bridoux
 */
 
 #ifndef SELECT_H_INCLUDED
@@ -43,10 +43,8 @@ typedef struct	s_selfd
   int		checktype;
   void		*data;
   int		(*callback)(struct s_selfd *this, void *data);
-
   char		*rb_r;
   size_t	len_r;
-
   char		*rb_w;
   size_t	len_w;
 }		t_selfd;
