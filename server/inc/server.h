@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Tue May 27 00:35:34 2014 Nicolas Bridoux
+** Last update Wed May 28 15:02:30 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -97,6 +97,7 @@ int	parse_command_line(t_server *server, int ac, char *av[]);
 
 void	server_log(char warn_level, const char *fmt, ...);
 int	handle_start(t_server *server);
+void	add_food(t_server *serv);
 
 /*
 ** timeout.c
@@ -164,7 +165,7 @@ void	prend(t_server *serv, t_selfd *fd, char **args);
 void	pose(t_server *serv, t_selfd *fd, char **args);
 void	expulse(t_server *serv, t_selfd *fd, char **args);
 void	broadcast(t_server *serv, t_selfd *fd, char **args);
-int	check_incant(t_server *serv, t_selfd *fd);
+int	check_incant(t_server *serv, t_selfd *fd, char send);
 void	incantation(t_server *serv, t_selfd *fd, char **args);
 size_t	nb_players_at(t_server *serv, size_t x, size_t y);
 void	ia_fork(t_server *serv, t_selfd *fd, char **args);

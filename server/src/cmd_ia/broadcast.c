@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 26 23:15:06 2014 Nicolas Bridoux
-** Last update Tue May 27 00:30:20 2014 Nicolas Bridoux
+** Last update Tue May 27 14:01:31 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -27,36 +27,45 @@ static int	get_cores_direction(int square_location, char orientation)
   return (g_dir[square_location - 1][orientation - 1]);
 }
 
+/*
+** return the direction of the incoming broadcast if it comes from
+** the up-left/up-right or bottom-left/bottom-right
+*/
+
 static int	not_same_line_col(t_server *serv, t_client *me, t_client *him)
 {
   int		dx;
   int		dy;
 
-  dy = MIN(abs((int)me->x - (int)him->y),
-	   (int)serv->game.height - abs((int)me->x - (int)him->y));
+  dy = MIN(abs((int)me->y - (int)him->y),
+	   (int)serv->game.height - abs((int)me->y - (int)him->y));
   dx = MIN(abs((int)me->x - (int)him->x),
 	   (int)serv->game.width - abs((int)me->x - (int)him->x));
-  if ((me->x + dy) % serv->game.height == him->y) // ca viens du haut
+  if ((me->y + dy) % serv->game.height == him->y)
     {
       if ((me->x + dx) % serv->game.width == him->x)
-	return (get_cores_direction(2, him->orientation)); // haut + gauche
+	return (get_cores_direction(2, him->orientation));
       else
-	return (get_cores_direction(8, him->orientation)); // haut + droite
+	return (get_cores_direction(8, him->orientation));
     }
-  // ca viens du bas
   if ((me->x + dx) % serv->game.width == him->x)
-    return (get_cores_direction(4, him->orientation)); // bas + gauche
+    return (get_cores_direction(4, him->orientation));
   else
-    return (get_cores_direction(6, him->orientation)); // bas + droite
+    return (get_cores_direction(6, him->orientation));
 }
+
+/*
+** return the direction of the incoming broadcast if it's on the same square
+** or if it's on the same line / column
+*/
 
 static int	get_direction(t_server *serv, t_client *me, t_client *him)
 {
   int		dx;
   int		dy;
 
-  dy = MIN(abs((int)me->x - (int)him->y),
-	   (int)serv->game.height - abs((int)me->x - (int)him->y));
+  dy = MIN(abs((int)me->y - (int)him->y),
+	   (int)serv->game.height - abs((int)me->y - (int)him->y));
   dx = MIN(abs((int)me->x - (int)him->x),
 	   (int)serv->game.width - abs((int)me->x - (int)him->x));
   server_log(WARNING, "dx = %d, dy = %d, tot = %d\n", dx, dy, dx + dy);
@@ -65,16 +74,16 @@ static int	get_direction(t_server *serv, t_client *me, t_client *him)
   if (!dx)
     {
       if ((me->x + dy) % serv->game.height == him->y)
-	return (get_cores_direction(1, him->orientation)); // case du haut de B
+	return (get_cores_direction(1, him->orientation));
       else
-	return (get_cores_direction(5, him->orientation)); // case du bas de B
+	return (get_cores_direction(5, him->orientation));
     }
   if (!dy)
     {
       if ((me->x + dx) % serv->game.width == him->x)
-	return (get_cores_direction(3, him->orientation)); // case de gauche de B
+	return (get_cores_direction(3, him->orientation));
       else
-	return (get_cores_direction(7, him->orientation)); // case de droite de B
+	return (get_cores_direction(7, him->orientation));
     }
   return (not_same_line_col(serv, me, him));
 }

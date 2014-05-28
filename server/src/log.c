@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Wed May 21 15:11:54 2014 Nicolas Bridoux
+** Last update Wed May 28 15:03:28 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -67,7 +67,7 @@ static int	gen_world(t_server *server)
 	return (EXIT_FAILURE);
       while (x < server->game.width)
 	{
-	  server->map[y][x].food = rand() % MAX_ITEM_MAP;
+	  server->map[y][x].food = 0;
 	  server->map[y][x].linemate = rand() % MAX_ITEM_MAP;
 	  server->map[y][x].deraumere = rand() % MAX_ITEM_MAP;
 	  server->map[y][x].sibur = rand() % MAX_ITEM_MAP;
@@ -91,4 +91,22 @@ int	handle_start(t_server *server)
     }
   printf("%sdone%s\n\n", GREEN, WHITE);
   return (EXIT_SUCCESS);
+}
+
+void		add_food(t_server *serv)
+{
+  size_t	x;
+  size_t	y;
+
+  y = 0;
+  while (y < serv->game.height)
+    {
+      x = 0;
+      while (x < serv->game.width)
+	{
+	  serv->map[y][x].food += rand() % MAX_ITEM_MAP;
+	  ++x;
+	}
+      ++y;
+    }
 }
