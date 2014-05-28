@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 28 16:43:44 2014 Nicolas Bridoux
-** Last update Wed May 28 16:55:20 2014 Nicolas Bridoux
+** Last update Wed May 28 18:19:33 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -15,6 +15,6 @@ void	sgt(t_server *serv, __attribute__((unused))t_selfd *fd,
 {
   char	buff[BUFF_SIZE];
 
-  snprintf(buff, sizeof(buff), "%zu", serv->game.time);
+  snprintf(buff, sizeof(buff), "sgt %zu", serv->game.time);
   send_response(fd, buff);
 }
