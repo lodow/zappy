@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 29 22:49:13 2014 Nicolas Bridoux
-** Last update Fri May 30 01:23:28 2014 Nicolas Bridoux
+** Last update Fri May 30 01:46:43 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -28,7 +28,7 @@ void		pnw_init(t_server *serv, t_selfd *fd)
 	    {
 	      snprintf(buff, sizeof(buff), "pnw %zu %zu %zu %d %d %s",
 		       fd_cli->cli_num, client->x, client->y,
-		       client->orientation, client->level,
+		       conv_orient(client->orientation), client->level,
 		       client->teamname);
 	      send_response(fd, buff);
 	    }
@@ -44,7 +44,7 @@ void		pnw(t_server *serv, t_selfd *fd)
 
   client = (t_client *)fd->data;
   snprintf(buff, sizeof(buff), "pnw %zu %zu %zu %d %d %s", fd->cli_num,
-	   client->x, client->y, client->orientation, client->level,
+	   client->x, client->y, conv_orient(client->orientation), client->level,
 	   client->teamname);
   send_to_every_gui(serv, buff);
 }

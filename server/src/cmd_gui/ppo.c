@@ -5,10 +5,21 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 28 16:11:15 2014 Nicolas Bridoux
-** Last update Thu May 29 23:23:47 2014 Nicolas Bridoux
+** Last update Fri May 30 01:47:14 2014 Nicolas Bridoux
 */
 
 #include "server.h"
+
+int	conv_orient(char orientation)
+{
+  if (orientation == UP)
+    return (1);
+  if (orientation == RIGHT)
+    return (2);
+  if (orientation == DOWN)
+    return (3);
+  return (4);
+}
 
 void		ppo_event(t_server *serv, t_selfd *fd)
 {
@@ -18,7 +29,7 @@ void		ppo_event(t_server *serv, t_selfd *fd)
   client = (t_client *)fd->data;
   snprintf(buff, sizeof(buff), "ppo %zu %zu %zu %d",
 	   fd->cli_num, client->x,
-	   client->y, client->orientation);
+	   client->y, conv_orient(client->orientation));
   send_to_every_gui(serv, buff);
 }
 
@@ -41,7 +52,7 @@ void		ppo(t_server *serv, t_selfd *fd, char **args)
 	    {
 	      snprintf(buff, sizeof(buff), "ppo %zu %zu %zu %d",
 		       fd_cli->cli_num, client->x,
-		       client->y, client->orientation);
+		       client->y, conv_orient(client->orientation));
 	      return (send_response(fd, buff));
 	    }
 	}

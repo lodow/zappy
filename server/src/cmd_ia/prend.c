@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:13:17 2014 Nicolas Bridoux
-** Last update Fri May 30 00:46:07 2014 Nicolas Bridoux
+** Last update Fri May 30 01:32:42 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -39,7 +39,7 @@ void		prend(t_server *serv, t_selfd *fd, char **args)
 		--(*((size_t *)&(serv->map[client->y][client->x]) + i));
 		++(*((size_t *)&client->inv + i));
 		send_response(fd, "ok");
-		pgt(serv, fd->cli_num, i);
+		pgt(serv, fd, i);
 	      }
 	    else
 	      send_response(fd, "ko");
