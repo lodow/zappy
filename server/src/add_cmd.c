@@ -5,19 +5,23 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 21:13:41 2014 Nicolas Bridoux
-** Last update Tue May 27 00:52:32 2014 Nicolas Bridoux
+** Last update Fri May 30 01:14:50 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-static void	connect_gui(__attribute__((unused))t_server *serv, t_selfd *fd)
+static void	connect_gui(t_server *serv, t_selfd *fd)
 {
   t_client	*client;
 
   client = (t_client *)fd->data;
   client->type_cli = GUI;
-
-  // envoyer la map au client
+  msz(serv, fd, NULL);
+  sgt(serv, fd, NULL);
+  mct(serv, fd, NULL);
+  tna(serv, fd, NULL);
+  pnw_init(serv, fd);
+  enw_init(serv, fd);
 }
 
 static int	init_ia(t_server *serv, t_selfd *fd, char *cmd)
@@ -39,6 +43,7 @@ static int	init_ia(t_server *serv, t_selfd *fd, char *cmd)
   client->level = 1;
   memset(&(client->inv), 0, sizeof(t_map));
   client->inv.food = 10;
+  pnw(serv, fd);
   set_timeout(serv, fd, "life", 126 * (USEC(1) / serv->game.time));
   return (0);
 }

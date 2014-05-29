@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Fri May 23 22:49:40 2014 Nicolas Bridoux
-** Last update Sat May 24 01:43:57 2014 Nicolas Bridoux
+** Last update Fri May 30 01:14:29 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -20,6 +20,7 @@ void		ia_fork(t_server *serv, t_selfd *fd,
   client = (t_client *)fd->data;
   server_log(WARNING, "Egg %zu was laid in (%d,%d)",
 	     serv->game.cli_num, client->x, client->y);
+  enw(serv, serv->game.cli_num, fd);
   if ((new_egg = malloc(sizeof(t_egg))))
     {
       new_egg->num_egg = serv->game.cli_num++;
@@ -27,6 +28,7 @@ void		ia_fork(t_server *serv, t_selfd *fd,
       new_egg->x = client->x;
       new_egg->y = client->y;
       new_egg->state = TO_BORN;
+      new_egg->father = fd->cli_num;
       add_to_list(&(serv->game.eggs), new_egg);
       snprintf(buff, sizeof(buff), "born:%zu", new_egg->num_egg);
       set_timeout(serv, NULL, strdup(buff),

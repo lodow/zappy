@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Wed May 28 15:48:50 2014 Nicolas Bridoux
+## Last update Fri May 30 00:57:43 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -51,6 +51,22 @@ SRC		=	main.c \
 			cmd_gui/pin.c \
 			cmd_gui/sgt.c \
 			cmd_gui/sst.c \
+			cmd_gui/send.c \
+			cmd_gui/pnw.c \
+			cmd_gui/ebo.c \
+			cmd_gui/pex.c \
+			cmd_gui/pbc.c \
+			cmd_gui/pic.c \
+			cmd_gui/pie.c \
+			cmd_gui/pfk.c \
+			cmd_gui/enw.c \
+			cmd_gui/pdr.c \
+			cmd_gui/pgt.c \
+			cmd_gui/pdi.c \
+			cmd_gui/eht.c \
+			cmd_gui/edi.c \
+			cmd_gui/seg.c \
+			cmd_gui/smg.c \
 
 CC		=	gcc
 FILETYPE	=	.c

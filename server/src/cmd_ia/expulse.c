@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 02:49:33 2014 Nicolas Bridoux
-** Last update Wed May 28 15:12:55 2014 Nicolas Bridoux
+** Last update Thu May 29 23:41:01 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -37,6 +37,7 @@ static void	expulse_client(t_server *serv, t_client *me,
     DOWN_X(him->x);
   else if (me->orientation == RIGHT)
     UP_X(him->x);
+  ppo_event(serv, fd);
   if (me->x == him->x && me->y == him->y)
     return (send_response(fd, "deplacement: 0"));
   snprintf(buff, sizeof(buff), "deplacement: %d",
@@ -63,6 +64,8 @@ void		expulse(t_server *serv, t_selfd *fd,
 	  (him = (t_client *)fd_cli->data) && fd_cli != fd &&
 	  me->x == him->x && me->y == him->y && him->type_cli == IA)
 	{
+	  if (ok == KO)
+	    pex(serv, fd);
 	  expulse_client(serv, (t_client *)fd->data, fd_cli);
 	  ok = OK;
 	}

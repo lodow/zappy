@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 17:42:57 2014 Nicolas Bridoux
-** Last update Tue May 20 17:56:53 2014 Nicolas Bridoux
+** Last update Thu May 29 23:21:26 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -25,4 +25,5 @@ void		avance(t_server *serv, t_selfd *fd,
   if (client->orientation == RIGHT)
     client->x = (client->x == serv->game.width - 1) ? (0) : (client->x + 1);
   send_response(fd, "ok");
+  ppo_event(serv, fd);
 }

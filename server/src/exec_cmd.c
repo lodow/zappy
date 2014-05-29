@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Wed May 28 18:13:22 2014 Nicolas Bridoux
+** Last update Fri May 30 00:32:59 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -66,7 +66,11 @@ static int	check_ia(t_server *serv, t_selfd *fd, char **tab)
     if (tab[0] && !strcmp(g_ia_cmd[i].name, tab[0]))
       if (!g_ia_cmd[i].args || (g_ia_cmd[i].args && tab[1]))
 	if (strcmp(tab[0], "incantation") || check_incant(serv, fd, OK))
-	  return (g_ia_cmd[i].delay);
+	  {
+	    if (!strcmp(tab[0], "fork"))
+	      pfk(serv, fd);
+	    return (g_ia_cmd[i].delay);
+	  }
   send_response(fd, "ko");
   return (-1);
 }

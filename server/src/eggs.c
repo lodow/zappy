@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 01:42:18 2014 Nicolas Bridoux
-** Last update Sat May 24 02:31:30 2014 Nicolas Bridoux
+** Last update Fri May 30 00:52:20 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -41,6 +41,7 @@ static void	egg_hatched(t_server *serv, char *cmd)
     {
       server_log(WARNING, "Egg %zu is hatch in (%d,%d)",
 		 egg->num_egg, egg->x, egg->y);
+      eht(serv, egg->num_egg);
       tmp = serv->game.teams;
       while (tmp)
 	{
@@ -72,6 +73,7 @@ void	handle_eggs(t_server *serv, char *cmd)
 	{
 	  server_log(WARNING, "Egg %zu is moldy (%d,%d)...",
 		     egg->num_egg, egg->x, egg->y);
+	  edi(serv, egg->num_egg);
 	  free(egg->teamname);
 	  rm_from_list(&(serv->game.eggs),
 		       find_in_list(serv->game.eggs, egg), &free);
@@ -89,6 +91,7 @@ void		replace_egg_by_ia(t_server *serv, t_selfd *fd, t_egg *egg)
   client->y = egg->y;
   free(egg->teamname);
   server_log(WARNING, "Player %zu takes over egg %zu", fd->cli_num, egg->num_egg);
+  ebo(serv, egg->num_egg);
   fd->cli_num = egg->num_egg;
   --serv->game.cli_num;
   rm_from_list(&(serv->game.eggs),

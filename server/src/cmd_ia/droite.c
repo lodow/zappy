@@ -5,13 +5,13 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 17:55:58 2014 Nicolas Bridoux
-** Last update Fri May 23 19:28:41 2014 Nicolas Bridoux
+** Last update Thu May 29 23:23:11 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-void		droite(__attribute__((unused))t_server *serv, t_selfd *fd,
-	       __attribute__((unused))char **args)
+void		droite(t_server *serv, t_selfd *fd,
+		       __attribute__((unused))char **args)
 {
   t_client	*client;
 
@@ -25,4 +25,5 @@ void		droite(__attribute__((unused))t_server *serv, t_selfd *fd,
   else if (client->orientation == RIGHT)
     client->orientation = DOWN;
   send_response(fd, "ok");
+  ppo_event(serv, fd);
 }

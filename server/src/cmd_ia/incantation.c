@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 20:03:06 2014 Nicolas Bridoux
-** Last update Wed May 28 14:27:15 2014 Nicolas Bridoux
+** Last update Fri May 30 00:20:53 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -78,7 +78,10 @@ int		check_incant(t_server *serv, t_selfd *fd, char send)
   square.food = nb_players_at(serv, me->x, me->y);
   ret = !memcmp(&square, &g_incant[(size_t)me->level - 1], sizeof(t_map));
   if (ret && send == OK)
-    send_to_everyone_on_square(serv, me->x, me->y, "elevation en cours");
+    {
+      pic(serv, fd);
+      send_to_everyone_on_square(serv, me->x, me->y, "elevation en cours");
+    }
   return (ret);
 }
 
@@ -111,7 +114,13 @@ void		incantation(t_server *serv, t_selfd *fd,
 		     __attribute__((unused))char **args)
 {
   if (!check_incant(serv, fd, KO))
-    send_response(fd, "ko");
+    {
+      pie(serv, fd, KO);
+      send_response(fd, "ko");
+    }
   else
-    send_level_up(serv, (t_client *)fd->data);
+    {
+      pie(serv, fd, OK);
+      send_level_up(serv, (t_client *)fd->data);
+    }
 }

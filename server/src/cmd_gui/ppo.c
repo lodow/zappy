@@ -5,13 +5,24 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 28 16:11:15 2014 Nicolas Bridoux
-** Last update Wed May 28 16:27:01 2014 Nicolas Bridoux
+** Last update Thu May 29 23:23:47 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-void		ppo(t_server *serv, t_selfd *fd,
-		    __attribute__((unused))char **args)
+void		ppo_event(t_server *serv, t_selfd *fd)
+{
+  char		buff[BUFF_SIZE];
+  t_client	*client;
+
+  client = (t_client *)fd->data;
+  snprintf(buff, sizeof(buff), "ppo %zu %zu %zu %d",
+	   fd->cli_num, client->x,
+	   client->y, client->orientation);
+  send_to_every_gui(serv, buff);
+}
+
+void		ppo(t_server *serv, t_selfd *fd, char **args)
 {
   char		buff[BUFF_SIZE];
   t_list	*tmp;

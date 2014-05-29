@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 26 23:15:06 2014 Nicolas Bridoux
-** Last update Wed May 28 15:12:05 2014 Nicolas Bridoux
+** Last update Thu May 29 23:43:05 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -120,6 +120,7 @@ void		broadcast(t_server *serv, t_selfd *fd, char **args)
 	send_broadcast(serv, (t_client *)fd->data, fd_cli, msg);
       tmp = tmp->next;
     }
+  pbc(serv, fd, msg);
   free(msg);
   send_response(fd, "ok");
 }

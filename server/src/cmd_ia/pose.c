@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:18:19 2014 Nicolas Bridoux
-** Last update Mon May 26 23:22:41 2014 Nicolas Bridoux
+** Last update Fri May 30 00:46:08 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -28,6 +28,7 @@ void		pose(t_server *serv, t_selfd *fd, char **args)
 	      {
 		--(*((size_t *)&client->inv + i));
 		++(*((size_t *)&(serv->map[client->y][client->x]) + i));
+		pdr(serv, fd->cli_num, i);
 		send_response(fd, "ok");
 	      }
 	    else

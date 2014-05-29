@@ -5,13 +5,13 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 17:59:33 2014 Nicolas Bridoux
-** Last update Fri May 23 19:28:56 2014 Nicolas Bridoux
+** Last update Thu May 29 23:23:26 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-void		gauche(__attribute__((unused))t_server *serv, t_selfd *fd,
-	       __attribute__((unused))char **args)
+void		gauche(t_server *serv, t_selfd *fd,
+		       __attribute__((unused))char **args)
 {
   t_client	*client;
 
@@ -25,4 +25,5 @@ void		gauche(__attribute__((unused))t_server *serv, t_selfd *fd,
   else if (client->orientation == RIGHT)
     client->orientation = UP;
   send_response(fd, "ok");
+  ppo_event(serv, fd);
 }

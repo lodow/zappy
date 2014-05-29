@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Wed May 28 17:15:57 2014 Nicolas Bridoux
+** Last update Fri May 30 01:06:16 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -189,20 +189,25 @@ void	sst(t_server *serv, t_selfd *fd, char **args);
 ** functions for event handling for gui client
 */
 
-void	pnw(t_server *serv, t_selfd *fd, char **args);
-void	pex(t_server *serv, t_selfd *fd, char **args);
-void	pbc(t_server *serv, t_selfd *fd, char **args);
-void	pic(t_server *serv, t_selfd *fd, char **args);
-void	pie(t_server *serv, t_selfd *fd, char **args);
-void	pfk(t_server *serv, t_selfd *fd, char **args);
-void	pdr(t_server *serv, t_selfd *fd, char **args);
-void	pgt(t_server *serv, t_selfd *fd, char **args);
-void	pdi(t_server *serv, t_selfd *fd, char **args);
-void	enw(t_server *serv, t_selfd *fd, char **args);
-void	eht(t_server *serv, t_selfd *fd, char **args);
-void	ebo(t_server *serv, t_selfd *fd, char **args);
-void	edi(t_server *serv, t_selfd *fd, char **args);
-void	seg(t_server *serv, t_selfd *fd, char **args);
-void	smg(t_server *serv, t_selfd *fd, char **args);
+void	send_to_every_gui(t_server *serv, char *msg);
+void	pnw(t_server *serv, t_selfd *fd);
+void	pnw_init(t_server *serv, t_selfd *fd);
+void	ppo_event(t_server *serv, t_selfd *fd);
+void	pex(t_server *serv, t_selfd *fd);
+void	pbc(t_server *serv, t_selfd *fd, char *msg);
+void	pic(t_server *serv, t_selfd *fd);
+void	pie(t_server *serv, t_selfd *fd, char result);
+void	plv_event(t_server *serv, size_t x, size_t y);
+void	pfk(t_server *serv, t_selfd *fd);
+void	enw(t_server *serv, size_t num_egg, t_selfd *fd);
+void	enw_init(t_server *serv, t_selfd *fd);
+void	pdr(t_server *serv, size_t cli_num, int ressource_num);
+void	pgt(t_server *serv, size_t cli_num, int ressource_num);
+void	pdi(t_server *serv, size_t fd);
+void	eht(t_server *serv, size_t num_egg);
+void	ebo(t_server *serv, size_t num_egg);
+void	edi(t_server *serv, size_t num_egg);
+void	seg(t_server *serv, char *win);
+void	smg(t_server *serv, char *win);
 
 #endif /* !SERVER_H_INCLUDED */

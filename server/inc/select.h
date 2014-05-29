@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Wed May 28 16:21:56 2014 Nicolas Bridoux
+** Last update Thu May 29 22:54:12 2014 Nicolas Bridoux
 */
 
 #ifndef SELECT_H_INCLUDED

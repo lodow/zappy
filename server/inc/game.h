@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Mon May 26 23:45:50 2014 Nicolas Bridoux
+** Last update Fri May 30 01:14:04 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -75,6 +75,7 @@ typedef struct	s_team
 typedef struct	s_egg
 {
   size_t	num_egg;
+  size_t	father;
   size_t	x;
   size_t	y;
   char		*teamname;

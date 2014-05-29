@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 11:02:39 2014 Nicolas Bridoux
-** Last update Wed May 28 15:10:31 2014 Nicolas Bridoux
+** Last update Fri May 30 00:48:09 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -28,6 +28,7 @@ static void	handle_special_timeout(t_server *serv, t_selfd *fd, char *cmd)
 	}
       else
 	{
+	  pdi(serv, fd->cli_num);
 	  send_response(fd, "mort");
 	  fd->to_close = 1;
 	}
