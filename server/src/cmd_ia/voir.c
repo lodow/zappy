@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 21 15:06:45 2014 Nicolas Bridoux
-** Last update Tue May 27 00:53:30 2014 Nicolas Bridoux
+** Last update Fri May 30 18:49:56 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -80,8 +80,6 @@ void		voir(t_server *serv, t_selfd *fd,
   saw = NULL;
   client = (t_client *)fd->data;
   i = -1;
-  // server_log(WARNING, "VOIR, client at (%d,%d) (orientaion = %d)",
-  // 	     client->x, client->y, client->orientation);
   while (++i < client->level + 1)
     saw = do_voir(serv, client, saw, i);
   saw = concat(saw, "}");

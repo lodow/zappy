@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Fri May 30 01:47:34 2014 Nicolas Bridoux
+** Last update Fri May 30 19:31:04 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -43,6 +43,8 @@
 # define NOT_KNOWN	2
 # define USEC(x)	(1000000 * (x))
 
+typedef struct timeval t_tv;
+
 typedef struct	s_server
 {
   int		quit;
@@ -72,7 +74,6 @@ int	listen_on_port(t_server *serv, char *port, int socktype);
 void	close_server_binds(t_server *serv);
 void	serv_verbose(t_server *serv);
 void	server_setup_select(t_server *serv);
-void	quit_server(t_server *serv);
 void	log_connection(t_net *sock, char *message);
 int	close_connection(t_server *serv, t_selfd *fd);
 
@@ -92,6 +93,12 @@ void	handle_add_cmd(t_server *server, t_selfd *fd, char *cmd);
 int	parse_command_line(t_server *server, int ac, char *av[]);
 
 /*
+** check_team_names.c
+*/
+
+int	check_team_names(t_list *list, char *progname, t_server *serv);
+
+/*
 ** log.c
 */
 
@@ -103,16 +110,16 @@ void	add_food(t_server *serv);
 ** timeout.c
 */
 
-void	display_serv_queue(t_server *serv); // just for debug
-
+void	display_serv_queue(t_server *serv);
 void	set_timeout(t_server *serv, t_selfd *fd, char *cmd, suseconds_t time);
-struct timeval *get_timeout(t_server *serv);
+t_tv	*get_timeout(t_server *serv);
 
 /*
 ** liste_instr.c
 */
 
-void	add_to_ordered_list(t_list **list, void *data, int (*sort)(void *, void *));
+void	add_to_ordered_list(t_list **list, void *data,
+			    int (*sort)(void *, void *));
 int	sort_instr(void *a, void *b);
 
 /*
@@ -121,6 +128,13 @@ int	sort_instr(void *a, void *b);
 
 void	exec_instruction(t_server *serv);
 void	push_instruction(t_server *serv, t_selfd *fd);
+
+/*
+** handle_callbacks.c
+*/
+
+void	handle_callbacks(t_server *serv, t_selfd *fd,
+			 fd_set *setr, fd_set *stw);
 
 /*
 ** eggs.c
@@ -135,6 +149,7 @@ void	replace_egg_by_ia(t_server *serv, t_selfd *fd, t_egg *egg);
 */
 
 void	clean_client(t_server *serv, t_selfd *fd);
+void	quit_server(t_server *serv);
 
 /*
 ** exec_cmd.c

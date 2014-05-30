@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 26 23:15:06 2014 Nicolas Bridoux
-** Last update Thu May 29 23:43:05 2014 Nicolas Bridoux
+** Last update Fri May 30 18:49:21 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -97,7 +97,8 @@ static void	send_broadcast(t_server *serv, t_client *me,
   him = (t_client *)fd_cli->data;
   if (him->type_cli == IA)
     {
-      snprintf(buff, sizeof(buff), "message %d,", get_direction(serv, me, him));
+      snprintf(buff, sizeof(buff), "message %d,",
+	       get_direction(serv, me, him));
       msg = concat(strdup(buff), msg);
       send_response(fd_cli, msg);
     }

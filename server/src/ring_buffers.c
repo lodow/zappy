@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 14:37:39 2014 Nicolas Bridoux
-** Last update Thu May 22 18:00:26 2014 Nicolas Bridoux
+** Last update Fri May 30 18:26:38 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -44,8 +44,7 @@ int	write_to_client(t_selfd *fd)
   int	r;
   char	*new_rb;
 
-  // write 10 for testing
-  if (fd->len_w && (r = write(fd->fd, fd->rb_w, fd->len_w > 10 ? 10 : fd->len_w)) > 0)
+  if (fd->len_w && (r = write(fd->fd, fd->rb_w, fd->len_w)) > 0)
     {
       if ((new_rb = malloc(sizeof(char) * (fd->len_w - r + 1))))
 	{
@@ -64,10 +63,29 @@ int	write_to_client(t_selfd *fd)
 ** NULL is returned if there is no complete command
 */
 
+static char	*has_a_complete_cmd(t_selfd *fd, size_t size_cmd)
+{
+  char		*cmd;
+  char		*new_rb;
+
+  if ((cmd = malloc(sizeof(char) * (size_cmd + 1))))
+    {
+      memcpy(cmd, fd->rb_r, size_cmd);
+      cmd[size_cmd] = '\0';
+    }
+  if ((new_rb = malloc(sizeof(char) * (fd->len_r - size_cmd))))
+    {
+      memcpy(new_rb, &fd->rb_r[size_cmd + 1], fd->len_r - (size_cmd + 1));
+      free(fd->rb_r);
+      fd->rb_r = new_rb;
+      fd->len_r -= size_cmd + 1;
+    }
+  return (cmd);
+}
+
 char		*get_command(t_selfd *fd)
 {
   char		*ptr;
-  char		*new_rb;
   char		*cmd;
   size_t	size_cmd;
   struct timeval tv;
@@ -75,18 +93,7 @@ char		*get_command(t_selfd *fd)
   if (fd->len_r && (ptr = memchr(fd->rb_r, EOT_CHAR, fd->len_r)))
     {
       size_cmd = ptr - fd->rb_r;
-      if ((cmd = malloc(sizeof(char) * (size_cmd + 1))))
-	{
-	  memcpy(cmd, fd->rb_r, size_cmd);
-	  cmd[size_cmd] = '\0';
-	}
-      if ((new_rb = malloc(sizeof(char) * (fd->len_r - size_cmd))))
-	{
-	  memcpy(new_rb, &fd->rb_r[size_cmd + 1], fd->len_r - (size_cmd + 1));
-	  free(fd->rb_r);
-	  fd->rb_r = new_rb;
-	  fd->len_r -= size_cmd + 1;
-	}
+      cmd = has_a_complete_cmd(fd, size_cmd);
       gettimeofday(&tv, NULL);
       server_log(RECEIVING, "%ld:%ld\t\tReceived \"%s\" from %d",
 		 tv.tv_sec, tv.tv_usec, cmd, fd->cli_num);
@@ -99,11 +106,11 @@ char		*get_command(t_selfd *fd)
 ** add the content of to_send in the ring buffer (should be null terminated string)
 */
 
-void		send_response(t_selfd *fd, char *to_send)
+void			send_response(t_selfd *fd, char *to_send)
 {
-  char		*new_rb;
-  size_t	len;
-  struct timeval tv;
+  char			*new_rb;
+  size_t		len;
+  struct timeval	tv;
 
   if (!to_send || fd->to_close)
     return ;

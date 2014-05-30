@@ -5,37 +5,10 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
-** Last update Fri May 23 23:36:45 2014 Nicolas Bridoux
+** Last update Fri May 30 19:32:15 2014 Nicolas Bridoux
 */
 
 #include "server.h"
-
-static int	check_team_names(t_list *list, char *progname,
-				 t_server *server)
-{
-  t_list	*tmp;
-  t_list	*team_names;
-
-  team_names = list;
-  while (list)
-    {
-      tmp = team_names;
-      if (!strcmp(((t_team *)list->data)->name, "GRAPHIC"))
-	return (fprintf(stderr, "%s: \"GRAPHIC\" is "
-			"not a valid team-name\n", progname));
-      ((t_team *)list->data)->max_cli = server->game.max_cli;
-      while (tmp)
-	{
-	  if (tmp != list && !strcmp(((t_team *)tmp->data)->name,
-				     ((t_team *)list->data)->name))
-	    return (fprintf(stderr,
-			    "%s: each team-name must be unique\n", progname));
-	  tmp = tmp->next;
-	}
-      list = list->next;
-    }
-  return (EXIT_SUCCESS);
-}
 
 static int	check_options(t_server *server, int ac, char *av[])
 {
@@ -91,6 +64,19 @@ static void	init_serv(t_server *server)
   server->game.cli_num = 1;
 }
 
+static void	add_team_names(t_team *t, t_server *server, int ac, char *av[])
+{
+  t->name = optarg;
+  t->max_cli = server->game.max_cli;
+  add_to_list(&(server->game.teams), t);
+  while (optind < ac && av[optind][0] != '-' && (t = malloc(sizeof(t_team))))
+    {
+      t->name = av[optind++];
+      t->max_cli = server->game.max_cli;
+      add_to_list(&(server->game.teams), t);
+    }
+}
+
 int		parse_command_line(t_server *server, int ac, char *av[])
 {
   char		c;
@@ -106,17 +92,7 @@ int		parse_command_line(t_server *server, int ac, char *av[])
       if (add_numbers(c, server, optarg))
 	return (EXIT_FAILURE);
       if (c == 'n' && (t = malloc(sizeof(t_team))))
-	{
-	  t->name = optarg;
-	  t->max_cli = server->game.max_cli;
-	  add_to_list(&(server->game.teams), t);
-	  while (optind < ac && av[optind][0] != '-' && (t = malloc(sizeof(t_team))))
-	    {
-	      t->name = av[optind++];
-	      t->max_cli = server->game.max_cli;
-	      add_to_list(&(server->game.teams), t);
-	    }
-	}
+	add_team_names(t, server, ac, av);
     }
   return (check_options(server, ac, av));
 }

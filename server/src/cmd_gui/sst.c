@@ -5,12 +5,12 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 28 16:52:09 2014 Nicolas Bridoux
-** Last update Wed May 28 18:36:13 2014 Nicolas Bridoux
+** Last update Fri May 30 18:48:47 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-void		sst(__attribute__((unused))t_server *serv, t_selfd *fd, char **args)
+void		sst(t_server *serv, t_selfd *fd, char **args)
 {
   char		buff[BUFF_SIZE];
   int		t;

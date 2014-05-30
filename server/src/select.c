@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May 22 18:17:13 2014 Nicolas Bridoux
+** Last update Fri May 30 18:41:16 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -90,8 +90,6 @@ void		do_select(t_list *fds, void *serv)
   fd_set	setw;
   t_list	*tmp;
   t_list	*nexttmp;
-  t_selfd	*fd;
-  int		disconnected;
 
   nexttmp = NULL;
   if ((tmp = select_fd_set(fds, &setr, &setw, get_timeout((t_server *)serv))))
@@ -100,16 +98,8 @@ void		do_select(t_list *fds, void *serv)
       exec_instruction((t_server *)serv);
       while (tmp || nexttmp)
         {
-          fd = (t_selfd *)tmp->data;
-	  disconnected = 0;
-	  if (FD_ISSET(fd->fd, &setr) || FD_ISSET(fd->fd, &setw))
-	    {
-	      fd->etype = (FD_ISSET(fd->fd, &setr)) * FDREAD
-		+ (FD_ISSET(fd->fd, &setw)) * FDWRITE;
-	      fd->checktype = 0;
-	      disconnected = fd->callback(fd, serv);
-	    }
-	  push_instruction((t_server *)serv, disconnected ? NULL : fd);
+	  handle_callbacks((t_server *)serv, (t_selfd *)tmp->data,
+			   &setr, &setw);
           tmp = nexttmp;
           nexttmp = tmp ? tmp->next : NULL;
         }

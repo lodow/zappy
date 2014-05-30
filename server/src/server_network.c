@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Sat May 24 02:40:29 2014 Nicolas Bridoux
+** Last update Fri May 30 18:08:26 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -75,36 +75,6 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
   serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
                                           (void*)bind6);
   return (0);
-}
-
-void		quit_server(t_server *serv)
-{
-  t_list	*tmp;
-  t_selfd	*tmpfd;
-  size_t	i;
-
-  tmp = serv->watch;
-  while (tmp)
-    {
-      if ((tmpfd = (t_selfd*)tmp->data))
-        {
-          free(tmpfd->data);
-          free(tmpfd);
-        }
-      tmp = tmp->next;
-    }
-  rm_list(serv->game.teams, &free);
-  tmp = serv->game.eggs;
-  while (tmp)
-    {
-      free(((t_egg *)tmp->data)->teamname);
-      tmp = tmp->next;
-    }
-  rm_list(serv->game.eggs, &free);
-  i = 0;
-  while (serv->map && i < serv->game.height)
-    free(serv->map[i++]);
-  free(serv->map);
 }
 
 void		server_setup_select(t_server *serv)

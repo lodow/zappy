@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May 29 22:54:12 2014 Nicolas Bridoux
+** Last update Fri May 30 18:40:41 2014 Nicolas Bridoux
 */
 
 #ifndef SELECT_H_INCLUDED
@@ -28,7 +28,7 @@
 # define UNKNOWN	0
 # define IA		1
 # define GUI		2
-# define READ_SIZE	5
+# define READ_SIZE	2048
 # define EOT_CHAR	'\n'
 # define BUFF_SIZE	4096
 # define FD_SERV	1

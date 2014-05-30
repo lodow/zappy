@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 19 20:49:41 2014 Nicolas Bridoux
-** Last update Sat May 24 01:51:37 2014 Nicolas Bridoux
+** Last update Fri May 30 18:50:19 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -20,7 +20,8 @@ void		display_serv_queue(t_server *serv)
     {
       new = (t_instr *)tmp->data;
       if (new->fd)
-	server_log(WARNING, " %d => \"%s\" => (%ld:%ld)", new->fd->cli_num, new->cmd,
+	server_log(WARNING, " %d => \"%s\" => (%ld:%ld)",
+		   new->fd->cli_num, new->cmd,
 		   new->time / 1000000, new->time % 1000000);
       tmp = tmp->next;
     }
@@ -65,7 +66,6 @@ struct timeval		*get_timeout(t_server *serv)
 	  tv->tv_sec = 0;
 	  tv->tv_usec = 0;
 	}
-      // server_log(WARNING, "real_timeout : %ld:%ld", tv->tv_sec, tv->tv_usec);
       return (tv);
     }
   return (NULL);

@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Fri May 30 00:57:43 2014 Nicolas Bridoux
+## Last update Fri May 30 19:30:28 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -21,11 +21,12 @@ SRC		=	main.c \
 			add_cmd.c \
 			log.c \
 			parse_command_line.c \
+			check_team_names.c \
 			timeout.c \
 			manage_instr.c \
 			clean.c \
 			exec_cmd.c \
-			handle_client.c \
+			handle_callbacks.c \
 			ring_buffers.c \
 			eggs.c \
 			my_str_to_wordtab.c \

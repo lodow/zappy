@@ -5,10 +5,47 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Wed May 28 15:06:23 2014 Nicolas Bridoux
+** Last update Fri May 30 18:10:06 2014 Nicolas Bridoux
 */
 
 #include "server.h"
+
+static void	free_eggs_and_map(t_server *serv)
+{
+  t_list	*tmp;
+  size_t       	i;
+
+  tmp = serv->game.eggs;
+  while (tmp)
+    {
+      free(((t_egg *)tmp->data)->teamname);
+      tmp = tmp->next;
+    }
+  rm_list(serv->game.eggs, &free);
+  i = 0;
+  while (serv->map && i < serv->game.height)
+    free(serv->map[i++]);
+  free(serv->map);
+}
+
+void		quit_server(t_server *serv)
+{
+  t_list	*tmp;
+  t_selfd	*tmpfd;
+
+  tmp = serv->watch;
+  while (tmp)
+    {
+      if ((tmpfd = (t_selfd*)tmp->data))
+        {
+          free(tmpfd->data);
+          free(tmpfd);
+        }
+      tmp = tmp->next;
+    }
+  rm_list(serv->game.teams, &free);
+  return (free_eggs_and_map(serv));
+}
 
 void		clean_client(t_server *serv, t_selfd *fd)
 {

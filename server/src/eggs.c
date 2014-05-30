@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 01:42:18 2014 Nicolas Bridoux
-** Last update Fri May 30 00:52:20 2014 Nicolas Bridoux
+** Last update Fri May 30 17:47:13 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -90,7 +90,8 @@ void		replace_egg_by_ia(t_server *serv, t_selfd *fd, t_egg *egg)
   client->x = egg->x;
   client->y = egg->y;
   free(egg->teamname);
-  server_log(WARNING, "Player %zu takes over egg %zu", fd->cli_num, egg->num_egg);
+  server_log(WARNING, "Player %zu takes over egg %zu",
+	     fd->cli_num, egg->num_egg);
   ebo(serv, egg->num_egg);
   fd->cli_num = egg->num_egg;
   --serv->game.cli_num;

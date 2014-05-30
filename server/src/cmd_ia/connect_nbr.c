@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 23:40:45 2014 Nicolas Bridoux
-** Last update Tue May 20 23:46:40 2014 Nicolas Bridoux
+** Last update Fri May 30 18:49:38 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -24,7 +24,7 @@ void		connect_nbr(t_server *serv, t_selfd *fd,
       if (client->teamname && ((t_team *)tmp->data)->name &&
 	  !strcmp(((t_team *)tmp->data)->name, client->teamname))
 	{
-	  snprintf(buff, sizeof(buff), "%zu",((t_team *)tmp->data)->max_cli);
+	  snprintf(buff, sizeof(buff), "%zu", ((t_team *)tmp->data)->max_cli);
 	  send_response(fd, buff);
 	}
       tmp = tmp->next;

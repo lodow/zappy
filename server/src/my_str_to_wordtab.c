@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 13:50:08 2014 Nicolas Bridoux
-** Last update Tue May 20 13:52:04 2014 Nicolas Bridoux
+** Last update Fri May 30 19:27:42 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -26,7 +26,7 @@ void	free_tab(char **tab)
   int	i;
 
   i = -1;
-  while (tab[++i])
+  while (tab && tab[++i])
     free(tab[i]);
   free(tab);
 }
