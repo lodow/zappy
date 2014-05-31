@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Sat May 31 20:18:24 2014 Nicolas Bridoux
+** Last update Sat May 31 20:44:32 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -78,24 +78,27 @@ void		quit_server(t_server *serv)
 void		clean_client(t_server *serv, t_selfd *fd)
 {
   t_list	*tmp;
-  t_client	*client;
+  t_instr	*instr;
 
   tmp = serv->instr;
   while (tmp)
     {
-      if (((t_instr *)tmp->data)->fd == fd)
+      instr = tmp->data;
+      if (instr->fd == fd)
 	{
+	  if (instr->cmd && strcmp(instr->cmd, "life") &&
+	      strcmp(instr->cmd, "timeout"))
+	    free(instr->cmd);
 	  rm_from_list(&serv->instr, tmp, &free);
 	  tmp = serv->instr;
 	}
       else
 	tmp = tmp->next;
     }
-  client = (t_client *)fd->data;
-  free(client->teamname);
-  free(client->sock);
-  rm_list(client->cmds, &free);
-  free(client);
+  free(((t_client *)fd->data)->teamname);
+  free(((t_client *)fd->data)->sock);
+  rm_list(((t_client *)fd->data)->cmds, &free);
+  free(fd->data);
   free(fd->rb_r);
   free(fd->rb_w);
   rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Sat May 31 20:18:13 2014 Nicolas Bridoux
+** Last update Sat May 31 20:46:07 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -114,16 +114,20 @@ int		close_connection(t_server *serv, t_selfd *fd)
 {
   t_net		*net;
   t_list	*tmp;
+  t_client	*client;
 
   server_log(WARNING, "Deleting player %zu", fd->cli_num);
-  net = ((t_client *)fd->data)->sock;
+  client = (t_client *)fd->data;
+  if (client->type_cli == IA)
+    pdi(serv, fd->cli_num);
+  net = client->sock;
   if (net->socket != -1 && close(net->socket) == -1)
     perror("close");
   tmp = serv->game.teams;
   while (tmp)
     {
-      if (((t_client*)fd->data)->teamname &&
-	  !strcmp(((t_team *)tmp->data)->name, ((t_client*)fd->data)->teamname))
+      if (client->teamname &&
+	  !strcmp(((t_team *)tmp->data)->name, client->teamname))
 	++((t_team *)tmp->data)->max_cli;
       tmp = tmp->next;
     }
