@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Apr 10 21:06:48 2014 Hugues
+** Last update Sat May 31 17:57:01 2014 Nicolas Bridoux
 */
 
 #include "network.h"

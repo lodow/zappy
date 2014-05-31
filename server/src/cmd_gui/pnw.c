@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 29 22:49:13 2014 Nicolas Bridoux
-** Last update Fri May 30 01:46:43 2014 Nicolas Bridoux
+** Last update Sat May 31 17:24:44 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -23,7 +23,7 @@ void		pnw_init(t_server *serv, t_selfd *fd)
       fd_cli = (t_selfd *)tmp->data;
       if (fd_cli->callback == (void *)&handle_client)
 	{
-	  client = (t_client *)fd->data;
+	  client = (t_client *)fd_cli->data;
 	  if (client->type_cli == IA)
 	    {
 	      snprintf(buff, sizeof(buff), "pnw %zu %zu %zu %d %d %s",

@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Fri May 30 18:08:26 2014 Nicolas Bridoux
+** Last update Fri May 30 20:04:18 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -56,7 +56,7 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
   bind4 = NULL;
   bind6 = NULL;
   if (!port || !(bind4 = create_connection(listening(AF_INET), port,
-                         socktype, &bind))
+					   socktype, &bind))
       || !(bind6 = create_connection(listening(AF_INET6), port,
                                      socktype, &bind))
       || (listen(bind4->socket, MAX_QUEUE) == -1)
@@ -70,10 +70,10 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
 	perror("close");
       return (1);
     }
-  serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
-                                          (void*)bind4);
-  serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
-                                          (void*)bind6);
+  serv->listener = (t_net **)add_ptr_t_tab((void **)serv->listener,
+                                          (void *)bind4);
+  serv->listener = (t_net **)add_ptr_t_tab((void **)serv->listener,
+                                          (void *)bind6);
   return (0);
 }
 

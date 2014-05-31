@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May 22 16:06:59 2014 Nicolas Bridoux
+** Last update Sat May 31 18:46:49 2014 Nicolas Bridoux
 */
 
 #include "liste.h"
@@ -43,7 +43,7 @@ void		rm_from_list(t_list **begin, t_list *trm, void (*f)(void*))
 }
 
 void		apply_on_list(t_list *begin,
-                      int (*f)(void*, void*), void *arg)
+                      int (*f)(void *, void *), void *arg)
 {
   t_list	*list;
 
@@ -55,13 +55,14 @@ void		apply_on_list(t_list *begin,
     }
 }
 
-void	rm_list(t_list *begin, void (*f)(void*))
+void	rm_list(t_list *begin, void (*f)(void *))
 {
   if (begin != NULL)
     {
       if (begin->next != NULL)
         rm_list(begin->next, f);
-      (*f)(begin->data);
+      if (f)
+	(*f)(begin->data);
       free(begin);
     }
 }
@@ -69,22 +70,16 @@ void	rm_list(t_list *begin, void (*f)(void*))
 void		add_to_list(t_list **begin, void *data)
 {
   t_list	*tmp;
+  t_list	*new;
 
-  if (*begin == NULL)
-    {
-      if ((*begin = malloc(1 * sizeof(t_list))) == NULL)
-        return ;
-      (*begin)->data = data;
-      (*begin)->next = NULL;
-      return ;
-    }
+  if (!(new = malloc(sizeof(t_list))))
+    return ;
+  new->data = data;
+  new->next = NULL;
+  if (!(*begin) && (*begin = new))
+    return ;
   tmp = *begin;
-  while ((tmp)->next != NULL)
-    tmp = (tmp)->next;
-  (tmp)->next = malloc(1 * sizeof(t_list));
-  if ((tmp)->next != NULL)
-    {
-      (tmp)->next->data = data;
-      (tmp)->next->next = NULL;
-    }
+  while (tmp->next != NULL)
+    tmp = tmp->next;
+  tmp->next = new;
 }

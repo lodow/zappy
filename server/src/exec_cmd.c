@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Fri May 30 00:32:59 2014 Nicolas Bridoux
+** Last update Sat May 31 19:28:13 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -86,6 +86,8 @@ int	is_cmd_valid(t_server *serv, t_selfd *fd, char *cmd)
     ret = check_ia(serv, fd, tab);
   else
     ret = check_gui(fd, tab);
+  if (ret < 0)
+    free(cmd);
   free_tab(tab);
   return (ret);
 }
@@ -107,5 +109,6 @@ void	exec_cmd(t_server *serv, t_selfd *fd, char *cmd)
 	cmd_tab[i].ptr(serv, fd,
 		       !strcmp(tab[0], "broadcast") ? &cmd : &tab[1]);
     }
+  free(cmd);
   free_tab(tab);
 }

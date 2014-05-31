@@ -5,7 +5,7 @@
 ** Login   <moriss_hepitech.net>
 **
 ** Started on  Tue Mar 19 11:04:35 2013 hugues morisset
-** Last update Thu Apr 10 21:08:50 2014 Hugues
+** Last update Sat May 31 18:49:35 2014 Nicolas Bridoux
 */
 
 #include "tab.h"
@@ -30,7 +30,7 @@ void	**add_ptr_t_tab(void **tab, void *add)
   if (i % PTRT_PACK == 0)
     {
       if ((newtab = malloc((i + 3 + (PTRT_PACK - ((i + 2) % PTRT_PACK)))
-                           * sizeof(void*))) == NULL)
+                           * sizeof(void *))) == NULL)
         return (NULL);
     }
   else
@@ -103,7 +103,8 @@ void	free_ptr_tab(void **tab, void (*f)(void *ptr))
     {
       while (tab[i] != NULL)
         {
-          f(tab[i]);
+	  if (f)
+	    f(tab[i]);
           i++;
         }
       free(tab);

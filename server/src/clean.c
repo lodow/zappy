@@ -5,10 +5,28 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Fri May 30 18:10:06 2014 Nicolas Bridoux
+** Last update Sat May 31 19:04:06 2014 Nicolas Bridoux
 */
 
 #include "server.h"
+
+static void	free_instr(t_server *serv)
+{
+  t_list	*tmp;
+  t_instr	*instr;
+
+  tmp = serv->instr;
+  while (tmp)
+    {
+      instr = (t_instr *)tmp->data;
+      if (instr->cmd && strcmp(instr->cmd, "life") &&
+	  strcmp(instr->cmd, "timeout"))
+	free(instr->cmd);
+      tmp = tmp->next;
+    }
+  rm_list(serv->instr, &free);
+  exit(EXIT_SUCCESS);
+}
 
 static void	free_eggs_and_map(t_server *serv)
 {
@@ -26,6 +44,7 @@ static void	free_eggs_and_map(t_server *serv)
   while (serv->map && i < serv->game.height)
     free(serv->map[i++]);
   free(serv->map);
+  return (free_instr(serv));
 }
 
 void		quit_server(t_server *serv)
@@ -36,13 +55,23 @@ void		quit_server(t_server *serv)
   tmp = serv->watch;
   while (tmp)
     {
-      if ((tmpfd = (t_selfd*)tmp->data))
+      if ((tmpfd = (t_selfd *)tmp->data))
         {
-          free(tmpfd->data);
+	  if (tmpfd->callback == (void *)&handle_client)
+	    {
+	      free(((t_client *)tmpfd->data)->teamname);
+	      free(((t_client *)tmpfd->data)->sock);
+	      rm_list(((t_client *)tmpfd->data)->cmds, &free);
+	    }
+	  free(tmpfd->rb_r);
+	  free(tmpfd->rb_w);
+	  free(tmpfd->data);
           free(tmpfd);
         }
       tmp = tmp->next;
     }
+  rm_list(serv->watch, NULL);
+  free(serv->listener);
   rm_list(serv->game.teams, &free);
   return (free_eggs_and_map(serv));
 }
@@ -50,6 +79,7 @@ void		quit_server(t_server *serv)
 void		clean_client(t_server *serv, t_selfd *fd)
 {
   t_list	*tmp;
+  t_client	*client;
 
   tmp = serv->instr;
   while (tmp)
@@ -62,6 +92,11 @@ void		clean_client(t_server *serv, t_selfd *fd)
       else
 	tmp = tmp->next;
     }
+  client = (t_client *)fd->data;
+  free(client->teamname);
+  free(client->sock);
+  rm_list(client->cmds, &free);
+  free(client);
   free(fd->rb_r);
   free(fd->rb_w);
   rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);

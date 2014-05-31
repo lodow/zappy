@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May 22 16:46:55 2014 Nicolas Bridoux
+** Last update Sat May 31 18:28:45 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -90,6 +90,11 @@ t_net		*create_connection(const char *host, const char *port,
   t_net		*res;
   int		err;
 
+  if (atoi(port) <= 0)
+    {
+      fprintf(stderr, "./zappy: '-p' requires a positive number\n");
+      return (NULL);
+    }
   if ((res = malloc(1 * sizeof(t_net))) == NULL)
     return (NULL);
   res->socktype = socktype;
@@ -114,7 +119,6 @@ int		close_connection(t_server *serv, t_selfd *fd)
   net = ((t_client *)fd->data)->sock;
   if (net->socket != -1 && close(net->socket) == -1)
     perror("close");
-  free(net);
   tmp = serv->game.teams;
   while (tmp)
     {
@@ -123,7 +127,6 @@ int		close_connection(t_server *serv, t_selfd *fd)
 	++((t_team *)tmp->data)->max_cli;
       tmp = tmp->next;
     }
-  free(((t_client *)fd->data)->teamname);
   clean_client(serv, fd);
   return (1);
 }
