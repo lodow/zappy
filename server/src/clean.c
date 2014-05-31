@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Sat May 31 19:04:06 2014 Nicolas Bridoux
+** Last update Sat May 31 20:18:24 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -25,7 +25,6 @@ static void	free_instr(t_server *serv)
       tmp = tmp->next;
     }
   rm_list(serv->instr, &free);
-  exit(EXIT_SUCCESS);
 }
 
 static void	free_eggs_and_map(t_server *serv)

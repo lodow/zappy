@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Fri May 30 19:30:28 2014 Nicolas Bridoux
+## Last update Sat May 31 20:06:02 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -42,6 +42,7 @@ SRC		=	main.c \
 			cmd_ia/ia_fork.c \
 			cmd_ia/expulse.c \
 			cmd_ia/incantation.c \
+			cmd_ia/end_game.c \
 			cmd_ia/broadcast.c \
 			cmd_gui/msz.c \
 			cmd_gui/bct.c \
