@@ -11,6 +11,7 @@
 SRC		=	main.c \
 			inet.c \
 			inet_accept.c \
+			inet_asynchronous_connect.c \
 			liste.c \
 			liste_find.c \
 			ptr_tab.c \

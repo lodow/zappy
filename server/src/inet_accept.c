@@ -53,14 +53,14 @@ int			port_number(t_net *net)
   return ((port == 0) ? 0 : ntohs(port));
 }
 
-t_net	*accept_connection(int sockfd)
+t_net	*accept_connection(t_net *sock)
 {
   t_net	*res;
 
   if ((res = malloc(1 * sizeof(t_net))) == NULL)
     return (NULL);
   res->addrlen = sizeof(struct sockaddr_storage);
-  res->socket = accept(sockfd, (struct sockaddr*)(&(res->addr)),
+  res->socket = accept(sock->socket, (struct sockaddr*)(&(res->addr)),
                        &(res->addrlen));
   if (res->socket == -1)
     {
@@ -69,30 +69,4 @@ t_net	*accept_connection(int sockfd)
       return (NULL);
     }
   return (res);
-}
-
-void	write_sock(const char *str, int socket, int strlen)
-{
-  int	len;
-
-  len = 0;
-  if (str != NULL)
-    {
-      if (strlen == -1)
-        {
-          while (str[len] != '\0')
-            len++;
-          strlen = len;
-        }
-      while ((len = write(socket, str, strlen)) != strlen)
-        {
-          if (len == -1)
-            {
-              perror("write");
-              return ;
-            }
-          str = &(str[len]);
-          strlen -= len;
-        }
-    }
 }
