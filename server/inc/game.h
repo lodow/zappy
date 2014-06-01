@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Fri May 30 01:14:04 2014 Nicolas Bridoux
+** Last update Sat May 31 20:07:55 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -24,6 +24,7 @@
 # define TO_BORN	1
 # define ALIVE		2
 # define MOLDY_TIME	1200
+# define ALL		-1
 # define UP_Y(x)	(x = (x == serv->game.height - 1) ? (0) : (x + 1))
 # define DOWN_Y(x)	(x = (!x) ? (serv->game.height - 1) : (x - 1))
 # define UP_X(x)	(x = (x == serv->game.width - 1) ? (0) : (x + 1))

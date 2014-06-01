@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May 22 16:46:55 2014 Nicolas Bridoux
+** Last update Sat May 31 20:46:07 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -90,6 +90,11 @@ t_net		*create_connection(const char *host, const char *port,
   t_net		*res;
   int		err;
 
+  if (atoi(port) <= 0)
+    {
+      fprintf(stderr, "./zappy: '-p' requires a positive number\n");
+      return (NULL);
+    }
   if ((res = malloc(1 * sizeof(t_net))) == NULL)
     return (NULL);
   res->socktype = socktype;
@@ -109,21 +114,23 @@ int		close_connection(t_server *serv, t_selfd *fd)
 {
   t_net		*net;
   t_list	*tmp;
+  t_client	*client;
 
   server_log(WARNING, "Deleting player %zu", fd->cli_num);
-  net = ((t_client *)fd->data)->sock;
+  client = (t_client *)fd->data;
+  if (client->type_cli == IA)
+    pdi(serv, fd->cli_num);
+  net = client->sock;
   if (net->socket != -1 && close(net->socket) == -1)
     perror("close");
-  free(net);
   tmp = serv->game.teams;
   while (tmp)
     {
-      if (((t_client*)fd->data)->teamname &&
-	  !strcmp(((t_team *)tmp->data)->name, ((t_client*)fd->data)->teamname))
+      if (client->teamname &&
+	  !strcmp(((t_team *)tmp->data)->name, client->teamname))
 	++((t_team *)tmp->data)->max_cli;
       tmp = tmp->next;
     }
-  free(((t_client *)fd->data)->teamname);
   clean_client(serv, fd);
   return (1);
 }

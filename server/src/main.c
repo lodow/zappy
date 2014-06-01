@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Sun May 18 14:43:41 2014 Nicolas Bridoux
+** Last update Sat May 31 20:19:25 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -39,11 +39,8 @@ int	main(int ac, char **av)
   signal(SIGINT, &sig_handler);
   signal(SIGQUIT, &sig_handler);
   signal(SIGTERM, &sig_handler);
-  if (parse_command_line(&g_serv, ac, av))
-    {
-      close_server_binds(&g_serv);
-      ret = 1;
-    }
+  if (parse_command_line(&g_serv, ac, av) && (ret = 1))
+    close_server_binds(&g_serv);
   else
     {
       if (!handle_start(&g_serv))
@@ -53,5 +50,6 @@ int	main(int ac, char **av)
 	}
     }
   quit_server(&g_serv);
+  server_log(WARNING, "Shutting down.. Now");
   return (ret);
 }
