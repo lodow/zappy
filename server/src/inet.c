@@ -69,7 +69,7 @@ int			ipaddress_init(const char *ip, const char *port,
   req.ai_socktype = net->socktype;
   req.ai_flags = AI_PASSIVE | AI_NUMERICSERV | AI_ADDRCONFIG;
   if ((ret = getaddrinfo(ip, port, &req, &res)))
-    return (ret);
+    return (ret + 0x70000000);
   tmp = res;
   while (tmp)
     {
@@ -96,7 +96,7 @@ t_net		*create_connection(const char *host, const char *port,
   if ((err = ipaddress_init(host, port, res, f)))
     {
       if (err > 0)
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err));
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err - 0x70000000));
       else
         perror("ipadress_init");
       free(res);

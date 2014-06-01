@@ -56,7 +56,7 @@ int			handle_newconnection(t_selfd *fd, t_server *serv)
   if (!ISREADABLE(fd))
     return (EXIT_FAILURE);
   bind_sock = (t_net*)fd->data;
-  if (!(nsock = accept_connection(bind_sock->socket)))
+  if (!(nsock = accept_connection(bind_sock)))
     return (EXIT_FAILURE);
   if ((!(client = malloc(sizeof(t_client))))
       || !(tmpfd = create_fd(nsock->socket, client, &handle_client)))

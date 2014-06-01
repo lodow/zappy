@@ -20,6 +20,7 @@
 # include <sys/socket.h>
 # include <netdb.h>
 # include <arpa/inet.h>
+# include <fcntl.h>
 
 # define MAX_QUEUE 50
 
@@ -35,12 +36,15 @@ t_net		*create_connection(const char *host, const char *port,
                            int socktype, int	(*f)(int sockfd,
                                const struct sockaddr *addr,
                                socklen_t addrlen));
-t_net	*accept_connection(int sockfd);
+t_net	*accept_connection(t_net *sock);
 char		*get_ip_addr(t_net *net);
 t_net	*peer(t_net *net);
 const char	*listening(int domain);
 int		port_number(t_net *net);
 
 void	write_sock(const char *str, int socket, int strlen);
+
+int	connect_nb(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+int	is_connected(t_net *net);
 
 #endif /* !NETWORK_H_INCLUDED */
