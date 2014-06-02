@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 20:03:06 2014 Nicolas Bridoux
-** Last update Sat May 31 20:08:53 2014 Nicolas Bridoux
+** Last update Mon Jun  2 16:53:38 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -94,6 +94,8 @@ static void	send_level_up(t_server *serv, t_client *client)
   char		buff[BUFF_SIZE];
 
   tmp = serv->watch;
+  memset((size_t *)&serv->map[client->y][client->x] + 1, 0,
+	 sizeof(t_map) - sizeof(size_t));
   while (tmp)
     {
       fd = (t_selfd *)tmp->data;
