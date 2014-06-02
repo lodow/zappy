@@ -14,6 +14,8 @@
         this.print = print;
         this.cmds = [];
         this.id = -1;
+        this.lvl = 0;
+        this.inv = {};
 
         // =================== Creating socket connection ================
 
@@ -83,9 +85,17 @@
         	print.recv("[" + self.id + "] : " + data);
         	if (data == "mort")
         		return (self.socket.destroy());
-
-
-
+            if (!data.indexOf("niveau actuel")) {
+                data = data.replace('/ /g', "");
+                self.lvl = parseInt(data.split(":")[1]) - 1;
+                return ;
+            }
+            if (!data.indexOf("message")) {
+                data = data.split(',');
+                data[0] = data.split(' ')[1];
+                self.emit('msg', parseInt(data[0]), data[1]);
+                return ;
+            }
 
         	if ((cmd = self.cmds.shift())) {
         		cmd.callback(data);
@@ -172,6 +182,7 @@
 					print.err("JSON error : " + e.message);
 					rep = false;
 				}
+                self.inv = rep;
 				callback(rep);
 			});
 		}
