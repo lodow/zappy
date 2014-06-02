@@ -33,7 +33,7 @@
         this.socket.addListener('connect', function() {
             nbClis++;
             self.dataCallback = handleConnect;
-            self.socket.addListener('data', handleData);
+            self.socket.on('data', handleData);
         });
         
        	handleData = function(data) {
@@ -76,11 +76,11 @@
             };
             print.send(opt.team);
             self.socket.write(opt.team + '\n');
-            self.socket.addListener('data', handleData);
+            self.socket.on('data', handleData);
         };
 
         this.getResponse = function (data) {
-        	print.recv(self.id + " : " + data);
+        	print.recv("[" + self.id + "] : " + data);
         	if (data == "mort")
         		return (self.socket.destroy());
 
@@ -93,9 +93,35 @@
         }
 
         this.sendCmd = function (cmd, callback) {
-        	print.send(self.id + " : " + cmd);
+        	print.send("[" + self.id + "] : " + cmd);
         	self.cmds.push({cmd:cmd, callback:callback});
         	self.socket.write(cmd + '\n');
+        }
+
+        this.numberOf = function (cmd, to_find) {
+        	var ret = 0, begin, end;
+
+        	while (cmd.indexOf(to_find) != -1) {
+        		begin = cmd.substring(0, cmd.indexOf(to_find));
+        		end = cmd.substring(cmd.indexOf(to_find) + to_find.length);
+        		cmd = begin + end;
+        		++ret;
+        	}
+        	return (ret);
+        }
+
+        this.creatObject = function (cmd) {
+        	var ret = { };
+
+        	ret.joueur = self.numberOf(cmd, "joueur");
+        	ret.nourriture = self.numberOf(cmd, "nourriture");
+        	ret.linemate = self.numberOf(cmd, "linemate");
+        	ret.deraumere = self.numberOf(cmd, "deraumere");
+        	ret.sibur = self.numberOf(cmd, "sibur");
+        	ret.mendiane = self.numberOf(cmd, "mendiane");
+        	ret.phiras = self.numberOf(cmd, "phiras");
+        	ret.thystame = self.numberOf(cmd, "thystame");
+        	return (ret);
         }
 
         // ======================= COMMANDS ==================
@@ -112,67 +138,77 @@
 
 		this.voir = function (callback) {
 			this.sendCmd("voir", function (rep) {
+				rep = rep.replace("{ ", "").replace("}", "").split(',');
+				for (var i = 0, l = rep.length; i < l; ++i)
+					rep[i] = self.creatObject(rep[i]);
 				callback(rep);
 			});
 		}
 
 		this.avance = function (callback) {
 			this.sendCmd("avance", function (rep) {
-				callback(rep);
+				callback(rep == "ok");
 			});
 		}
 
 		this.droite = function (callback) {
 			this.sendCmd("droite", function (rep) {
-				callback(rep);
+				callback(rep == "ok");
 			});
 		}
 
 		this.gauche = function (callback) {
 			this.sendCmd("gauche", function (rep) {
-				callback(rep);
+				callback(rep == "ok");
 			});
 		}
 
 		this.inventaire = function (callback) {
 			this.sendCmd("inventaire", function (rep) {
+				rep = rep.replace(/(, | ,)/g, ',').replace(/ /g, ':').replace(/({|,)/g, '$1"').replace(/:/g, '":');
+				try {
+					rep = JSON.parse(rep);
+				} catch (e) {
+					print.err("JSON error : " + e.message);
+					rep = false;
+				}
 				callback(rep);
 			});
 		}
 
 		this.prend = function (obj, callback) {
 			this.sendCmd("prend " + obj, function (rep) {
-				callback(rep);
+				callback(rep == "ok");
 			});
 		}
 
 		this.pose = function (obj, callback) {
 			this.sendCmd("pose " + obj, function (rep) {
-				callback(rep);
+				callback(rep == "ok");
 			});
 		}
 
 		this.expulse = function (callback) {
 			this.sendCmd("expulse", function (rep) {
-				callback(rep);
+				callback(rep == "ok");
 			});
 		}
 
 		this.broadcast = function (msg, callback) {
 			this.sendCmd("broadcast " + msg, function (rep) {
-				callback(rep);
+				callback(rep ==  "ok");
 			});
 		}
 
 		this.incantation = function (callback) {
 			this.sendCmd("incantation", function (rep) {
-				callback(rep);
+				callback(rep == "elevation en cours");
 			});
 		}
 
 		this.fork = function (callback) {
-			this.sendCmd("incantation", function (rep) {
-				callback(rep);
+			this.sendCmd("fork", function (rep) {
+				callback(rep == "ok");
 			});
 		}
 

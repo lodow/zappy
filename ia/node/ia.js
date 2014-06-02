@@ -17,29 +17,22 @@
 	console.recv = function (msg) { console.log("\033[0;32m<<< " + msg + "\033[0;0m"); }
 	console.send = function (msg) { console.log("\033[0;34m>>> " + msg + "\033[0;0m"); }
 
-
+    var incant = [
+    	{linemate : 1},
+    ];
+	// chaque fonction emet un event dans chaque cas, qui retourne a une autre fonction etc
+	// gestion de l'inventaire ?
 
 	var doAlgo = function (cli, mapX, mapY) {
 
-		var ret = function (res) {
 
-			cli.voir(ret);
-			cli.connect_nbr(ret);
-			cli.fork(ret);
-			cli.avance(ret);
-			cli.droite(ret);
-			cli.gauche(ret);
-			cli.inventaire(ret);
-			cli.broadcast("salut", ret);
-			cli.expulse(ret);
-		}
 		
-		cli.voir(ret);
-		
+		cli.voir(function (see) {
+			
+		});
+
     }
 
-    for (var i = 0; i < 500; ++i)
-    	new client(console, opt, doAlgo);
-    // var b = new client(console, opt, doAlgo);
+    new client(console, opt, doAlgo);
 
 })();
