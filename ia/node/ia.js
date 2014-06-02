@@ -2,7 +2,7 @@
 
 (function () {
 	var stdio = require('stdio');
-    var client = require("./client.js");
+    var client = require("./client");
 
 	var opt = stdio.getopt({
 		'team': {key: 'n', args: 1, description: 'Teamname for te ia', mandatory: true},
@@ -17,11 +17,29 @@
 	console.recv = function (msg) { console.log("\033[0;32m<<< " + msg + "\033[0;0m"); }
 	console.send = function (msg) { console.log("\033[0;34m>>> " + msg + "\033[0;0m"); }
 
-    var callback = function (msg) {
-        console.log("on est dans le callback" + msg);
+
+
+	var doAlgo = function (cli, mapX, mapY) {
+
+		var ret = function (res) {
+
+			cli.voir(ret);
+			cli.connect_nbr(ret);
+			cli.fork(ret);
+			cli.avance(ret);
+			cli.droite(ret);
+			cli.gauche(ret);
+			cli.inventaire(ret);
+			cli.broadcast("salut", ret);
+			cli.expulse(ret);
+		}
+		
+		cli.voir(ret);
+		
     }
 
-    new client.Client(console, opt, callback));
-    new client.Client(console, opt, callback));
+    for (var i = 0; i < 500; ++i)
+    	new client(console, opt, doAlgo);
+    // var b = new client(console, opt, doAlgo);
 
 })();

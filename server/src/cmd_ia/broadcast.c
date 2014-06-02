@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 26 23:15:06 2014 Nicolas Bridoux
-** Last update Fri May 30 18:49:21 2014 Nicolas Bridoux
+** Last update Mon Jun  2 16:00:51 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -68,7 +68,6 @@ static int	get_direction(t_server *serv, t_client *me, t_client *him)
 	   (int)serv->game.height - abs((int)me->y - (int)him->y));
   dx = MIN(abs((int)me->x - (int)him->x),
 	   (int)serv->game.width - abs((int)me->x - (int)him->x));
-  server_log(WARNING, "dx = %d, dy = %d, tot = %d\n", dx, dy, dx + dy);
   if (!dx && !dy)
     return (0);
   if (!dx)
@@ -101,6 +100,7 @@ static void	send_broadcast(t_server *serv, t_client *me,
 	       get_direction(serv, me, him));
       msg = concat(strdup(buff), msg);
       send_response(fd_cli, msg);
+      free(msg);
     }
 }
 
