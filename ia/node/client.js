@@ -5,6 +5,7 @@
 	var net = require('net');
 	var events = require('events');
 	var nbClis = 0;
+    var nbFork = 0;
 
 	var Client = function (print, opt, callback) {
 
@@ -14,8 +15,8 @@
         this.print = print;
         this.cmds = [];
         this.id = -1;
-        this.lvl = 0;
-        this.inv = {};
+        this.lvl = 1; // 0
+        this.inv = {linemate : 0, deraumere : 0, sibur : 0, mendiane : 0, phiras : 0, thystame : 0};
 
         // =================== Creating socket connection ================
 
@@ -34,6 +35,8 @@
         
         this.socket.addListener('connect', function() {
             nbClis++;
+            if (nbFork)
+                --nbFork;
             self.dataCallback = handleConnect;
             self.socket.on('data', handleData);
         });
@@ -88,13 +91,12 @@
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
-                return ;
+                return (self.emit("1", self.lvl));
             }
             if (!data.indexOf("message")) {
                 data = data.split(',');
-                data[0] = data.split(' ')[1];
-                self.emit('msg', parseInt(data[0]), data[1]);
-                return ;
+                data[0] = data[0].split(' ')[1];
+                return (self.emit('6', parseInt(data[0]), data[1]));
             }
 
         	if ((cmd = self.cmds.shift())) {
@@ -139,6 +141,77 @@
         this.nbClis = function () {
 			return (nbClis);
 		}
+
+        this.nbFork = function () {
+            return (nbFork);
+        }
+
+        this.goDirection = function (direction, callback) {
+            if (direction == 0) {
+                callback(direction);
+            } else if (direction == 1) {
+                self.avance(function (res) {
+                    callback(res);
+                });
+            } else if (direction == 2) {
+                self.avance(function (res) {
+                    self.gauche(function (res) {
+                        self.avance(function (res) {
+                            callback(direction);
+                        });
+                    });
+                });
+            } else if (direction == 3) {
+                self.gauche(function (res) {
+                    self.avance(function (res) {
+                        callback(direction);
+                    });
+                });
+            } else if (direction == 4) {
+                self.gauche(function (res) {
+                    self.avance(function (res) {
+                        self.gauche(function (res) {
+                            self.avance(function (res) {
+                                callback(direction);
+                            });
+                        });
+                    });
+                });
+            } else if (direction == 5) {
+                self.gauche(function (res) {
+                    self.gauche(function (res) {
+                        self.avance(function (res) {
+                            callback(direction);
+                        });
+                    });
+                });
+            } else if (direction == 6) {
+                self.droite(function (res) {
+                    self.avance(function (res) {
+                        self.droite(function (res) {
+                            self.avance(function (res) {
+                                callback(direction);
+                            });
+                        });
+                    });
+                });
+            } else if (direction == 7) {
+                self.droite(function (res) {
+                    self.avance(function (res) {
+                        callback(direction);
+                    });
+                });
+            } else if (direction == 8) {
+                self.avance(function (res) {
+                    self.droite(function (res) {
+                        self.avance(function (res) {
+                            callback(direction);
+                        });
+                    });
+                });
+            } else 
+                print.err("[" + this.id + "] : Wrong direction (> 8 || < 0)");
+        }
 
 		this.connect_nbr = function (callback) {
 			this.sendCmd("connect_nbr", function (rep) {
@@ -189,12 +262,16 @@
 
 		this.prend = function (obj, callback) {
 			this.sendCmd("prend " + obj, function (rep) {
+                if (rep == "ok")
+                    self.inv[obj]++;
 				callback(rep == "ok");
 			});
 		}
 
 		this.pose = function (obj, callback) {
 			this.sendCmd("pose " + obj, function (rep) {
+                if (rep == "ok")
+                    self.inv[obj]--;
 				callback(rep == "ok");
 			});
 		}
@@ -219,6 +296,7 @@
 
 		this.fork = function (callback) {
 			this.sendCmd("fork", function (rep) {
+                ++nbFork;
 				callback(rep == "ok");
 			});
 		}

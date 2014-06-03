@@ -29,70 +29,184 @@
 
 	var doAlgo = function (cli, mapX, mapY) {
 
-		cli.on('msg', function (direction, data) {
-			console.log("Received msg (broadcast):", direction, data);
+		cli.on('10', function (numSquare) {
+			var pos;
+
+			if (numSquare == 1)
+				pos = 2;
+			else if (numSquare == 2)
+				pos = 1;
+			else if (numSquare == 3)
+				pos = 8;
+			else
+				pos = 0;
+			console.log('Je prend la nourriture de la case:', pos);
+			cli.goDirection(pos, function (res) {
+				cli.prend("nourriture", function (res) {
+					if (res) {
+						console.log("J'ai réussi a prendre la nourriture");
+						cli.emit('1');
+					} else {
+						console.log("Je n'ai pas réussi a prendre la nourriture (quelqu'un la prise avant moi)");
+						cli.emit('9');
+					}
+				});
+			});
 		});
 
-		cli.on('Move', function (callback) { // S'oriente aléatoirement a droite/gauche et avance d'une case
-			var avance = function (res) {
-				cli.avance(callback);
+		cli.on('9', function () {
+			console.log("J'avance");
+			cli.goDirection(Math.floor(Math.random() * 10) % 9 + 1, function (res) {
+				cli.voir(function (see) {
+					cli.emit('8', see);
+				});
+			});
+		});
+
+		cli.on('8', function (see) {
+			for (var i = 	0; i < 4;  ++i)
+				if (see[i].nourriture) {
+					console.log('Il y a de la nourriture devant moi');
+					return (cli.emit('10', i));
+				}
+			console.log("Il n'y a pas de la nourriture devant moi");
+			cli.emit('9');
+		});
+
+		cli.on('12', function (item) {
+			console.log("je prend un ", item);
+			cli.prend(item, function (res) {
+				cli.voir(function (see) {
+					cli.emit('2', see[0]);
+				});
+			});
+		});
+
+		cli.on('13', function (item) {
+			console.log("Je pose un", item);
+			cli.pose(item, function (res) {
+				cli.voir(function (see) {
+					cli.emit('2', see[0]);
+				});
+			});
+		});
+
+		cli.on('14', function () {
+			console.log("J'avance");
+			cli.avance(function (res) {
+				cli.voir(function (see) {
+					cli.emit('2', see[0]);
+				});
+			});
+		});
+
+		cli.on('4', function () {
+			console.log("Je debloque les anciens broadcast et j'incante");
+			cli.broadcast(cli.lvl.toString + "-ok", function (res) {
+				cli.incantation(function (res) {
+					console.log("result de l'incant:", res);
+				});
+			});			
+		});
+
+
+		var onBroadcast = function (direction, msg) {
+			msg = msg.split('-');
+			if (parseInt(msg[0]) != cli.lvl) {
+				console.log('Ce broadcast ne me concerne pas');
+				return (cli.emit('1'));
 			}
 
-			if (Math.floor(Math.random() * 10) % 2)
-				cli.droite(avance);
-			else
-				cli.gauche(avance);
+			if (msg[1] == 'help') {
+				cli.goDirection(direction, function (res) {
+					console.log("res =>", res);
+					if (!res) {
+						console.log("Je suis bien arrivé pour l'incant");
+					} else {
+						console.log("J'attend de nouvelles coordonées pour me déplacer");
+					}
+				});
+			} else if (msg[1] == "ok") {
+
+			}
+		}
+
+		cli.on('6', onBroadcast);
+
+		cli.on('3', function (square) {
+			console.log('Je vérifie le nombre de joueurs');
+			if (square.joueur == incant[cli.lvl].joueur) {
+				console.log('Il y a le bon nombre de joueurs sur la case')
+				return (cli.emit("4"));
+			} else if (square.joueur < incant[cli.lvl].joueur) {
+				console.log("Il manque des joueurs sur la case");
+				
+				cli.connect_nbr(function (res) {
+					if (!res) {
+						if (cli.nbClis() + cli.nbFork() >= incant[cli.lvl].joueur) {
+							console.log("je broadcast");
+							cli.broadcast(cli.lvl.toString() + "-help", function (res) {
+								cli.emit('3', square);
+							});
+						} else {
+							console.log("Je fork et je broadcast");
+							cli.fork(function (res) {
+								cli.broadcast(cli.lvl.toString() + "-help", function (res) {
+									cli.emit('3', square);
+								});
+							});
+						}
+					} else {
+						console.log('Je connecte un nouveau client, et je broadcast');
+						new client(console, opt, doAlgo);
+						cli.broadcast(cli.lvl.toString() + "-help", function (res) {
+							cli.emit('3', square);
+						});
+					}
+				});
+			} else {
+				// si on a trop de joueurs sur la case ?
+			}
 		});
 
-		cli.on('needFood', function () {
-			cli.voir(function (see) {
-				if (see[0].nourriture) {
-					cli.prend("nourriture", function (res) {
-						if (!res)
-							cli.emit("Move", function () { cli.emit("needFood"); });
-					});
-				} else {
-					cli.emit("Move", function () { cli.emit("needFood"); });
-				}
-			});
-		});
-
-		cli.on('checkIncant', function () {
-			cli.voir(function (see) {
-				var square = see[0];
-
-				for (c in square) {
-					if (c != "joueur" && square[c] > incant[cli.lvl][c]) { // Trop de ressources sur la case, on les prend pour plus tard
-						console.log("taking:", c);
-					  	return (cli.prend(c, function () { cli.emit('checkIncant'); }));
+		cli.on('2', function (square) {
+			for (c in square) {
+				if (c != "joueur") {
+					if (square[c] > incant[cli.lvl][c]) {
+						console.log("Il a a trop de :", c, "sur la case");
+						return (cli.emit('12', c));
 					}
 
-					if (c != "joueur" && square[c] < incant[cli.lvl][c]) { // Il manque une ressource sur la case, on essaye de poser, sinon on bouge
-						console.log("missing:", c);
-						return (cli.emit('Move', function () { cli.emit("checkIncant"); }));
+					if (square[c] < incant[cli.lvl][c]) {
+						console.log("Il manque de :", c, "sur la case");
+						if (square[c] + cli.inv[c] >= incant[cli.lvl][c]) {
+							console.log("Je pose:", c);
+							return (cli.emit('13', c));
+						} else {
+							console.log("Je n'en ai pas", cli.inv);
+							return (cli.emit('14'));
+						}
 					}
 				}
-
-				if (square.joueur < incant[cli.lvl].joueur) { // Si il manque des joueurs, on envoie un broadcast pour les amener a nous
-					return (cli.broadcast("TOTO", function () { }));
-				}
-
-				// Tout est bon pour une incantation
-				return (cli.incantation(function () { cli.emit('checkFood'); }));
-			});
+			}
+			cli.emit("3", square);
 		});
 
-		cli.on('checkFood', function () {
+		cli.on('1', function () {
 			cli.inventaire(function (inv) {
-				if (inv.nourriture > 3) {
-					cli.emit('checkIncant');
-				} else {
-					cli.emit('needFood');
-				}
+				cli.voir(function (see) {
+					if (inv.nourriture > 50) {
+						cli.emit('2', see[0]);
+					} else {
+						cli.emit('8', see);
+					}
+				});
 			});
 		});
 
-		cli.emit('checkFood');
+		cli.fork(function (res) {
+			cli.emit('1');
+		});
     }
 
     new client(console, opt, doAlgo);
