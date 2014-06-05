@@ -96,7 +96,7 @@
             if (data == 'ko' && self.lock) {
                 print.log("[" + self.id + "] : " + data + " => INCANTATION FAILED");
                 self.lock = false;
-                self.broadcast(self.lvl.toString() "-ok", function (res) {
+                self.broadcast(self.lvl.toString() + "-ok", function (res) {
 
                 });
                 return (self.levelCallback(3));

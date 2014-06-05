@@ -107,8 +107,9 @@
 
 		var launchIncant = function () { 
 			if (cli.msg) {
-				cli.msg = null;
-				return (begin(3));
+				return (cli.voir(function (see) {
+					followMsg(see);
+				}));
 			}
 
 			if (!cli.lock) {
