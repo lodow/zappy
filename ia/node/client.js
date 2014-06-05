@@ -6,16 +6,20 @@
 	var events = require('events');
 	var nbClis = 0;
     var nbFork = 0;
+    var cliId = 0;
 
 	var Client = function (print, opt, callback) {
 
-		var self = this, handleData, handleConnect, handleCmd;
+		var self = this, handleData, handleConnect;
 
         this.dataCallback = null;
+        this.levelCallback = null;
         this.print = print;
-        this.cmds = [];
-        this.id = -1;
-        this.lvl = 1; // 0
+        this.cmds = [ ];
+        this.msg = null;
+        this.id = cliId;
+        this.lvl = 0;
+        this.lock = false;
         this.inv = {linemate : 0, deraumere : 0, sibur : 0, mendiane : 0, phiras : 0, thystame : 0};
 
         // =================== Creating socket connection ================
@@ -35,6 +39,7 @@
         
         this.socket.addListener('connect', function() {
             nbClis++;
+            cliId++;
             if (nbFork)
                 --nbFork;
             self.dataCallback = handleConnect;
@@ -67,7 +72,7 @@
             	this.turn = this.turn || 0;
             	print.recv(data);
                 if (!(this.turn++))
-                    self.id = parseInt(data);
+                    self.id = nbClis;
                 else {
                     data = data.split(' ');
                     if (data.length != 2) {
@@ -88,15 +93,27 @@
         	print.recv("[" + self.id + "] : " + data);
         	if (data == "mort")
         		return (self.socket.destroy());
+            if (data == 'ko' && self.lock) {
+                print.log("[" + self.id + "] : " + data + " => INCANTATION FAILED");
+                self.lock = false;
+                self.broadcast(self.lvl.toString() "-ok", function (res) {
+
+                });
+                return (self.levelCallback(3));
+            } 
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
-                return (self.emit("1", self.lvl));
+                self.lock = false;
+                return (self.levelCallback(3));
             }
             if (!data.indexOf("message")) {
                 data = data.split(',');
                 data[0] = data[0].split(' ')[1];
-                return (self.emit('6', parseInt(data[0]), data[1]));
+                if (parseInt(data[1].split('-')[0]) == self.lvl) {
+                    self.msg = { direction : parseInt(data[0]) , msg : data[1].split('-')[1]};
+                }
+                return ;
             }
 
         	if ((cmd = self.cmds.shift())) {
@@ -105,8 +122,13 @@
         }
 
         this.sendCmd = function (cmd, callback) {
+            if (self.cmds.length >= 10) {
+                print.err("[" + self.id + "] " + " Trop de commandes en même temps !");
+                return ;
+            }
+
         	print.send("[" + self.id + "] : " + cmd);
-        	self.cmds.push({cmd:cmd, callback:callback});
+        	self.cmds.push({cmd : cmd, callback : callback});
         	self.socket.write(cmd + '\n');
         }
 
@@ -144,6 +166,10 @@
 
         this.nbFork = function () {
             return (nbFork);
+        }
+
+        this.setLevelCallback = function (callback) {
+            this.levelCallback = callback;
         }
 
         this.goDirection = function (direction, callback) {
@@ -252,7 +278,7 @@
 				try {
 					rep = JSON.parse(rep);
 				} catch (e) {
-					print.err("JSON error : " + e.message);
+					print.err(self.id + " JSON error : " + e.message);
 					rep = false;
 				}
                 self.inv = rep;
@@ -284,12 +310,14 @@
 
 		this.broadcast = function (msg, callback) {
 			this.sendCmd("broadcast " + msg, function (rep) {
-				callback(rep ==  "ok");
+                callback(rep ==  "ok");
 			});
 		}
 
 		this.incantation = function (callback) {
 			this.sendCmd("incantation", function (rep) {
+                if (rep == "elevation en cours")
+                    self.lock = true;
 				callback(rep == "elevation en cours");
 			});
 		}
@@ -303,7 +331,7 @@
 
 	}
 
-	Client.prototype = new events.EventEmitter;
+	Client.prototype = new events.EventEmitter();
 	module.exports = Client;
 
 })();
