@@ -28,6 +28,7 @@
     ];
 
     var coresPos = [2, 1, 8];
+    var moves = [1, 3, 5, 7];
 
 	var doAlgo = function (cli, mapX, mapY) {
 
@@ -60,10 +61,10 @@
 
 		var foodInFrontOf = function (see, nbFood) {
 			try {
-				for (var i = 0; i < 4;  ++i) // 4 => see.length, commencer par la case devant + opti
+				for (var i = 0; i < 4;  ++i)
 					if (see[i].nourriture) {
 						console.log("[" + cli.id + "]", 'Il y a de la nourriture devant moi');
-						return (takeFood(i, nbFood));
+						return (takeFood(see[2].nourriture ? 2 : i, nbFood));
 					}
 			} catch (e) {
 				console.err(cli.id + 'ERROR');
@@ -93,7 +94,7 @@
 
 		var nextSquare = function () {
 			console.log("[" + cli.id + "]", "J'avance");
-			cli.goDirection(Math.floor(Math.random() * 10) % 8 + 1, function (res) {
+			cli.goDirection(moves[Math.floor(Math.random() * 10) % 4], function (res) {
 				cli.voir(function (see) {
 					hasMsg(see);
 				});
@@ -101,16 +102,14 @@
 		}
 
 		var launchIncant = function () { 
-			if (!cli.lock) {
-				console.log("[" + cli.id + "]", "J'incante");
-				cli.incantation(function (res) {
-					if (!res)
-						begin((mapX + mapY) / 2);
-					else {
-						cli.broadcast(cli.lvl.toString() + "-ok", function (res) { });
-					}
-				});
-			}
+			console.log("[" + cli.id + "]", "J'incante");
+			cli.incantation(function (res) {
+				if (!res)
+					begin((mapX + mapY) / 2);
+				else {
+					cli.broadcast(cli.lvl.toString() + "-ok", function (res) { });
+				}
+			});
 		}
 
 		var callRenfort = function (square) {
@@ -126,6 +125,29 @@
 			}
 		}
 
+		var addPlayer = function () {
+			cli.connect_nbr(function (res) {
+				if (!res) {
+					if (cli.nbClis() + cli.nbFork() >= incant[cli.lvl].joueur) {
+						cli.inventaire(function (inv) {
+							addPlayer();
+						});
+					} else {
+						console.log("[" + cli.id + "]", "Je fork et je broadcast");
+						cli.fork(function (res) {
+							addPlayer();
+						});
+					}
+				} else {
+					console.log("[" + cli.id + "]", 'Je connecte un nouveau client, et je broadcast');
+					new client(console, opt, doAlgo);
+					cli.voir(function (see) {
+						callRenfort(see[0]);
+					});
+				}
+			});
+		}
+
 		var checkNbPlayers = function (square) {
 			console.log("[" + cli.id + "]", 'Je vérifie le nombre de joueurs');
 
@@ -134,29 +156,7 @@
 				return (launchIncant());
 			} else if (square.joueur < incant[cli.lvl].joueur) {
 				console.log(cli.id, "Il manque des joueurs sur la case");
-				if (cli.msg) {
-					console.log("[" + cli.id + "]", "J'ai reçu un message, je cherche d'ou il vient");
-					return (cli.voir(function (see) {
-						hasMsg(see);
-					}));
-				}
-
-				cli.connect_nbr(function (res) {
-					if (!res) {
-						if (cli.nbClis() + cli.nbFork() >= incant[cli.lvl].joueur) {
-							callRenfort(square);
-						} else {
-							console.log("[" + cli.id + "]", "Je fork et je broadcast");
-							cli.fork(function (res) {
-								callRenfort(square);
-							});
-						}
-					} else {
-						console.log("[" + cli.id + "]", 'Je connecte un nouveau client, et je broadcast');
-						new client(console, opt, doAlgo);
-						callRenfort(square);
-					}
-				});
+				addPlayer();				
 			} else {
 				console.log("[" + cli.id + "]", "Nous sommes trop sur la case, je m'en vais");
 				begin(3);
@@ -215,9 +215,8 @@
 		}
 
 		// /!\ Verif pas 2 incantation au même moment sur la même case ! msg.direction == 0, même case
-		// Si on a les bonnes ressources, on vérifie que personne ne nous apelle, puis on appelle
-		// Si on nous appelle, on va dans la bonne direction tant qu'on a pas reçu de "ok"
-		// si on recoit "ko", fail de l'incant du mec
+		// direction == 0 && msg = "ok" => lock, attente de l'incant
+		// "niveau actuel" => unlock, fin de l'incant
 
 		var followMsg = function (see) {
 			var recv = cli.msg;
@@ -226,33 +225,31 @@
 				return (cli.voir(function (see) {
 						hasMsg(see);
 					}));
-			}
-			cli.msg = null;
-			if (recv && recv.msg == "ok") {
-				if (recv.direction == 0)
-					console.log("[" + cli.id + "]", "Le  mec qui m'a appelé incante");
-				else {
-					console.log("[" + cli.id + "]", "J'étais trop loin on a plus besoin de moi")
-					begin(5);
-				}
-				return ;
-			}
-
-			if (recv && recv.msg == "ko" && recv.direction == 0) {
-				console.log("[" + cli.id + "]", "Le  mec qui m'a appelé a raté son incantation");
-				return (begin(5));
-			}
-
-			if (recv.msg == "help") {
-				console.log("[" + cli.id + "]", "J'ai reçu:", recv.msg);
-				cli.goDirection(recv.direction, function (dir) {
-					cli.voir(function (see) {
-						followMsg(see);
+			} else {
+				cli.msg = null;
+				if (recv.msg == "ok") {
+					if (recv.direction == 0)
+						console.log("[" + cli.id + "]", "Le mec qui m'a appelé incante");
+					else {
+						console.log("[" + cli.id + "]", "J'étais trop loin on a plus besoin de moi")
+						begin(5);
+					}
+					return ;
+				} else if (recv.msg == "help") { // direction == 0, ne pas faire "voir" et la suite
+					console.log("[" + cli.id + "]", "J'ai reçu:", recv.msg, ", je vais vers lui");
+					cli.goDirection(recv.direction, function (dir) {
+						cli.voir(function (see) {
+							followMsg(see);
+						});
 					});
-				});
+				} else if (recv.msg == "ko") {
+					if (recv.direction == 0) {
+						console.log("[" + cli.id + "]", "Le  mec qui m'a appelé a raté son incantation");
+						return (begin(5));
+					}
+				}
 			}
 		}
-
 		
 		var hasMsg = function (see) {
 			console.log("[" + cli.id + "]", "Je check mes messages");
@@ -262,12 +259,20 @@
 				checkRock(see[0]);
 			}
 		}
-
 		
+		// dès le début si on a pas assez de player sur la map pour monter de level, on va chercher de la nourriture pour survivre le temps que les autres level UP
 		var begin =  function (nbFood) {
 			cli.inventaire(function (inv) {
 				cli.voir(function (see) {
 					if (inv.nourriture >= nbFood) {
+
+						if (nbFood > (mapX + mapY) / 2) {
+							cli.connect_nbr(function (res) {
+								if (res) {
+									new client(console, opt, doAlgo);
+								}
+							});
+						}
 						hasMsg(see);
 					} else {
 						foodInFrontOf(see, nbFood);

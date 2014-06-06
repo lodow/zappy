@@ -19,7 +19,6 @@
         this.msg = null;
         this.id = cliId;
         this.lvl = 0;
-        this.lock = false;
         this.mapX = 0;
         this.mapY = 0;
         this.inv = {linemate : 0, deraumere : 0, sibur : 0, mendiane : 0, phiras : 0, thystame : 0};
@@ -105,13 +104,12 @@
                 self.broadcast(self.lvl.toString() + "-ko", function (res) {
 
                 });
-                return (self.levelCallback((self.mapX + self.mapY) / 2));
+                return (self.levelCallback((self.mapX + self.mapY)));
             } 
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
-                self.lock = false;
-                return (self.levelCallback((self.mapX + self.mapY) / 2));
+                return (self.levelCallback((self.mapX + self.mapY)));
             }
             if (!data.indexOf("message")) {
                 data = data.split(',');
@@ -324,8 +322,6 @@
 
 		this.incantation = function (callback) {
 			this.sendCmd("incantation", function (rep) {
-                if (rep == "elevation en cours")
-                    self.lock = true;
 				callback(rep == "elevation en cours");
 			});
 		}
