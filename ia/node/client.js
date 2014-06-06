@@ -20,6 +20,8 @@
         this.id = cliId;
         this.lvl = 0;
         this.lock = false;
+        this.mapX = 0;
+        this.mapY = 0;
         this.inv = {linemate : 0, deraumere : 0, sibur : 0, mendiane : 0, phiras : 0, thystame : 0};
 
         // =================== Creating socket connection ================
@@ -81,13 +83,17 @@
                     }
                     self.dataCallback = this.getResponse;
                     print.warn("Connection successfully initialized");
-                    callback(self, parseInt(data[0]), parseInt(data[1]));
+                    self.mapX = parseInt(data[0]);
+                    self.mapY = parseInt(data[1]);
+                    callback(self, self.mapX, self.mapY);
                 }
             };
             print.send(opt.team);
             self.socket.write(opt.team + '\n');
             self.socket.on('data', handleData);
         };
+
+        // ================= Sending and Receiving procedures ================
 
         this.getResponse = function (data) {
         	print.recv("[" + self.id + "] : " + data);
@@ -96,16 +102,16 @@
             if (data == 'ko' && self.lock) {
                 print.log("[" + self.id + "] : " + data + " => INCANTATION FAILED");
                 self.lock = false;
-                self.broadcast(self.lvl.toString() + "-ok", function (res) {
+                self.broadcast(self.lvl.toString() + "-ko", function (res) {
 
                 });
-                return (self.levelCallback(3));
+                return (self.levelCallback((self.mapX + self.mapY) / 2));
             } 
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
                 self.lock = false;
-                return (self.levelCallback(3));
+                return (self.levelCallback((self.mapX + self.mapY) / 2));
             }
             if (!data.indexOf("message")) {
                 data = data.split(',');
@@ -131,6 +137,8 @@
         	self.cmds.push({cmd : cmd, callback : callback});
         	self.socket.write(cmd + '\n');
         }
+
+        // ==================== Utils ==========================================
 
         this.numberOf = function (cmd, to_find) {
         	var ret = 0, begin, end;

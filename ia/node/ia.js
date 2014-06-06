@@ -5,7 +5,7 @@
     var client = require("./client");
 
 	var opt = stdio.getopt({
-		'team': {key: 'n', args: 1, description: 'Teamname for te ia', mandatory: true},
+		'team': {key: 'n', args: 1, description: "IA's teamname", mandatory: true},
 	    'port': {key: 'p', args: 1, description: 'Connexion port', mandatory: false},
 	    'host': {key: 'h', args: 1, description: 'Connexion host', mandatory: false},
 	});
@@ -27,19 +27,14 @@
     	{joueur : 6, linemate : 2, deraumere : 2, sibur : 2, mendiane : 2, phiras : 2, thystame : 1},
     ];
 
+    var coresPos = [2, 1, 8];
+
 	var doAlgo = function (cli, mapX, mapY) {
 
 		var takeFood = function (numSquare, nbFood) {
 			var pos;
 
-			if (numSquare == 1)
-				pos = 2;
-			else if (numSquare == 2)
-				pos = 1;
-			else if (numSquare == 3)
-				pos = 8;
-			else
-				pos = 0;
+			pos = coresPos[numSquare - 1] || 0;
 			console.log("[" + cli.id + "]", 'Je prend la nourriture de la case:', pos);
 			cli.goDirection(pos, function (res) {
 				cli.prend("nourriture", function (res) {
@@ -106,23 +101,28 @@
 		}
 
 		var launchIncant = function () { 
-			if (cli.msg) {
-				return (cli.voir(function (see) {
-					followMsg(see);
-				}));
-			}
-
 			if (!cli.lock) {
 				console.log("[" + cli.id + "]", "J'incante");
 				cli.incantation(function (res) {
 					if (!res)
-						begin(3);
+						begin((mapX + mapY) / 2);
 					else {
-						cli.broadcast(cli.lvl.toString() + "-ok", function (res) {
-
-						});
+						cli.broadcast(cli.lvl.toString() + "-ok", function (res) { });
 					}
 				});
+			}
+		}
+
+		var callRenfort = function (square) {
+			if (square.joueur < incant[cli.lvl].joueur) {
+				console.log("[" + cli.id + "]", "je demande de l'aide");
+				cli.broadcast(cli.lvl.toString() + "-help", function (res) {
+					cli.voir(function (see) {
+						callRenfort(see[0]);
+					});
+				});
+			} else {
+				checkNbPlayers(square);
 			}
 		}
 
@@ -144,30 +144,17 @@
 				cli.connect_nbr(function (res) {
 					if (!res) {
 						if (cli.nbClis() + cli.nbFork() >= incant[cli.lvl].joueur) {
-							console.log("[" + cli.id + "]", "je broadcast");
-							cli.broadcast(cli.lvl.toString() + "-help", function (res) {
-								cli.voir(function (see) {
-									checkNbPlayers(see[0]);
-								});
-							});
+							callRenfort(square);
 						} else {
 							console.log("[" + cli.id + "]", "Je fork et je broadcast");
 							cli.fork(function (res) {
-								cli.broadcast(cli.lvl.toString() + "-help", function (res) {
-									cli.voir(function (see) {
-										checkNbPlayers(see[0]);
-									});
-								});
+								callRenfort(square);
 							});
 						}
 					} else {
 						console.log("[" + cli.id + "]", 'Je connecte un nouveau client, et je broadcast');
 						new client(console, opt, doAlgo);
-						cli.broadcast(cli.lvl.toString() + "-help", function (res) {
-							cli.voir(function (see) {
-								checkNbPlayers(see[0]);
-							});
-						});
+						callRenfort(square);
 					}
 				});
 			} else {
@@ -227,33 +214,42 @@
 			checkNbPlayers(square);
 		}
 
+		// /!\ Verif pas 2 incantation au même moment sur la même case ! msg.direction == 0, même case
 		// Si on a les bonnes ressources, on vérifie que personne ne nous apelle, puis on appelle
 		// Si on nous appelle, on va dans la bonne direction tant qu'on a pas reçu de "ok"
+		// si on recoit "ko", fail de l'incant du mec
 
 		var followMsg = function (see) {
 			var recv = cli.msg;
 
-			if (recv) { 
-				cli.msg = null;
-				if (recv.msg == "help") {
-					console.log("[" + cli.id + "]", "J'ai reçu:", recv.msg);
-					cli.goDirection(recv.direction, function (dir) {
-						cli.voir(function (see) {
-							followMsg(see);
-						});
-					});
-				} else {
-					begin(3);
+			if (!recv) {
+				return (cli.voir(function (see) {
+						hasMsg(see);
+					}));
+			}
+			cli.msg = null;
+			if (recv && recv.msg == "ok") {
+				if (recv.direction == 0)
+					console.log("[" + cli.id + "]", "Le  mec qui m'a appelé incante");
+				else {
+					console.log("[" + cli.id + "]", "J'étais trop loin on a plus besoin de moi")
+					begin(5);
 				}
-			} else {
-				if (see[0].joueur == incant[cli.lvl].joueur) {
-					console.log("[" + cli.id + "]", "celui qui m'a appelé incante");
-				}
+				return ;
+			}
 
-				if (see[0].joueur > incant[cli.lvl].joueur) {
-					console.log("[" + cli.id + "]", "Y a une couille dans le potage");
-					begin(3);
-				}
+			if (recv && recv.msg == "ko" && recv.direction == 0) {
+				console.log("[" + cli.id + "]", "Le  mec qui m'a appelé a raté son incantation");
+				return (begin(5));
+			}
+
+			if (recv.msg == "help") {
+				console.log("[" + cli.id + "]", "J'ai reçu:", recv.msg);
+				cli.goDirection(recv.direction, function (dir) {
+					cli.voir(function (see) {
+						followMsg(see);
+					});
+				});
 			}
 		}
 
@@ -282,7 +278,7 @@
 
 		cli.fork(function (res) {
 			cli.setLevelCallback(begin);
-			begin(3);
+			begin((mapX + mapY) / 2);
 		});
     }
 
