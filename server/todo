@@ -1,7 +1,0 @@
-========== GESTION COMMANDES ===========
-
-=> ===== INCANTATION ==
-   -> Expulsion pendant une incant.
-
-=> === RING BUFFER ===
-   -> utiliser un vrai ring buffer de taille fixe, (en lecture du moins) ou pas ?
