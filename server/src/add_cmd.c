@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue Apr 29 21:13:41 2014 Nicolas Bridoux
-** Last update Sat May 31 18:14:07 2014 Nicolas Bridoux
+** Last update Sat Jun  7 14:32:18 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -38,6 +38,7 @@ static int	init_ia(t_server *serv, t_selfd *fd, char *cmd)
     {
       client->x = rand() % serv->game.width;
       client->y = rand() % serv->game.height;
+      gen_food(serv);
     }
   client->orientation = rand() % 4 + 1;
   client->level = 1;

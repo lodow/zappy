@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Sat May 31 20:06:02 2014 Nicolas Bridoux
+## Last update Sat Jun  7 15:08:10 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -31,6 +31,7 @@ SRC		=	main.c \
 			ring_buffers.c \
 			eggs.c \
 			my_str_to_wordtab.c \
+			gen_ressources.c \
 			cmd_ia/avance.c \
 			cmd_ia/droite.c \
 			cmd_ia/gauche.c \

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 01:42:18 2014 Nicolas Bridoux
-** Last update Fri May 30 17:47:13 2014 Nicolas Bridoux
+** Last update Sat Jun  7 14:32:40 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -41,6 +41,7 @@ static void	egg_hatched(t_server *serv, char *cmd)
     {
       server_log(WARNING, "Egg %zu is hatch in (%d,%d)",
 		 egg->num_egg, egg->x, egg->y);
+      gen_food(serv);
       eht(serv, egg->num_egg);
       tmp = serv->game.teams;
       while (tmp)

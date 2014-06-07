@@ -1,14 +1,7 @@
 ========== GESTION COMMANDES ===========
 
 => ===== INCANTATION ==
-   -> si on se fait expulser pendant une incant, que se passe t-il ?
-
-=> ==== EVENT GUI ====
-   ->bct, dans l'instruction pie ? (fin d'incant)
+   -> Expulsion pendant une incant.
 
 => === RING BUFFER ===
    -> utiliser un vrai ring buffer de taille fixe, (en lecture du moins) ou pas ?
-
-=> Rajouter les pierres après incantation
-=> Vérifier la food
-=> Afficher "oeuf", quand un oeuf est sur la map

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 20:03:06 2014 Nicolas Bridoux
-** Last update Mon Jun  2 16:53:38 2014 Nicolas Bridoux
+** Last update Sat Jun  7 16:18:37 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -99,18 +99,17 @@ static void	send_level_up(t_server *serv, t_client *client)
   while (tmp)
     {
       fd = (t_selfd *)tmp->data;
-      if (fd && fd->callback == (void *)&handle_client)
+      if (fd && fd->callback == (void *)&handle_client &&
+	  (him = (t_client *)fd->data) && him->type_cli == IA &&
+	  him->x == client->x && him->y == client->y)
 	{
-	  him = (t_client *)fd->data;
-	  if (him->type_cli == IA && him->x == client->x &&
-	      him->y == client->y)
-	    {
-	      snprintf(buff, sizeof(buff), "niveau actuel : %d", ++him->level);
-	      send_response(fd, buff);
-	    }
+	  snprintf(buff, sizeof(buff), "niveau actuel : %d", ++him->level);
+	  send_response(fd, buff);
 	}
       tmp = tmp->next;
     }
+  plv_event(serv, client->x, client->y);
+  gen_rocks(serv, &g_incant[client->level >= 2 ? client->level - 2 : 0]);
 }
 
 void		incantation(t_server *serv, t_selfd *fd,

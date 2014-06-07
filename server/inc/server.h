@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Sat May 31 20:09:30 2014 Nicolas Bridoux
+** Last update Sat Jun  7 15:27:15 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -166,6 +166,14 @@ void	free_tab(char **tab);
 char	**my_str_to_wordtab(char *str, char delim);
 
 /*
+** gen_ressources.c
+*/
+
+void	gen_food(t_server *serv);
+void	gen_single_food(t_server *serv, char *ressource);
+void	gen_rocks(t_server *serv, t_map *need);
+
+/*
 ** functions for ia client in "cmd_ia" directory
 */
 
@@ -206,6 +214,8 @@ void	sst(t_server *serv, t_selfd *fd, char **args);
 */
 
 void	send_to_every_gui(t_server *serv, char *msg);
+void	mct_event(t_server *serv);
+void	bct_event(t_server *serv, t_map *map, size_t x, size_t y);
 void	pnw(t_server *serv, t_selfd *fd);
 void	pnw_init(t_server *serv, t_selfd *fd);
 void	ppo_event(t_server *serv, t_selfd *fd);
