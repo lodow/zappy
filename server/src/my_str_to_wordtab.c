@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 13:50:08 2014 Nicolas Bridoux
-** Last update Fri May 30 19:27:42 2014 Nicolas Bridoux
+** Last update Sat Jun  7 22:41:59 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -15,9 +15,12 @@ static size_t	count_words(char *str, char delim)
   size_t	count;
 
   count = 1;
-  while (*str++)
-    if (*str == delim)
-      ++count;
+  while (*str)
+    {
+      if (*str == delim)
+	++count;
+      ++str;
+    }
   return (count);
 }
 
