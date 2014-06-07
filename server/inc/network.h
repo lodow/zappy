@@ -46,6 +46,7 @@ int		port_number(t_net *net);
 void	write_sock(const char *str, int socket, int strlen);
 
 int	connect_nb(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+int	check_socket_error(t_net *net);
 int	is_connected(t_net *net);
 
 #endif /* !NETWORK_H_INCLUDED */
