@@ -5,10 +5,11 @@
 	var net = require('net');
 	var events = require('events');
 	var nbClis = 0;
-    var nbFork = 0;
     var cliId = 0;
+    var mapX = 0;
+    var mapY = 0;
 
-	var Client = function (print, opt, callback) {
+	var Client = function (print, opt, beginCallback) {
 
 		var self = this, handleData, handleConnect;
 
@@ -19,8 +20,6 @@
         this.msg = null;
         this.id = cliId;
         this.lvl = 0;
-        this.mapX = 0;
-        this.mapY = 0;
         this.inv = {linemate : 0, deraumere : 0, sibur : 0, mendiane : 0, phiras : 0, thystame : 0};
 
         // =================== Creating socket connection ================
@@ -41,8 +40,6 @@
         this.socket.addListener('connect', function() {
             nbClis++;
             cliId++;
-            if (nbFork)
-                --nbFork;
             self.dataCallback = handleConnect;
             self.socket.on('data', handleData);
         });
@@ -82,9 +79,9 @@
                     }
                     self.dataCallback = this.getResponse;
                     print.warn("Connection successfully initialized");
-                    self.mapX = parseInt(data[0]);
-                    self.mapY = parseInt(data[1]);
-                    callback(self, self.mapX, self.mapY);
+                    mapX = parseInt(data[0]);
+                    mapY = parseInt(data[1]);
+                    beginCallback(self, mapX, mapY);
                 }
             };
             print.send(opt.team);
@@ -99,23 +96,39 @@
         	if (data == "mort")
         		return (self.socket.destroy());
             if (data == 'ko' && self.lock) {
-                print.log("[" + self.id + "] : " + data + " => INCANTATION FAILED");
+                this.debug("Mon incantation n'a pas réussi");
                 self.lock = false;
-                self.broadcast(self.lvl.toString() + "-ko", function (res) {
-
-                });
-                return (self.levelCallback((self.mapX + self.mapY)));
+                self.broadcast(self.lvl.toString() + "-ko", function (res) { });
+                return (self.levelCallback(self.lvl * 10));
             } 
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
-                return (self.levelCallback((self.mapX + self.mapY)));
+                return (self.levelCallback(self.lvl * 10));
             }
             if (!data.indexOf("message")) {
                 data = data.split(',');
                 data[0] = data[0].split(' ')[1];
                 if (parseInt(data[1].split('-')[0]) == self.lvl) {
+                    if (self.inv.nourriture < self.lvl * 10 / 2 || !self.levelCallback) {
+                        self.debug("J'ai pas assez de nourriture, j'ignore l'aide !");
+                        return ;
+                    }
+
                     self.msg = { direction : parseInt(data[0]) , msg : data[1].split('-')[1]};
+                    self.cmds = [ ];
+
+                    if (self.msg.msg == "help") { // l'ia demande de l'aide
+                        self.debug("On m'a demandé de l'aide je vais en:" + self.msg.direction);
+                        return (self.doOneStep(self.msg.direction, function (dir) {
+
+                                }));
+                    } else if (self.msg.msg == "ok" ) { // l'ia qui appelle commence l'incantation
+                        if (self.msg.direction != 0) // Pour ceux qui ont commencés à venir
+                            return (self.levelCallback(self.lvl * 10));
+                    } else if (self.msg.msg == "ko") { // l'ia qui appele a raté son incantation (début ou fin)
+                        return (self.levelCallback(self.lvl * 10));
+                    }
                 }
                 return ;
             }
@@ -126,6 +139,13 @@
         }
 
         this.sendCmd = function (cmd, callback) {
+            if (cmd != "connect_nbr" && nbClis < 10) {
+                this.sendCmd("connect_nbr", function (res) {
+                    if (res > 0)
+                        new Client(print, opt, beginCallback);
+                });
+            }
+
             if (self.cmds.length >= 10) {
                 print.err("[" + self.id + "] " + " Trop de commandes en même temps !");
                 return ;
@@ -170,12 +190,33 @@
 			return (nbClis);
 		}
 
-        this.nbFork = function () {
-            return (nbFork);
+        this.debug = function (msg) {
+            console.log("[" + self.id + "] ", msg);
         }
 
-        this.setLevelCallback = function (callback) {
-            this.levelCallback = callback;
+        this.setLevelCallback = function (toSetCallback, callback) {
+            this.levelCallback = toSetCallback;
+            return (callback());
+        }
+
+        this.doOneStep = function (direction, callback) {
+            if (direction == 0) {
+                callback(direction);
+            } else if (direction == 1 || direction == 2 || direction == 8) {
+                self.avance(function (res) {
+                    callback(direction);
+                });
+            } else if (direction == 3 || direction == 4 || direction == 5) {
+                self.gauche(function (res) {
+                    callback(direction);
+                });
+            } else if (direction == 6 || direction == 7) {
+                self.droite(function (res) {
+                    callback(direction);
+                });
+            } else {
+                print.err("[" + this.id + "] : Wrong direction (> 8 || < 0)");
+            }
         }
 
         this.goDirection = function (direction, callback) {
@@ -328,7 +369,6 @@
 
 		this.fork = function (callback) {
 			this.sendCmd("fork", function (rep) {
-                ++nbFork;
 				callback(rep == "ok");
 			});
 		}

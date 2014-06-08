@@ -27,265 +27,155 @@
     	{joueur : 6, linemate : 2, deraumere : 2, sibur : 2, mendiane : 2, phiras : 2, thystame : 1},
     ];
 
-    var coresPos = [2, 1, 8];
-    var moves = [1, 3, 5, 7];
+    var coresPos = [0, 2, 1, 8];
 
 	var doAlgo = function (cli, mapX, mapY) {
 
-		var takeFood = function (numSquare, nbFood) {
-			var pos;
 
-			pos = coresPos[numSquare - 1] || 0;
-			console.log("[" + cli.id + "]", 'Je prend la nourriture de la case:', pos);
-			cli.goDirection(pos, function (res) {
-				cli.prend("nourriture", function (res) {
-					if (res) {
-						console.log("[" + cli.id + "]", "J'ai réussi a prendre la nourriture");
-						begin(nbFood);
-					} else {
-						console.log("[" + cli.id + "]", "Je n'ai pas réussi a prendre la nourriture (quelqu'un la prise avant moi)");
-						searchFood(nbFood);
-					}
-				});
-			});
-		}
+		// ====> Chercher de la nourriture uniquement
+		var survive = function (nbFood, see) {
+			if (cli.inv.nourriture > nbFood) {
+				cli.debug("Finis la survie");
+				return (begin(10));
+			}
 
-		var searchFood = function (nbFood) {
-			console.log("[" + cli.id + "]", "J'avance");
-			cli.goDirection(Math.floor(Math.random() * 10) % 8 + 1, function (res) {
-				cli.voir(function (see) {
-					foodInFrontOf(see, nbFood);
-				});
-			});
-		}	
-
-		var foodInFrontOf = function (see, nbFood) {
 			try {
-				for (var i = 0; i < 4;  ++i)
-					if (see[i].nourriture) {
-						console.log("[" + cli.id + "]", 'Il y a de la nourriture devant moi');
-						return (takeFood(see[2].nourriture ? 2 : i, nbFood));
-					}
+				for (var i = 0; i < 4; ++i)
+					if (see[i].nourriture) // préférer devant plutôt que devant + gauche
+						return (cli.goDirection(coresPos[i], function (dir) {
+									cli.prend("nourriture", function (res) {
+										if (res)
+											cli.debug("J'ai pris une nourriture");
+										cli.voir(function (see) {
+											survive(nbFood, see);
+										});
+									});
+								}));
 			} catch (e) {
-				console.err(cli.id + 'ERROR');
-				process.exit(0);
+				cli.debug("Err survive");
+				process.exit(1);
 			}
-			console.log("[" + cli.id + "]", "Il n'y a pas de la nourriture devant moi");
-			searchFood(nbFood);
-		}
-
-		var takeRock =  function (item) {
-			console.log("[" + cli.id + "]", "je prend un ", item);
-			cli.prend(item, function (res) {
-				cli.voir(function (see) {
-					hasMsg(see);
-				});
-			});
-		}
-
-		var putRock = function (item) {
-			console.log("[" + cli.id + "]", "Je pose un", item);
-			cli.pose(item, function (res) {
-				cli.voir(function (see) {
-					hasMsg(see);
-				});
-			});
-		}
-
-		var nextSquare = function () {
-			console.log("[" + cli.id + "]", "J'avance");
-			cli.goDirection(moves[Math.floor(Math.random() * 10) % 4], function (res) {
-				cli.voir(function (see) {
-					hasMsg(see);
-				});
-			});
-		}
-
-		var launchIncant = function () { 
-			console.log("[" + cli.id + "]", "J'incante");
-			cli.incantation(function (res) {
-				if (!res)
-					begin((mapX + mapY) / 2);
-				else {
-					cli.broadcast(cli.lvl.toString() + "-ok", function (res) { });
-				}
-			});
-		}
-
-		var callRenfort = function (square) {
-			if (square.joueur < incant[cli.lvl].joueur) {
-				console.log("[" + cli.id + "]", "je demande de l'aide");
-				cli.broadcast(cli.lvl.toString() + "-help", function (res) {
-					cli.voir(function (see) {
-						callRenfort(see[0]);
-					});
-				});
-			} else {
-				checkNbPlayers(square);
-			}
-		}
-
-		var addPlayer = function () {
-			cli.connect_nbr(function (res) {
-				if (!res) {
-					if (cli.nbClis() + cli.nbFork() >= incant[cli.lvl].joueur) {
-						cli.inventaire(function (inv) {
-							addPlayer();
+			cli.debug("Pas de nourriture sur cette case");
+			return (cli.avance(function (res) {
+						cli.voir(function (see) {
+							survive(nbFood, see);
 						});
-					} else {
-						console.log("[" + cli.id + "]", "Je fork et je broadcast");
-						cli.fork(function (res) {
-							addPlayer();
-						});
+					}));
+		}
+
+		// =====> Gestion du nombre de joueurs et incantation
+
+		var launchIncant = function () {
+			cli.debug("Il y a le bon nombre de joueurs, je lance l'incantation");
+			cli.broadcast(cli.lvl.toString() + "-ok", function (res) {
+				cli.incantation(function (res) {
+					if (!res) {
+						cli.debug("Je n'ai pas pu lancer mon incantation");
+						cli.broadcast(cli.lvl.toString() + "-ko", function (res) { });
+						return (begin(10));
 					}
-				} else {
-					console.log("[" + cli.id + "]", 'Je connecte un nouveau client, et je broadcast');
-					new client(console, opt, doAlgo);
-					cli.voir(function (see) {
-						callRenfort(see[0]);
-					});
-				}
+				});
 			});
 		}
 
-		var checkNbPlayers = function (square) {
-			console.log("[" + cli.id + "]", 'Je vérifie le nombre de joueurs');
+
+		var callTeam = function (square) {
+			cli.debug("Je vérifie le nombre de joueurs");
 
 			if (square.joueur == incant[cli.lvl].joueur) {
-				console.log("[" + cli.id + "]", 'Il y a le bon nombre de joueurs sur la case')
 				return (launchIncant());
 			} else if (square.joueur < incant[cli.lvl].joueur) {
-				console.log(cli.id, "Il manque des joueurs sur la case");
-				addPlayer();				
-			} else {
-				console.log("[" + cli.id + "]", "Nous sommes trop sur la case, je m'en vais");
-				begin(3);
-			}
-		};
-
-		var takeAllAndGoNext = function (square) {
-			for (c in square) {
-				if (c != "joueur") {
-					if (square[c] > 0) {
-						return (cli.prend(c, function (res) {
+				cli.debug("Nous ne sommes pas assez, j'appele des gens");
+				return (cli.broadcast(cli.lvl.toString() + "-help", function (res) {
 							cli.voir(function (see) {
-								takeAllAndGoNext(see[0]);
+								callTeam(see[0]);
 							});
 						}));
-					}
-				}
+			} else {
+				cli.debug("Nous sommes trop sur la map, je m'en vais");
+				return (begin(10));
 			}
-			return (nextSquare());
 		}
 
-		var hasGoodNbOfRocks = function (square) {
-			for (c in square) {
-				if (c != "joueur") {
-					if (cli.inv[c] === undefined || incant[cli.lvl][c] > square[c] + cli.inv[c]) {
-						return (false);
-					}
-				}
-			}
+		// =====> Gestion des pierres
+		var possibleIncant = function (square) {
+			for (s in square)
+				if (s != "joueur" && square[s] + cli.inv[s] < incant[cli.lvl][s])
+					return (false);
 			return (true);
 		}
 
-		var checkRock = function (square) {
-			if (!hasGoodNbOfRocks(square)) {
-				console.log("[" + cli.id + "]","Il manque des ressources, je prend tout et je bouge");
-				return (takeAllAndGoNext(square));
-			}
+		var takeStonesAndMove = function (see) {
+			var square = see[0];
 
-			for (c in square) {
-				if (c != "joueur") {
-					if (square[c] > incant[cli.lvl][c]) {
-						console.log("[" + cli.id + "]", "Il a a trop de :", c, "sur la case");
-						return (takeRock(c));
+			for (s in square)
+				if (s != "joueur" && square[s] && (incant[cli.lvl][s] || incant[cli.lvl + 1 == 7 ? cli.lvl : cli.lvl + 1][s]))
+					return (cli.prend(s, function (res) {
+								cli.voir(function (see) {
+									takeStonesAndMove(see);
+								});
+							}));
+
+			// bouger à un endroit pertinent en fonction de nos besoins
+			cli.avance(function (res) {
+				cli.voir(function (see) {
+					searchStones(see);
+				});
+			});
+		}
+
+		var searchStones = function (see) {
+			var square = see[0];
+
+			if (!possibleIncant(square))
+				return (takeStonesAndMove(see));
+
+			for (s in square) {
+				if (s != "joueur") {
+					if (square[s] > incant[cli.lvl][s]) {
+						cli.debug("Je prend un " + s);
+						return (cli.prend(s, function (res) {
+									cli.voir(function (see) {
+										searchStones(see);
+									});
+								}));
 					}
 
-					if (square[c] < incant[cli.lvl][c]) {
-						console.log("[" + cli.id + "]", "Il manque de :", c, "sur la case");
-						if (square[c] + cli.inv[c] >= incant[cli.lvl][c]) {
-							console.log("[" + cli.id + "]","Je pose:", c);
-							return (putRock(c));
-						} 
+					if (square[s] < incant[cli.lvl][s]) {
+						cli.debug("Je pose un " + s);
+						return (cli.pose(s, function (res) {
+									cli.voir(function (see) {
+										searchStones(see);
+									});
+								}));
 					}
 				}
 			}
-			checkNbPlayers(square);
+			cli.debug("Il devrait y avoir le bon nombre de pierres sur la case");
+			return (callTeam(square));
 		}
 
-		// /!\ Verif pas 2 incantation au même moment sur la même case ! msg.direction == 0, même case
-		// direction == 0 && msg = "ok" => lock, attente de l'incant
-		// "niveau actuel" => unlock, fin de l'incant
-
-		var followMsg = function (see) {
-			var recv = cli.msg;
-
-			if (!recv) {
-				return (cli.voir(function (see) {
-						hasMsg(see);
-					}));
-			} else {
-				cli.msg = null;
-				if (recv.msg == "ok") {
-					if (recv.direction == 0)
-						console.log("[" + cli.id + "]", "Le mec qui m'a appelé incante");
-					else {
-						console.log("[" + cli.id + "]", "J'étais trop loin on a plus besoin de moi")
-						begin(5);
-					}
-					return ;
-				} else if (recv.msg == "help") { // direction == 0, ne pas faire "voir" et la suite
-					console.log("[" + cli.id + "]", "J'ai reçu:", recv.msg, ", je vais vers lui");
-					cli.goDirection(recv.direction, function (dir) {
-						cli.voir(function (see) {
-							followMsg(see);
-						});
-					});
-				} else if (recv.msg == "ko") {
-					if (recv.direction == 0) {
-						console.log("[" + cli.id + "]", "Le  mec qui m'a appelé a raté son incantation");
-						return (begin(5));
-					}
-				}
-			}
-		}
-		
-		var hasMsg = function (see) {
-			console.log("[" + cli.id + "]", "Je check mes messages");
-			if (cli.msg) {
-				followMsg(see);
-			} else {
-				checkRock(see[0]);
-			}
-		}
-		
-		// dès le début si on a pas assez de player sur la map pour monter de level, on va chercher de la nourriture pour survivre le temps que les autres level UP
-		var begin =  function (nbFood) {
+		// ====> Tout début de la "boucle de vie"
+		var begin = function (nbFood) {
 			cli.inventaire(function (inv) {
 				cli.voir(function (see) {
-					if (inv.nourriture >= nbFood) {
-
-						if (nbFood > (mapX + mapY) / 2) {
-							cli.connect_nbr(function (res) {
-								if (res) {
-									new client(console, opt, doAlgo);
-								}
-							});
-						}
-						hasMsg(see);
+					if (inv.nourriture < nbFood) {
+						cli.debug("Je n'ai pas assez de nourriture je vais en chercher");
+						survive(nbFood + 10, see);
 					} else {
-						foodInFrontOf(see, nbFood);
+						cli.debug("J'ai assez de nourriture, je vais chercher des pierres");
+						searchStones(see);
 					}
 				});
 			});
 		}
 
 		cli.fork(function (res) {
-			cli.setLevelCallback(begin);
-			begin((mapX + mapY) / 2);
+			cli.setLevelCallback(begin, function () {
+				begin(10);
+			});
 		});
-    }
+	}
 
     new client(console, opt, doAlgo);
 
