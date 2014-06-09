@@ -99,19 +99,19 @@
                 this.debug("Mon incantation n'a pas réussi");
                 self.lock = false;
                 self.broadcast(self.lvl.toString() + "-ko", function (res) { });
-                return (self.levelCallback(self.lvl * 10));
+                return (self.levelCallback((self.lvl + 1) * 10));
             } 
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
-                return (self.levelCallback(self.lvl * 10));
+                return (self.levelCallback((self.lvl + 1) * 10));
             }
             if (!data.indexOf("message")) {
                 data = data.split(',');
                 data[0] = data[0].split(' ')[1];
                 if (parseInt(data[1].split('-')[0]) == self.lvl) {
-                    if (self.inv.nourriture < self.lvl * 10 / 2 || !self.levelCallback) {
-                        self.debug("J'ai pas assez de nourriture, j'ignore l'aide !");
+                    if (self.inv.nourriture < (self.lvl + 1) * 10 / 2 || !self.levelCallback) {
+                        self.debug("J'ai pas assez de nourriture, j'ignore l'aide ! (lvl : " + self.lvl + ", food : "+self.inv.nourriture+")");
                         return ;
                     }
 
@@ -120,14 +120,12 @@
 
                     if (self.msg.msg == "help") { // l'ia demande de l'aide
                         self.debug("On m'a demandé de l'aide je vais en:" + self.msg.direction);
-                        return (self.doOneStep(self.msg.direction, function (dir) {
-
-                                }));
+                        return (self.doOneStep(self.msg.direction, function (dir) { }));
                     } else if (self.msg.msg == "ok" ) { // l'ia qui appelle commence l'incantation
                         if (self.msg.direction != 0) // Pour ceux qui ont commencés à venir
-                            return (self.levelCallback(self.lvl * 10));
+                            return (self.levelCallback((self.lvl + 1) * 10));
                     } else if (self.msg.msg == "ko") { // l'ia qui appele a raté son incantation (début ou fin)
-                        return (self.levelCallback(self.lvl * 10));
+                        return (self.levelCallback((self.lvl + 1) * 10));
                     }
                 }
                 return ;

@@ -41,14 +41,21 @@
 
 			try {
 				for (var i = 0; i < 4; ++i)
-					if (see[i].nourriture) // préférer devant plutôt que devant + gauche
-						return (cli.goDirection(coresPos[i], function (dir) {
+					if (see[i].nourriture)
+						return (cli.goDirection(coresPos[see[2].nourriture ? i : 2], function (dir) {
 									cli.prend("nourriture", function (res) {
-										if (res)
-											cli.debug("J'ai pris une nourriture");
-										cli.voir(function (see) {
-											survive(nbFood, see);
-										});
+										cli.debug(res ? "J'ai pris une nourriture" : "Quelqu'un m'a pris ma nourriture");
+										if (!res) {
+											cli.goDirection(coresPos[Math.floor(Math.random() * 10) % 3 + 1], function (dir) {
+														cli.voir(function (see) {
+													survive(nbFood, see);
+												});
+											});
+										} else {
+											cli.voir(function (see) {
+												survive(nbFood, see);
+											});
+										}
 									});
 								}));
 			} catch (e) {
@@ -105,6 +112,37 @@
 			return (true);
 		}
 
+		var getNeedyPlace = function (see) {
+			var needy = [ ], score, direction;
+
+			for (var i = 0; i < 4; ++i) {
+				score = 0;
+				for (s in see[i]) {
+					if (s != "joueur") {
+						if (see[i][s] > 0 && incant[cli.lvl][s]) {
+							cli.debug("case " + i + " score + 10 ("+s+")");
+							score += 10;
+						}
+						if (see[i][s] > 0 && incant[cli.lvl + 1 == 7 ? cli.lvl : cli.lvl][s]) {
+							cli.debug("case " + i + " score + 1 ("+s+")");
+							score += 1;
+						}
+					}
+				}
+				needy.push({ score : score,  index : i});
+			}
+
+			for (var i = 0, l = needy.length; i < l; ++i) {
+				needy[0] = needy[0].score > needy[i].score ? needy[0] : needy[i];
+			}
+			cli.debug("Le meilleur score est : (" + needy.length + ")");
+			cli.debug(needy[0]);
+
+			direction = needy.length && needy[0].score > 0 ? needy[0].index : Math.floor(Math.random() * 10) % 3 + 1;
+			cli.debug("direction : " + direction);
+			return (coresPos[direction]);
+		}
+
 		var takeStonesAndMove = function (see) {
 			var square = see[0];
 
@@ -116,8 +154,7 @@
 								});
 							}));
 
-			// bouger à un endroit pertinent en fonction de nos besoins
-			cli.avance(function (res) {
+			cli.goDirection(getNeedyPlace(see), function (dir) {
 				cli.voir(function (see) {
 					searchStones(see);
 				});
