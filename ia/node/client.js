@@ -6,6 +6,7 @@
 	var events = require('events');
 	var nbClis = 0;
     var cliId = 0;
+    var levels = [0, 0, 0, 0, 0 ,0, 0, 0]
     var mapX = 0;
     var mapY = 0;
 
@@ -34,12 +35,14 @@
 
         this.socket.addListener('close', function(err) {
             nbClis--;
+            levels[self.lvl]--;
             print.warn('Closing connection... Exiting.');
         });
         
         this.socket.addListener('connect', function() {
             nbClis++;
             cliId++;
+            levels[0]++;
             self.dataCallback = handleConnect;
             self.socket.on('data', handleData);
         });
@@ -94,7 +97,7 @@
         this.getResponse = function (data) {
         	print.recv("[" + self.id + "] : " + data);
         	if (data == "mort")
-        		return (self.socket.destroy());
+                return (self.socket.destroy());
             if (data == 'ko' && self.lock) {
                 this.debug("Mon incantation n'a pas réussi");
                 self.lock = false;
@@ -104,6 +107,8 @@
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
+                levels[self.lvl - 1]--;
+                levels[self.lvl]++;
                 return (self.levelCallback((self.lvl + 1) * 10));
             }
             if (!data.indexOf("message")) {
@@ -116,12 +121,15 @@
                     }
 
                     self.msg = { direction : parseInt(data[0]) , msg : data[1].split('-')[1]};
-                    self.cmds = [ ];
+                    var msg = self.msg;
+
+                    for (var i = 0, l = self.cmds.length; i < l; ++i)
+                        self.cmds[i].callback = null;
 
                     if (self.msg.msg == "help") { // l'ia demande de l'aide
                         self.debug("On m'a demandé de l'aide je vais en:" + self.msg.direction);
                         return (self.doOneStep(self.msg.direction, function (dir) { }));
-                    } else if (self.msg.msg == "ok" ) { // l'ia qui appelle commence l'incantation
+                    } else if (self.msg.msg == "ok") { // l'ia qui appelle commence l'incantation
                         if (self.msg.direction != 0) // Pour ceux qui ont commencés à venir
                             return (self.levelCallback((self.lvl + 1) * 10));
                     } else if (self.msg.msg == "ko") { // l'ia qui appele a raté son incantation (début ou fin)
@@ -132,7 +140,8 @@
             }
 
         	if ((cmd = self.cmds.shift())) {
-        		cmd.callback(data);
+        		if (cmd.callback)
+                    cmd.callback(data);
         	}
         }
 
@@ -187,6 +196,10 @@
         this.nbClis = function () {
 			return (nbClis);
 		}
+
+        this.levels = function (index) {
+            return (levels[index]);
+        }
 
         this.debug = function (msg) {
             console.log("[" + self.id + "] ", msg);
@@ -325,6 +338,7 @@
 				} catch (e) {
 					print.err(self.id + " JSON error : " + e.message);
 					rep = false;
+                    process.exit(1);
 				}
                 self.inv = rep;
 				callback(rep);

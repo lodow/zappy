@@ -164,6 +164,8 @@
 		var searchStones = function (see) {
 			var square = see[0];
 
+			if (cli.levels(cli.lvl) < incant[cli.lvl].joueur)
+				return (survive(cli.inv.nourriture + 10, see));
 			if (!possibleIncant(square))
 				return (takeStonesAndMove(see));
 
