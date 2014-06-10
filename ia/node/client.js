@@ -10,6 +10,19 @@
     var mapX = 0;
     var mapY = 0;
 
+    var match = {
+                avance : "^ok$",
+                droite : "^ok$",
+                gauche : "^ok$",
+                prend : "^(ok|ko)$",
+                pose : "^(ok|ko)$",
+                expulse : "^(ok|ko)$",
+                broadcast : "^ok$",
+                fork : "^ok$",
+                incantation : "^(elevation en cours|ko)$",
+                connect_nbr : "^[0-9]+$",
+            };
+
 	var Client = function (print, opt, beginCallback) {
 
 		var self = this, handleData, handleConnect;
@@ -98,15 +111,16 @@
         	print.recv("[" + self.id + "] : " + data);
         	if (data == "mort")
                 return (self.socket.destroy());
-            if (data == 'ko' && self.lock) {
+            if (data == 'ko' && self.incant) {
                 this.debug("Mon incantation n'a pas réussi");
-                self.lock = false;
+                self.incant = false;
                 self.broadcast(self.lvl.toString() + "-ko", function (res) { });
                 return (self.levelCallback((self.lvl + 1) * 10));
             } 
             if (!data.indexOf("niveau actuel")) {
                 data = data.replace('/ /g', "");
                 self.lvl = parseInt(data.split(":")[1]) - 1;
+                self.incant = false;
                 levels[self.lvl - 1]--;
                 levels[self.lvl]++;
                 return (self.levelCallback((self.lvl + 1) * 10));
@@ -115,27 +129,30 @@
                 data = data.split(',');
                 data[0] = data[0].split(' ')[1];
                 if (parseInt(data[1].split('-')[0]) == self.lvl) {
-                    if (self.inv.nourriture < (self.lvl + 1) * 10 / 2 || !self.levelCallback) {
-                        self.debug("J'ai pas assez de nourriture, j'ignore l'aide ! (lvl : " + self.lvl + ", food : "+self.inv.nourriture+")");
+                    if (self.inv.nourriture < (self.lvl + 1) * 10 / 2 || !self.levelCallback || self.incant)
                         return ;
-                    }
 
                     self.msg = { direction : parseInt(data[0]) , msg : data[1].split('-')[1]};
+                    self.cmds = [ ];
+
                     var msg = self.msg;
-
-                    for (var i = 0, l = self.cmds.length; i < l; ++i)
-                        self.cmds[i].callback = null;
-
-                    if (self.msg.msg == "help") { // l'ia demande de l'aide
-                        self.debug("On m'a demandé de l'aide je vais en:" + self.msg.direction);
-                        return (self.doOneStep(self.msg.direction, function (dir) { }));
-                    } else if (self.msg.msg == "ok") { // l'ia qui appelle commence l'incantation
-                        if (self.msg.direction != 0) // Pour ceux qui ont commencés à venir
+                    if (msg.msg == "help") {
+                        self.debug("On m'a demandé de l'aide je vais en:" + msg.direction);
+                        return (self.doOneStep(msg.direction, function (dir) { }));
+                    } else if (msg.msg == "ok") {
+                        if (msg.direction != 0)
                             return (self.levelCallback((self.lvl + 1) * 10));
-                    } else if (self.msg.msg == "ko") { // l'ia qui appele a raté son incantation (début ou fin)
+                    } else if (msg.msg == "ko") {
                         return (self.levelCallback((self.lvl + 1) * 10));
                     }
+
                 }
+                return ;
+            }
+
+            if (!self.cmds.length || !self.isValid(self.cmds[0].cmd, data)) {
+                if (self.cmds.length)
+                    self.debug("Invalid response : " + data + ", (" + self.cmds[0].cmd + ") ignoring.");
                 return ;
             }
 
@@ -155,6 +172,7 @@
 
             if (self.cmds.length >= 10) {
                 print.err("[" + self.id + "] " + " Trop de commandes en même temps !");
+                process.exit(1);
                 return ;
             }
 
@@ -199,6 +217,41 @@
 
         this.levels = function (index) {
             return (levels[index]);
+        }
+
+        this.removeCallbacks = function () {
+            for (var i = 0, l = self.cmds.length; i < l; ++i)
+                self.cmds[i].callback = null;
+        }
+
+        this.isValid = function (cmd, response) {
+            cmd = cmd.split(' ')[0];
+
+            if (cmd == "voir") {
+                var rep = response.replace("{ ", "").replace("}", "").split(',');
+                for (var i = 0, l = rep.length; i < l; ++i)
+                    rep[i] = self.creatObject(rep[i]);
+                return (rep.length > 3);
+            }
+
+            if (cmd == "inventaire") {
+                var rep = response.replace(/(, | ,)/g, ',').replace(/ /g, ':').replace(/({|,)/g, '$1"').replace(/:/g, '":');
+                try {
+                    rep = JSON.parse(rep);
+                } catch (e) {
+                    print.err(self.id + " JSON error : " + e.message);
+                    return (false);
+                }
+                return (true);
+            }
+
+            for (c in match) {
+                if (c == cmd) {
+                    var reg = new RegExp(match[c]);
+                    return (reg.test(response));
+                }
+            }
+            return (false);
         }
 
         this.debug = function (msg) {
@@ -375,6 +428,8 @@
 
 		this.incantation = function (callback) {
 			this.sendCmd("incantation", function (rep) {
+                if (rep == "elevation en cours")
+                    self.incant = true;
 				callback(rep == "elevation en cours");
 			});
 		}
