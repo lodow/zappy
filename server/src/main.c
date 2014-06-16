@@ -21,10 +21,12 @@ void	sig_handler(int sig)
     }
 }
 
-void	handle_server(t_server *serv)
+void		handle_server(t_server *serv)
 {
+  struct timeval	tv;
+
   while (!serv->quit)
-    do_select(serv->watch, serv);
+    do_select(serv->watch, (get_timeout(serv, &tv) ? &tv : NULL), serv);
 }
 
 int	main(int ac, char **av)
@@ -44,10 +46,10 @@ int	main(int ac, char **av)
   else
     {
       if (!handle_start(&g_serv))
-	{
-	  server_setup_select(&g_serv);
-	  handle_server(&g_serv);
-	}
+        {
+          server_setup_select(&g_serv);
+          handle_server(&g_serv);
+        }
     }
   quit_server(&g_serv);
   server_log(WARNING, "Shutting down.. Now");

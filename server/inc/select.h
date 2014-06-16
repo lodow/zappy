@@ -49,7 +49,7 @@ typedef struct	s_selfd
   size_t	len_w;
 }		t_selfd;
 
-void	do_select(t_list *fds, void *global_arg);
+void	do_select(t_list *fds, struct timeval *tv, void *global_arg);
 t_selfd	*create_fd(int fd, void *data, int (*call)());
 
 /*

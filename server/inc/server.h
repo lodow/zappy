@@ -112,7 +112,7 @@ void	add_food(t_server *serv);
 
 void	display_serv_queue(t_server *serv);
 void	set_timeout(t_server *serv, t_selfd *fd, char *cmd, suseconds_t time);
-t_tv	*get_timeout(t_server *serv);
+int	get_timeout(t_server *ser, struct timeval *tv);
 
 /*
 ** liste_instr.c

@@ -1,9 +1,9 @@
 /*
 ** ring_buffers.c for ring_buffers.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Tue Apr 29 14:37:39 2014 Nicolas Bridoux
 ** Last update Fri May 30 18:26:38 2014 Nicolas Bridoux
 */
@@ -83,12 +83,12 @@ static char	*has_a_complete_cmd(t_selfd *fd, size_t size_cmd)
   return (cmd);
 }
 
-char		*get_command(t_selfd *fd)
+char			*get_command(t_selfd *fd)
 {
-  char		*ptr;
-  char		*cmd;
-  size_t	size_cmd;
-  struct timeval tv;
+  char			*ptr;
+  char			*cmd;
+  size_t		size_cmd;
+  struct timeval	tv;
 
   if (fd->len_r && (ptr = memchr(fd->rb_r, EOT_CHAR, fd->len_r)))
     {

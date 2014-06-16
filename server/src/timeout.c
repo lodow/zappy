@@ -1,9 +1,9 @@
 /*
 ** timeout.c for timeout.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Mon May 19 20:49:41 2014 Nicolas Bridoux
 ** Last update Fri May 30 18:50:19 2014 Nicolas Bridoux
 */
@@ -44,15 +44,12 @@ void			set_timeout(t_server *serv, t_selfd *fd,
   add_to_ordered_list(&(serv->instr), new, &sort_instr);
 }
 
-struct timeval		*get_timeout(t_server *serv)
+int		get_timeout(t_server *serv, struct timeval *tv)
 {
-  struct timeval	*tv;
-  t_instr		*next;
+  t_instr	*next;
 
   if (serv->instr && (next = (t_instr *)serv->instr->data))
     {
-      if (!(tv = malloc(sizeof(struct timeval))))
-	return (NULL);
       gettimeofday(tv, NULL);
       tv->tv_usec += USEC(tv->tv_sec);
       tv->tv_usec = next->time - tv->tv_usec;
@@ -66,8 +63,8 @@ struct timeval		*get_timeout(t_server *serv)
 	  tv->tv_sec = 0;
 	  tv->tv_usec = 0;
 	}
-      return (tv);
+      return (1);
     }
-  return (NULL);
+  return (0);
 }
 

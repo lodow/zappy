@@ -69,22 +69,16 @@ t_list	*select_fd_set(t_list *fds, fd_set *setr,
 		       fd_set *setw, struct timeval *tv)
 {
   set_fdset(fds, setr, setw);
-  if ((select(max_fd_plusone(fds), setr, setw, NULL, tv) == -1))
+  if (select(max_fd_plusone(fds), setr, setw, NULL, tv) == -1)
     {
       if (errno != EINTR)
         perror("Select");
-      free(tv);
       return (NULL);
     }
-  free(tv);
   return (fds);
 }
 
-/*
-** Return a list of t_selfd which changed state
-*/
-
-void		do_select(t_list *fds, void *serv)
+void		do_select(t_list *fds, struct timeval *tv, void *global_arg)
 {
   fd_set	setr;
   fd_set	setw;
@@ -92,13 +86,13 @@ void		do_select(t_list *fds, void *serv)
   t_list	*nexttmp;
 
   nexttmp = NULL;
-  if ((tmp = select_fd_set(fds, &setr, &setw, get_timeout((t_server *)serv))))
+  if ((tmp = select_fd_set(fds, &setr, &setw, tv)))
     {
       nexttmp = tmp ? tmp->next : NULL;
-      exec_instruction((t_server *)serv);
+      exec_instruction((t_server *)global_arg);
       while (tmp || nexttmp)
         {
-	  handle_callbacks((t_server *)serv, (t_selfd *)tmp->data,
+	  handle_callbacks((t_server *)global_arg, (t_selfd *)tmp->data,
 			   &setr, &setw);
           tmp = nexttmp;
           nexttmp = tmp ? tmp->next : NULL;
