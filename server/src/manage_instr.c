@@ -66,19 +66,18 @@ void		push_instruction(t_server *serv, t_selfd *fd)
   t_list	*cmd;
   float		delay;
 
-  if (fd && fd->callback == (void *)&handle_client)
+  if (!fd)
+    return ;
+  client = (t_client *)fd->data;
+  if (client->flag == OK && client->cmds)
     {
-      client = (t_client *)fd->data;
-      if (client->flag == OK && client->cmds)
-	{
-	  if ((cmd = dequeue(&(client->cmds))) &&
-	      (delay = is_cmd_valid(serv, fd, (char *)cmd->data)) >= 0)
-	    {
-	      set_timeout(serv, fd, (char *)cmd->data,
-			  USEC(delay / (float)serv->game.time));
-	      client->flag = KO;
-	    }
-	  free(cmd);
-	}
+      if ((cmd = dequeue(&(client->cmds))) &&
+      (delay = is_cmd_valid(serv, fd, (char *)cmd->data)) >= 0)
+        {
+          set_timeout(serv, fd, (char *)cmd->data,
+          USEC(delay / (float)serv->game.time));
+          client->flag = KO;
+        }
+      free(cmd);
     }
 }

@@ -34,5 +34,6 @@ int		handle_client(t_selfd *fd, t_server *serv)
   if (fd->len_w)
     CHECKWRITE(fd);
   CHECKREAD(fd);
+  push_instruction(serv, fd);
   return (0);
 }
