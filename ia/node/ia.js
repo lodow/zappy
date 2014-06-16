@@ -4,11 +4,16 @@
 	var stdio = require('stdio');
     var client = require("./client");
 
+    try {
 	var opt = stdio.getopt({
 		'team': {key: 'n', args: 1, description: "IA's teamname", mandatory: true},
 	    'port': {key: 'p', args: 1, description: 'Connexion port', mandatory: false},
 	    'host': {key: 'h', args: 1, description: 'Connexion host', mandatory: false},
 	});
+	} catch(e) {
+		console.log("Error getopt !");
+		process.exit(1);
+	}
 
 	opt.port = parseInt(opt.port) || 4242;
 	opt.host = opt.host || "127.0.0.1";
@@ -135,23 +140,41 @@
 				needy.push({ score : score,  index : i});
 			}
 
-			for (var i = 0, l = needy.length; i < l; ++i) // si on a des 0 et un truc négatif, éviter les joueurs
+			for (var i = 0, l = needy.length; i < l; ++i)
 				needy[0] = needy[0].score > needy[i].score ? needy[0] : needy[i];
 
-			direction = needy[0].score > 0 ? needy[0].index : Math.floor(Math.random() * 10) % 3 + 1;
+			if (needy[0].score > 0) {
+				direction = needy[0].index;
+			}
+			if (needy[0].score == 0) {
+				for (var i = 0, l = needy.length; i < l; ++i)
+					if (needy[i].score < 0) {
+						direction = needy[0].index;
+						break ;
+					} else {
+						direction = Math.floor(Math.random() * 10) % 3 + 1;
+					}
+			}
+			if (needy[0].score < 0) {
+				direction = Math.floor(Math.random() * 10) % 3 + 1;
+			}
+
 			return (coresPos[direction]);
 		}
 
 		var takeStonesAndMove = function (see) {
 			var square = see[0];
+			var nextLvl = cli.lvl + 1 == 7 ? cli.lvl : cli.lvl + 1;
 
 			for (s in square)
-				if (s != "joueur" && square[s] && (incant[cli.lvl][s] || incant[cli.lvl + 1 == 7 ? cli.lvl : cli.lvl + 1][s]))
-					return (cli.prend(s, function (res) {
-								cli.voir(function (see) {
-									takeStonesAndMove(see);
-								});
-							}));
+				if (s != "joueur" && square[s] && (incant[cli.lvl][s] || incant[nextLvl][s])) {
+				 // if (cli.inv[s] < incant[cli.lvl][s] || cli.inv[s] < incant[nextLvl][s]) // On prend uniquement si on en a pas deja assez
+						return (cli.prend(s, function (res) {
+									cli.voir(function (see) {
+										takeStonesAndMove(see);
+									});
+								}));
+				}
 
 			cli.goDirection(getNeedyPlace(see), function (dir) {
 				cli.voir(function (see) {

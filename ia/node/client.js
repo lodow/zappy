@@ -9,6 +9,7 @@
     var levels = [0, 0, 0, 0, 0 ,0, 0, 0]
     var mapX = 0;
     var mapY = 0;
+    var maxPlayers = 10;
 
     var match = {
                 avance : "^ok$",
@@ -129,10 +130,10 @@
                 data = data.split(',');
                 data[0] = data[0].split(' ')[1];
                 if (parseInt(data[1].split('-')[0]) == self.lvl) {
-                    if (self.inv.nourriture < (self.lvl + 1) * 10 / 2 || !self.levelCallback || self.incant)
+                    if (self.inv.nourriture < (self.lvl + 1) * 10 / 2 || !self.levelCallback || self.incant) // certains joueurs ne bougent plus ou vont dans la même direction ?
                         return ;
 
-                    self.msg = { direction : parseInt(data[0]) , msg : data[1].split('-')[1]};
+                    self.msg = { direction : parseInt(data[0]) , msg : data[1].split('-')[1] };
                     self.cmds = [ ];
 
                     var msg = self.msg;
@@ -163,7 +164,7 @@
         }
 
         this.sendCmd = function (cmd, callback) {
-            if (cmd != "connect_nbr" && nbClis < 10) {
+            if (cmd != "connect_nbr" && nbClis < maxPlayers) {
                 this.sendCmd("connect_nbr", function (res) {
                     if (res > 0)
                         new Client(print, opt, beginCallback);
@@ -239,7 +240,6 @@
                 try {
                     rep = JSON.parse(rep);
                 } catch (e) {
-                    print.err(self.id + " JSON error : " + e.message);
                     return (false);
                 }
                 return (true);
