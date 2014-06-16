@@ -8,7 +8,7 @@
 ** Last update Fri May 30 18:41:16 2014 Nicolas Bridoux
 */
 
-#include "server.h"
+#include "select.h"
 
 static int	max_fd_plusone(t_list *fds)
 {
@@ -66,7 +66,7 @@ t_selfd		*create_fd(int fd, void *data, int (*call)())
 }
 
 t_list	*select_fd_set(t_list *fds, fd_set *setr,
-		       fd_set *setw, struct timeval *tv)
+                       fd_set *setw, struct timeval *tv)
 {
   set_fdset(fds, setr, setw);
   if (select(max_fd_plusone(fds), setr, setw, NULL, tv) == -1)
@@ -84,15 +84,19 @@ void		do_select(t_list *fds, struct timeval *tv, void *global_arg)
   fd_set	setw;
   t_list	*tmp;
   t_list	*nexttmp;
+  t_selfd	*fd;
 
   nexttmp = NULL;
   if ((tmp = select_fd_set(fds, &setr, &setw, tv)))
     {
-      nexttmp = tmp ? tmp->next : NULL;
-      while (tmp || nexttmp)
+      nexttmp = tmp->next;
+      while (tmp)
         {
-	  handle_callbacks((t_server *)global_arg, (t_selfd *)tmp->data,
-			   &setr, &setw);
+          fd = (t_selfd *)tmp->data;
+          fd->etype = (FD_ISSET(fd->fd, &setr)) * FDREAD
+                      + (FD_ISSET(fd->fd, &setw)) * FDWRITE;
+          fd->checktype = 0;
+          fd->callback(fd, global_arg);
           tmp = nexttmp;
           nexttmp = tmp ? tmp->next : NULL;
         }
