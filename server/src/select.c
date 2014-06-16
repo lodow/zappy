@@ -89,7 +89,6 @@ void		do_select(t_list *fds, struct timeval *tv, void *global_arg)
   if ((tmp = select_fd_set(fds, &setr, &setw, tv)))
     {
       nexttmp = tmp ? tmp->next : NULL;
-      exec_instruction((t_server *)global_arg);
       while (tmp || nexttmp)
         {
 	  handle_callbacks((t_server *)global_arg, (t_selfd *)tmp->data,

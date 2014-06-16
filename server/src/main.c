@@ -26,7 +26,10 @@ void		handle_server(t_server *serv)
   struct timeval	tv;
 
   while (!serv->quit)
-    do_select(serv->watch, (get_timeout(serv, &tv) ? &tv : NULL), serv);
+    {
+      do_select(serv->watch, (get_timeout(serv, &tv) ? &tv : NULL), serv);
+      exec_instruction(serv);
+    }
 }
 
 int	main(int ac, char **av)
