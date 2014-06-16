@@ -8,7 +8,7 @@
 ** Last update Sat May 31 20:46:07 2014 Nicolas Bridoux
 */
 
-#include "server.h"
+#include "network.h"
 
 char			*get_ip_addr(t_net *net)
 {
@@ -90,11 +90,6 @@ t_net		*create_connection(const char *host, const char *port,
   t_net		*res;
   int		err;
 
-  if (atoi(port) <= 0)
-    {
-      fprintf(stderr, "./zappy: '-p' requires a positive number\n");
-      return (NULL);
-    }
   if ((res = malloc(1 * sizeof(t_net))) == NULL)
     return (NULL);
   res->socktype = socktype;
@@ -110,27 +105,10 @@ t_net		*create_connection(const char *host, const char *port,
   return (res);
 }
 
-int		close_connection(t_server *serv, t_selfd *fd)
+void	close_connection(t_net *net)
 {
-  t_net		*net;
-  t_list	*tmp;
-  t_client	*client;
-
-  server_log(WARNING, "Deleting player %zu", fd->cli_num);
-  client = (t_client *)fd->data;
-  if (client->type_cli == IA)
-    pdi(serv, fd->cli_num);
-  net = client->sock;
-  if (net->socket != -1 && close(net->socket) == -1)
-    perror("close");
-  tmp = serv->game.teams;
-  while (tmp)
-    {
-      if (client->teamname &&
-	  !strcmp(((t_team *)tmp->data)->name, client->teamname))
-	++((t_team *)tmp->data)->max_cli;
-      tmp = tmp->next;
-    }
-  clean_client(serv, fd);
-  return (1);
+  if (net)
+    if (net->socket != -1 && close(net->socket) == -1)
+      perror("close");
+  free(net);
 }

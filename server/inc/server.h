@@ -1,9 +1,9 @@
 /*
 ** server.h for server.h in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
 ** Last update Sat Jun  7 15:27:15 2014 Nicolas Bridoux
 */
@@ -75,7 +75,7 @@ void	close_server_binds(t_server *serv);
 void	serv_verbose(t_server *serv);
 void	server_setup_select(t_server *serv);
 void	log_connection(t_net *sock, char *message);
-int	close_connection(t_server *serv, t_selfd *fd);
+int	destroy_connection(t_server *serv, t_selfd *fd);
 
 int	handle_newconnection(t_selfd *fd, t_server *serv);
 int	handle_client(t_selfd *fd, t_server *serv);

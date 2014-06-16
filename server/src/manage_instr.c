@@ -1,9 +1,9 @@
 /*
 ** manage_instr.c for manage_instr.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Thu May 22 11:02:39 2014 Nicolas Bridoux
 ** Last update Sat May 31 18:35:36 2014 Nicolas Bridoux
 */
@@ -18,7 +18,7 @@ static void	handle_special_timeout(t_server *serv, t_selfd *fd, char *cmd)
     return (handle_eggs(serv, cmd));
   client = (t_client *)fd->data;
   if (!strcmp(cmd, "timeout") && client->type_cli == UNKNOWN)
-    close_connection(serv, fd);
+    destroy_connection(serv, fd);
   if (!strcmp(cmd, "life"))
     {
       if (client->inv.food > 0)

@@ -36,6 +36,7 @@ t_net		*create_connection(const char *host, const char *port,
                            int socktype, int	(*f)(int sockfd,
                                const struct sockaddr *addr,
                                socklen_t addrlen));
+void	close_connection(t_net *net);
 t_net	*accept_connection(t_net *sock);
 char		*get_ip_addr(t_net *net);
 t_net	*peer(t_net *net);

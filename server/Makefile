@@ -19,6 +19,7 @@ SRC		=	main.c \
 			select.c \
 			server_network.c \
 			new_connection.c \
+			remove_player.c \
 			add_cmd.c \
 			log.c \
 			parse_command_line.c \

@@ -1,9 +1,9 @@
 /*
 ** clean.c for clean.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
 ** Last update Sat May 31 20:44:32 2014 Nicolas Bridoux
 */
@@ -30,7 +30,7 @@ static void	free_instr(t_server *serv)
 static void	free_eggs_and_map(t_server *serv)
 {
   t_list	*tmp;
-  size_t       	i;
+  size_t		i;
 
   tmp = serv->game.eggs;
   while (tmp)
@@ -96,7 +96,6 @@ void		clean_client(t_server *serv, t_selfd *fd)
 	tmp = tmp->next;
     }
   free(((t_client *)fd->data)->teamname);
-  free(((t_client *)fd->data)->sock);
   rm_list(((t_client *)fd->data)->cmds, &free);
   free(fd->data);
   free(fd->rb_r);
