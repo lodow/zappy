@@ -10,11 +10,11 @@
 
 #include "select.h"
 
-static int	max_fd_plusone(t_list *fds)
+static inline int	max_fd_plusone(t_list *fds)
 {
-  int		max;
-  t_list	*tmp;
-  t_selfd	*fd;
+  int			max;
+  t_list		*tmp;
+  t_selfd		*fd;
 
   max = -1;
   tmp = fds;
@@ -27,10 +27,10 @@ static int	max_fd_plusone(t_list *fds)
   return (max + 1);
 }
 
-static void	set_fdset(t_list *fds, fd_set *setr, fd_set *setw)
+static inline void	set_fdset(t_list *fds, fd_set *setr, fd_set *setw)
 {
-  t_list	*tmp;
-  t_selfd	*fd;
+  t_list		*tmp;
+  t_selfd		*fd;
 
   FD_ZERO(setr);
   FD_ZERO(setw);
@@ -57,11 +57,6 @@ t_selfd		*create_fd(int fd, void *data, int (*call)())
   res->checktype = FDREAD;
   res->data = data;
   res->callback = call;
-  res->rb_r = NULL;
-  res->len_r = 0;
-  res->rb_w = NULL;
-  res->len_w = 0;
-  res->to_close = 0;
   return (res);
 }
 

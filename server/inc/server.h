@@ -43,6 +43,11 @@
 # define NOT_KNOWN	2
 # define USEC(x)	(1000000 * (x))
 
+# define UNKNOWN	0
+# define IA		1
+# define GUI		2
+# define BUFF_SIZE	4096
+
 typedef struct timeval t_tv;
 
 typedef struct	s_server
