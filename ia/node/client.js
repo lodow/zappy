@@ -225,7 +225,7 @@
                 self.cmds[i].callback = null;
         }
 
-        this.isValid = function (cmd, response) {
+        this.isValid = function (cmd, response) { // si on recoit un KO après un "niveau actuel" => incant a fail
             cmd = cmd.split(' ')[0];
 
             if (cmd == "voir") {

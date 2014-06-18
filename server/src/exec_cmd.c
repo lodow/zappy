@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 11:54:45 2014 Nicolas Bridoux
-** Last update Mon Jun  9 21:12:10 2014 Nicolas Bridoux
+** Last update Wed Jun 18 15:17:15 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -109,6 +109,7 @@ void	exec_cmd(t_server *serv, t_selfd *fd, char *cmd)
 	cmd_tab[i].ptr(serv, fd,
 		       !strcmp(tab[0], "broadcast") ? &cmd : &tab[1]);
     }
-  free(cmd);
+  if (serv->instr)
+    free(cmd);
   free_tab(tab);
 }

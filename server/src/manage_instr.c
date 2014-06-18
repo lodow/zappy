@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu May 22 11:02:39 2014 Nicolas Bridoux
-** Last update Sat May 31 18:35:36 2014 Nicolas Bridoux
+** Last update Wed Jun 18 14:54:32 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -47,14 +47,16 @@ void			exec_instruction(t_server *serv)
       if (next->time <= now.tv_usec)
 	{
 	  if (!strcmp(next->cmd, "timeout") || !strcmp(next->cmd, "life") ||
-	      !strncmp(next->cmd, "born:", 5) || !strncmp(next->cmd, "moldy:", 6))
+	      !strncmp(next->cmd, "born:", 5) ||
+	      !strncmp(next->cmd, "moldy:", 6))
 	    {
 	      handle_special_timeout(serv, next->fd, next->cmd);
 	      rm_from_list(&(serv->instr), serv->instr, &free);
 	      return ;
 	    }
 	  exec_cmd(serv, next->fd, next->cmd);
-	  ((t_client *)next->fd->data)->flag = OK;
+	  if (serv->instr)
+	    ((t_client *)next->fd->data)->flag = OK;
 	  rm_from_list(&(serv->instr), serv->instr, &free);
 	}
     }
@@ -72,7 +74,7 @@ void		push_instruction(t_server *serv, t_selfd *fd)
   if (client->flag == OK && client->cmds)
     {
       if ((cmd = dequeue(&(client->cmds))) &&
-      (delay = is_cmd_valid(serv, fd, (char *)cmd->data)) >= 0)
+	  (delay = is_cmd_valid(serv, fd, (char *)cmd->data)) >= 0)
         {
           set_timeout(serv, fd, (char *)cmd->data,
           USEC(delay / (float)serv->game.time));

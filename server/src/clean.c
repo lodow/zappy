@@ -5,12 +5,12 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Sat May 31 20:44:32 2014 Nicolas Bridoux
+** Last update Wed Jun 18 14:42:37 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-static void	free_instr(t_server *serv)
+void		free_instr(t_server *serv)
 {
   t_list	*tmp;
   t_instr	*instr;
@@ -25,6 +25,7 @@ static void	free_instr(t_server *serv)
       tmp = tmp->next;
     }
   rm_list(serv->instr, &free);
+  serv->instr = NULL;
 }
 
 static void	free_eggs_and_map(t_server *serv)
@@ -39,10 +40,12 @@ static void	free_eggs_and_map(t_server *serv)
       tmp = tmp->next;
     }
   rm_list(serv->game.eggs, &free);
+  serv->game.eggs = NULL;
   i = 0;
   while (serv->map && i < serv->game.height)
     free(serv->map[i++]);
   free(serv->map);
+  serv->map = NULL;
   return (free_instr(serv));
 }
 

@@ -5,11 +5,11 @@
     var client = require("./client");
 
     try {
-	var opt = stdio.getopt({
-		'team': {key: 'n', args: 1, description: "IA's teamname", mandatory: true},
-	    'port': {key: 'p', args: 1, description: 'Connexion port', mandatory: false},
-	    'host': {key: 'h', args: 1, description: 'Connexion host', mandatory: false},
-	});
+		var opt = stdio.getopt({
+			'team': {key: 'n', args: 1, description: "IA's teamname", mandatory: true},
+		    'port': {key: 'p', args: 1, description: 'Connexion port', mandatory: false},
+		    'host': {key: 'h', args: 1, description: 'Connexion host', mandatory: false},
+		});
 	} catch(e) {
 		console.log("Error getopt !");
 		process.exit(1);

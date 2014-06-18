@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Sat Jun  7 15:27:15 2014 Nicolas Bridoux
+** Last update Wed Jun 18 12:10:57 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -150,6 +150,7 @@ void	replace_egg_by_ia(t_server *serv, t_selfd *fd, t_egg *egg);
 
 void	clean_client(t_server *serv, t_selfd *fd);
 void	quit_server(t_server *serv);
+void	free_instr(t_server *serv);
 
 /*
 ** exec_cmd.c
