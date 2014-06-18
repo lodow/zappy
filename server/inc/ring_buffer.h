@@ -11,6 +11,17 @@
 #ifndef RING_BUFFER_H_INCLUDED
 # define RING_BUFFER_H_INCLUDED
 
+# include <stdlib.h>
 
+typedef struct	s_rbuf
+{
+  char		*buf;
+  ssize_t		size;
+  ssize_t		idx_r;
+  ssize_t		idx_w;
+}		t_rbuf;
+
+t_rbuf	*create_ring_buffer(ssize_t size);
+void		*destroy_ring_buffer(t_rbuf *buf);
 
 #endif /* !RING_BUFFER_H_INCLUDED */

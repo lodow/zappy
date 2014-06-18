@@ -9,6 +9,7 @@
 ##
 
 SRC		=	main.c \
+			ring_buffer.c \
 			inet.c \
 			inet_accept.c \
 			inet_asynchronous_connect.c \
@@ -30,7 +31,6 @@ SRC		=	main.c \
 			clean.c \
 			exec_cmd.c \
 			handle_callbacks.c \
-			ring_buffer.c \
 			eggs.c \
 			my_str_to_wordtab.c \
 			gen_ressources.c \
