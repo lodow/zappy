@@ -49,4 +49,6 @@ int	connect_nb(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 int	check_socket_error(t_net *net);
 int	is_connected(t_net *net);
 
+int	bind_reuse(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+
 #endif /* !NETWORK_H_INCLUDED */

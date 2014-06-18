@@ -12,6 +12,7 @@ SRC		=	main.c \
 			inet.c \
 			inet_accept.c \
 			inet_asynchronous_connect.c \
+			inet_reuse.c \
 			liste.c \
 			liste_find.c \
 			liste_instr.c \

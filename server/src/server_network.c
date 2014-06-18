@@ -56,9 +56,9 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
   bind4 = NULL;
   bind6 = NULL;
   if (!port || !(bind4 = create_connection(listening(AF_INET), port,
-					   socktype, &bind))
+					   socktype, &bind_reuse))
       || !(bind6 = create_connection(listening(AF_INET6), port,
-                                     socktype, &bind))
+                                     socktype, &bind_reuse))
       || (listen(bind4->socket, MAX_QUEUE) == -1)
       || (listen(bind6->socket, MAX_QUEUE) == -1))
     {
