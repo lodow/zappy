@@ -14,12 +14,16 @@
 ** return the number of characters read and placed in the circular buffer
 */
 
-int	read_from_client(t_selfd *fd)
+int		read_from_client(t_selfd *fd)
 {
-  char	buff[BUFSIZ];
-  int	r;
+  char		buff[BUFSIZ];
+  int		r;
+  size_t	size;
 
-  if ((r = read(fd->fd, buff, BUFSIZ)) > 0)
+  r = 0;
+  size = ring_buffer_left_write(fd->rbuff);
+  size = (size < sizeof(buff)) ? size : sizeof(buff);
+  if (size && ((r = read(fd->fd, buff, size)) > 0))
     write_buffer(fd->rbuff, buff, r);
   return (r);
 }
@@ -35,7 +39,7 @@ int		write_to_client(t_selfd *fd)
   int		w;
 
   w = 0;
-  size = read_buffer(fd->wbuff, buff, BUFSIZ);
+  size = read_buffer(fd->wbuff, buff, sizeof(buff));
   if (size)
     if ((w = write(fd->fd, buff, size)) < 0)
       return (w);
@@ -49,21 +53,26 @@ int		write_to_client(t_selfd *fd)
 
 char			*get_command(t_selfd *fd)
 {
-  char			*ptr;
   char			*cmd;
-  size_t		size_cmd;
+  char			*ptr;
   struct timeval	tv;
+  size_t			size;
+  char			buff[BUFSIZ];
 
-  if (fd->len_r && (ptr = memchr(fd->rb_r, EOT_CHAR, fd->len_r)))
+  size = read_buffer(fd->rbuff, buff, sizeof(buff) - 1);
+  buff[size] = '\0';
+  if (size && ((cmd = strchr(buff, '\n')))
+      && (ptr = malloc((cmd - buff) * sizeof(char))))
     {
-      size_cmd = ptr - fd->rb_r;
-      cmd = has_a_complete_cmd(fd, size_cmd);
-      gettimeofday(&tv, NULL);
-      server_log(RECEIVING, "%ld:%ld\t\tReceived \"%s\" from %d",
-                 tv.tv_sec, tv.tv_usec, cmd, fd->cli_num);
-      return (cmd);
+      memcpy(ptr, buff, (cmd - buff));
+      rollback_read_buffer(fd->rbuff, size - (cmd - buff));
     }
-  return (NULL);
+  else
+    return (NULL);
+  gettimeofday(&tv, NULL);
+  server_log(RECEIVING, "%ld:%ld\t\tReceived \"%s\" from %d",
+             tv.tv_sec, tv.tv_usec, ptr, fd->cli_num);
+  return (ptr);
 }
 
 /*
