@@ -10,7 +10,7 @@
 
 #include "ring_buffer.h"
 
-t_rbuf	*create_ring_buffer(ssize_t size)
+t_rbuf	*create_ring_buffer(size_t size)
 {
   t_rbuf	*rbuf;
 
@@ -39,12 +39,12 @@ void	destroy_ring_buffer(void *ptr)
     }
 }
 
-ssize_t	ring_buffer_left_read(t_rbuf *buf)
+size_t	ring_buffer_left_read(t_rbuf *buf)
 {
   return (((buf->idx_w + buf->size) - buf->idx_r) % buf->size);
 }
 
-ssize_t	ring_buffer_left_write(t_rbuf *buf)
+size_t	ring_buffer_left_write(t_rbuf *buf)
 {
   return (((buf->idx_r + buf->size) - buf->idx_w) % buf->size);
 }

@@ -10,10 +10,10 @@
 
 #include "ring_buffer.h"
 
-void		write_buffer(t_rbuf *buf, const char *data, ssize_t size)
+void		write_buffer(t_rbuf *buf, const char *data, size_t size)
 {
-  ssize_t	i;
-  ssize_t	born;
+  size_t	i;
+  size_t	born;
   char	*buffer;
 
   born = buf->size;
@@ -27,11 +27,11 @@ void		write_buffer(t_rbuf *buf, const char *data, ssize_t size)
   buf->idx_w = (buf->idx_w + i) % born;
 }
 
-ssize_t		read_buffer(t_rbuf *buf, char *data, ssize_t size)
+size_t		read_buffer(t_rbuf *buf, char *data, size_t size)
 {
-  ssize_t	i;
-  ssize_t	born;
-  ssize_t	left;
+  size_t	i;
+  size_t	born;
+  size_t	left;
   char	*buffer;
 
   left = ring_buffer_left_read(buf);
@@ -48,7 +48,7 @@ ssize_t		read_buffer(t_rbuf *buf, char *data, ssize_t size)
   return (size);
 }
 
-void	rollback_read_buffer(t_rbuf *buf, ssize_t bysize)
+void	rollback_read_buffer(t_rbuf *buf, size_t bysize)
 {
   buf->idx_r = (buf->idx_r - bysize + 2 * buf->size) % buf->size;
 }

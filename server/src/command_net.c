@@ -30,7 +30,7 @@ int	read_from_client(t_selfd *fd)
 
 int		write_to_client(t_selfd *fd)
 {
-  ssize_t	size;
+  size_t	size;
   char	buff[BUFSIZ];
   int		w;
 
