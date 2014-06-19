@@ -20,9 +20,7 @@ void		log_connection(t_net *sock, char *message)
       if ((ip = get_ip_addr(tmp)))
         server_log(WARNING, "%s %s:%d", message, ip, port_number(tmp));
       free(ip);
-      if (tmp && tmp->socket != -1 && close(tmp->socket) == -1)
-	perror("close");
-      free(tmp);
+      close_connection(tmp);
     }
 }
 
@@ -62,8 +60,7 @@ int			handle_newconnection(t_selfd *fd, t_server *serv)
       || !(tmpfd = create_fd(nsock->socket, client, &handle_client)))
     {
       free(client);
-      if (nsock && nsock->socket != -1 && close(nsock->socket) == -1)
-	perror("close");
+      close_connection(nsock);
       return (EXIT_FAILURE);
     }
   client->sock = nsock;

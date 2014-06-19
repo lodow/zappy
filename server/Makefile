@@ -10,6 +10,7 @@
 
 SRC		=	main.c \
 			ring_buffer.c \
+			ring_buffer_fill.c \
 			inet.c \
 			inet_accept.c \
 			inet_asynchronous_connect.c \
@@ -23,6 +24,7 @@ SRC		=	main.c \
 			new_connection.c \
 			remove_player.c \
 			add_cmd.c \
+			command_net.c \
 			log.c \
 			parse_command_line.c \
 			check_team_names.c \

@@ -97,5 +97,5 @@ void		clean_client(t_server *serv, t_selfd *fd)
     }
   free(((t_client *)fd->data)->teamname);
   rm_list(((t_client *)fd->data)->cmds, &free);
-  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
+  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &destroy_fd);
 }

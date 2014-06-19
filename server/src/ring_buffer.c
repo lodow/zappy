@@ -27,8 +27,11 @@ t_rbuf	*create_ring_buffer(ssize_t size)
   return (rbuf);
 }
 
-void	*destroy_ring_buffer(t_rbuf *buf)
+void	destroy_ring_buffer(void *ptr)
 {
+  t_rbuf	*buf;
+
+  buf = (t_rbuf*)ptr;
   if (buf)
     {
       free(buf->buf);

@@ -57,20 +57,29 @@ t_selfd		*create_fd(int fd, void *data, int (*call)())
   res->checktype = FDREAD;
   res->data = data;
   res->callback = call;
+  res->rbuff = create_ring_buffer(BUFSIZ);
+  res->wbuff = create_ring_buffer(BUFSIZ);
+  if (!res->rbuff || !res->wbuff)
+    {
+      free(res->rbuff);
+      free(res->wbuff);
+      free(res);
+      return (NULL);
+    }
   return (res);
 }
 
-t_list	*select_fd_set(t_list *fds, fd_set *setr,
-                       fd_set *setw, struct timeval *tv)
+void		destroy_fd(void *fd)
 {
-  set_fdset(fds, setr, setw);
-  if (select(max_fd_plusone(fds), setr, setw, NULL, tv) == -1)
+  t_selfd	*ptr;
+
+  ptr = (t_selfd*)fd;
+  if (ptr)
     {
-      if (errno != EINTR)
-        perror("Select");
-      return (NULL);
+      free(ptr->rbuff);
+      free(ptr->wbuff);
+      free(ptr);
     }
-  return (fds);
 }
 
 void		do_select(t_list *fds, struct timeval *tv, void *global_arg)
@@ -82,18 +91,20 @@ void		do_select(t_list *fds, struct timeval *tv, void *global_arg)
   t_selfd	*fd;
 
   nexttmp = NULL;
-  if ((tmp = select_fd_set(fds, &setr, &setw, tv)))
+  set_fdset(fds, &setr, &setw);
+  if ((select(max_fd_plusone(fds), &setr, &setw, NULL, tv) == -1)
+      && (errno != EINTR))
+    return ;
+  tmp = fds;
+  nexttmp = tmp->next;
+  while (tmp)
     {
-      nexttmp = tmp->next;
-      while (tmp)
-        {
-          fd = (t_selfd *)tmp->data;
-          fd->etype = (FD_ISSET(fd->fd, &setr)) * FDREAD
-                      + (FD_ISSET(fd->fd, &setw)) * FDWRITE;
-          fd->checktype = 0;
-          fd->callback(fd, global_arg);
-          tmp = nexttmp;
-          nexttmp = tmp ? tmp->next : NULL;
-        }
+      fd = (t_selfd*)tmp->data;
+      fd->etype = (FD_ISSET(fd->fd, &setr)) * FDREAD
+                  + (FD_ISSET(fd->fd, &setw)) * FDWRITE;
+      fd->checktype = 0;
+      fd->callback(fd, global_arg);
+      tmp = nexttmp;
+      nexttmp = tmp ? tmp->next : NULL;
     }
 }

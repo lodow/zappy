@@ -104,6 +104,15 @@ int	parse_command_line(t_server *server, int ac, char *av[]);
 int	check_team_names(t_list *list, char *progname, t_server *serv);
 
 /*
+** Read/Write to/from rings buffers
+*/
+
+void	send_response(t_selfd *fd, char *to_send);
+char	*get_command(t_selfd *fd);
+int	write_to_client(t_selfd *fd);
+int	read_from_client(t_selfd *fd);
+
+/*
 ** log.c
 */
 
