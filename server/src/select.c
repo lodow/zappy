@@ -93,8 +93,7 @@ void		do_select(t_list *fds, struct timeval *tv, void *global_arg)
 
   nexttmp = NULL;
   set_fdset(fds, &setr, &setw);
-  if ((select(max_fd_plusone(fds), &setr, &setw, NULL, tv) == -1)
-      && (errno != EINTR))
+  if ((select(max_fd_plusone(fds), &setr, &setw, NULL, tv) == -1))
     return ;
   tmp = fds;
   nexttmp = tmp->next;
