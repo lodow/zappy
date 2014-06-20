@@ -16,7 +16,7 @@ t_rbuf	*create_ring_buffer(size_t size)
 
   if ((rbuf = malloc(1 * sizeof(t_rbuf))) == NULL)
     return (NULL);
-  if ((rbuf->buf = malloc(sizeof(size * sizeof(char)))) == NULL)
+  if ((rbuf->buf = malloc(size * sizeof(char))) == NULL)
     {
       free(rbuf);
       return (NULL);

@@ -57,6 +57,7 @@ t_selfd		*create_fd(int fd, void *data, int (*call)())
   res->checktype = FDREAD;
   res->data = data;
   res->callback = call;
+  res->to_close = 0;
   res->rbuff = create_ring_buffer(BUFSIZ);
   res->wbuff = create_ring_buffer(BUFSIZ);
   if (!res->rbuff || !res->wbuff)
