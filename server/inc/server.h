@@ -47,6 +47,7 @@
 # define IA		1
 # define GUI		2
 # define BUFF_SIZE	4096
+# define EOT_CHAR '\n'
 
 typedef struct timeval t_tv;
 

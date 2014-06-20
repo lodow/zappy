@@ -61,11 +61,12 @@ char			*get_command(t_selfd *fd)
 
   size = read_buffer(fd->rbuff, buff, sizeof(buff) - 1);
   buff[size] = '\0';
-  if (size && ((cmd = strchr(buff, '\n')))
+  if (size && ((cmd = strchr(buff, EOT_CHAR)))
       && (ptr = malloc((cmd - buff) * sizeof(char))))
     {
       memcpy(ptr, buff, (cmd - buff));
-      rollback_read_buffer(fd->rbuff, size - (cmd - buff));
+      ptr[(cmd - buff)] = '\0';
+      rollback_read_buffer(fd->rbuff, size - (cmd - buff + 1));
     }
   else
     return (NULL);
@@ -83,13 +84,18 @@ void			send_response(t_selfd *fd, char *to_send)
 {
   size_t		len;
   struct timeval	tv;
+  char			c;
 
+  c = EOT_CHAR;
   if (!to_send || fd->to_close)
     return ;
   gettimeofday(&tv, NULL);
   server_log(SENDING, "%ld:%ld\t\tSending \"%s\" to %d",
              tv.tv_sec, tv.tv_usec, to_send, fd->cli_num);
   if ((len = strlen(to_send)))
-    CHECKWRITE(fd);
-  write_buffer(fd->wbuff, to_send, len);
+    {
+      CHECKWRITE(fd);
+      write_buffer(fd->wbuff, to_send, len);
+      write_buffer(fd->wbuff, &c, 1);
+    }
 }
