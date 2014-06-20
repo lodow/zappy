@@ -41,8 +41,10 @@ int		write_to_client(t_selfd *fd)
   w = 0;
   size = read_buffer(fd->wbuff, buff, sizeof(buff));
   if (size)
-    if ((w = write(fd->fd, buff, size)) < 0)
-      return (w);
+    {
+      if ((w = write(fd->fd, buff, size)) < 0)
+        return (w);
+    }
   rollback_read_buffer(fd->wbuff, size - w);
   return (w);
 }
@@ -59,9 +61,8 @@ char			*get_command(t_selfd *fd)
   size_t			size;
   char			buff[BUFSIZ];
 
-  size = read_buffer(fd->rbuff, buff, sizeof(buff) - 1);
-  buff[size] = '\0';
-  if (size && ((cmd = strchr(buff, EOT_CHAR)))
+  size = read_buffer(fd->rbuff, buff, sizeof(buff));
+  if (size && ((cmd = memchr(buff, EOT_CHAR, sizeof(buff))))
       && (ptr = malloc(((cmd - buff) + 1) * sizeof(char))))
     {
       memcpy(ptr, buff, (cmd - buff));
