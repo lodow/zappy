@@ -62,7 +62,7 @@ char			*get_command(t_selfd *fd)
   size = read_buffer(fd->rbuff, buff, sizeof(buff) - 1);
   buff[size] = '\0';
   if (size && ((cmd = strchr(buff, EOT_CHAR)))
-      && (ptr = malloc((cmd - buff) * sizeof(char))))
+      && (ptr = malloc(((cmd - buff) + 1) * sizeof(char))))
     {
       memcpy(ptr, buff, (cmd - buff));
       ptr[(cmd - buff)] = '\0';
