@@ -24,7 +24,12 @@ void		write_buffer(t_rbuf *buf, const char *data, size_t size)
       buffer[(buf->idx_w + i) % born] = data[i];
       ++i;
     }
-  buf->idx_w = (buf->idx_w + i) % born;
+  buf->idx_r += born;
+  buf->idx_w += i;
+  if (buf->idx_w >= buf->idx_r)
+    buf->idx_r = buf->idx_w + 1;
+  buf->idx_r %= born;
+  buf->idx_w %= born;
 }
 
 size_t		read_buffer(t_rbuf *buf, char *data, size_t size)

@@ -95,6 +95,11 @@ void			send_response(t_selfd *fd, char *to_send)
              tv.tv_sec, tv.tv_usec, to_send, fd->cli_num);
   if ((len = strlen(to_send)))
     {
+      if (ring_buffer_left_write(fd->wbuff) < len + 1)
+        {
+          server_log(ERROR, "Ring buffer under run when sending %s\n"
+                     "Message will be truncated !", to_send);
+        }
       CHECKWRITE(fd);
       write_buffer(fd->wbuff, to_send, len);
       write_buffer(fd->wbuff, &c, 1);

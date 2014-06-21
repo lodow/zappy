@@ -39,12 +39,12 @@ void	destroy_ring_buffer(void *ptr)
     }
 }
 
-size_t	ring_buffer_left_read(t_rbuf *buf)
+inline size_t	ring_buffer_left_read(t_rbuf *buf)
 {
   return (((buf->idx_w + buf->size) - buf->idx_r) % buf->size);
 }
 
-size_t	ring_buffer_left_write(t_rbuf *buf)
+inline size_t	ring_buffer_left_write(t_rbuf *buf)
 {
   return (((buf->idx_r + buf->size - 1) - buf->idx_w) % buf->size);
 }
