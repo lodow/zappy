@@ -24,7 +24,7 @@ void	serv_verbose(t_server *serv)
         ip = get_ip_addr(tmp);
         if (ip)
           printf("Listening on %s:%s%d%s\n", ip, GREEN,
-		 port_number(tmp), WHITE);
+                 port_number(tmp), WHITE);
         free(ip);
         ++i;
       }
@@ -40,9 +40,7 @@ void	close_server_binds(t_server *serv)
     while (serv->listener[i])
       {
         tmp = serv->listener[i];
-        if (tmp->socket != -1)
-          close(tmp->socket);
-        tmp->socket = -1;
+        close_connection(tmp);
         rm_ptr_f_tab((void**)(serv->listener), (void*)(serv->listener[i]));
         i++;
       }
@@ -56,7 +54,7 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
   bind4 = NULL;
   bind6 = NULL;
   if (!port || !(bind4 = create_connection(listening(AF_INET), port,
-					   socktype, &bind_reuse))
+                         socktype, &bind_reuse))
       || !(bind6 = create_connection(listening(AF_INET6), port,
                                      socktype, &bind_reuse))
       || (listen(bind4->socket, MAX_QUEUE) == -1)
@@ -64,16 +62,14 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
     {
       if (bind4 && bind6)
         perror("Listen");
-      if (bind4 && bind4->socket != -1 && close(bind4->socket) == -1)
-	perror("close");
-      if (bind6 && bind6->socket != -1 && close(bind6->socket) == -1)
-	perror("close");
+      close_connection(bind4);
+      close_connection(bind6);
       return (1);
     }
-  serv->listener = (t_net **)add_ptr_t_tab((void **)serv->listener,
-                                          (void *)bind4);
-  serv->listener = (t_net **)add_ptr_t_tab((void **)serv->listener,
-                                          (void *)bind6);
+  serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
+                                          (void*)bind4);
+  serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
+                                          (void*)bind6);
   return (0);
 }
 
@@ -89,7 +85,7 @@ void		server_setup_select(t_server *serv)
       {
         tmp = serv->listener[i];
         if ((fd = create_fd(tmp->socket, tmp, &handle_newconnection)))
-	  add_to_list(&(serv->watch), fd);
+          add_to_list(&(serv->watch), fd);
         i++;
       }
 }

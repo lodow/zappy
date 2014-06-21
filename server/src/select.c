@@ -62,8 +62,8 @@ t_selfd		*create_fd(int fd, void *data, int (*call)())
   res->wbuff = create_ring_buffer(BUFSIZ * 2);
   if (!res->rbuff || !res->wbuff)
     {
-      free(res->rbuff);
-      free(res->wbuff);
+      destroy_ring_buffer(res->rbuff);
+      destroy_ring_buffer(res->wbuff);
       free(res);
       return (NULL);
     }
@@ -77,8 +77,8 @@ void		destroy_fd(void *fd)
   ptr = (t_selfd*)fd;
   if (ptr)
     {
-      free(ptr->rbuff);
-      free(ptr->wbuff);
+      destroy_ring_buffer(ptr->rbuff);
+      destroy_ring_buffer(ptr->wbuff);
       free(ptr);
     }
 }
