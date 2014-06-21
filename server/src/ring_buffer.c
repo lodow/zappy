@@ -39,6 +39,28 @@ void	destroy_ring_buffer(void *ptr)
     }
 }
 
+void		extend_ring_buffer(t_rbuf *buf, size_t addsize)
+{
+  size_t	fsize;
+  char		*tmp;
+
+  fsize = buf->size + addsize;
+  if (!(tmp = realloc(buf->buf, fsize)))
+    return ;
+  buf->buf = tmp;
+  if (buf->idx_r > buf->idx_w)
+    {
+      addsize = ring_buffer_left_read(buf);
+      if (!(tmp = malloc(addsize)))
+        return ;
+      addsize = read_buffer(buf, tmp, addsize);
+      buf->size = fsize;
+      write_buffer(buf, tmp, addsize);
+      free(tmp);
+    }
+  buf->size = fsize;
+}
+
 inline size_t	ring_buffer_left_read(t_rbuf *buf)
 {
   return (((buf->idx_w + buf->size) - buf->idx_r) % buf->size);

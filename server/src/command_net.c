@@ -56,9 +56,10 @@ int		write_to_client(t_selfd *fd)
 char			*full_line(t_selfd *fd, char *part, size_t size)
 {
   t_client		*client;
+  char			*tmp;
 
   client = (t_client*)fd->data;
-  if (!client)
+  if (!client || size == 0)
     return (NULL);
   if (!part)
     {
@@ -67,9 +68,12 @@ char			*full_line(t_selfd *fd, char *part, size_t size)
       client->tmpcmd = NULL;
       return (NULL);
     }
-  client->tmpcmd = realloc(client->tmpcmd, client->tmpcmdsize + size);
-  memcpy(&(client->tmpcmd[client->tmpcmdsize]), part, size);
-  client->tmpcmdsize += size;
+  if ((tmp = realloc(client->tmpcmd, client->tmpcmdsize + size)))
+    {
+      client->tmpcmd = tmp;
+      memcpy(&(client->tmpcmd[client->tmpcmdsize]), part, size);
+      client->tmpcmdsize += size;
+    }
   return (client->tmpcmd);
 }
 
@@ -79,7 +83,7 @@ char			*get_command(t_selfd *fd)
   char			*ptr;
   struct timeval	tv;
   size_t			size;
-  char			buff[BUFSIZ];
+  char			buff[512];
 
   size = read_buffer(fd->rbuff, buff, sizeof(buff));
   if (size && ((cmd = memchr(buff, EOT_CHAR, size))))
@@ -123,7 +127,8 @@ void			send_response(t_selfd *fd, char *to_send)
       if (ring_buffer_left_write(fd->wbuff) < len + 1)
         {
           server_log(ERROR, "Ring buffer under run when sending %s\n"
-                     "Message will be truncated !", to_send);
+                     "Ring Buffer will be extend !", to_send);
+          extend_ring_buffer(fd->wbuff, len + 1);
         }
       CHECKWRITE(fd);
       write_buffer(fd->wbuff, to_send, len);
