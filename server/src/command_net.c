@@ -53,6 +53,26 @@ int		write_to_client(t_selfd *fd)
 ** Get one line (\n) from ring buffer
 */
 
+char			*full_line(t_selfd *fd, char *part, size_t size)
+{
+  t_client		*client;
+
+  client = (t_client*)fd->data;
+  if (!client)
+    return (NULL);
+  if (!part)
+    {
+      client->tmpcmdsize = 0;
+      free(client->tmpcmd);
+      client->tmpcmd = NULL;
+      return (NULL);
+    }
+  client->tmpcmd = realloc(client->tmpcmd, client->tmpcmdsize + size);
+  memcpy(&(client->tmpcmd[client->tmpcmdsize]), part, size);
+  client->tmpcmdsize += size;
+  return (client->tmpcmd);
+}
+
 char			*get_command(t_selfd *fd)
 {
   char			*cmd;
@@ -62,19 +82,24 @@ char			*get_command(t_selfd *fd)
   char			buff[BUFSIZ];
 
   size = read_buffer(fd->rbuff, buff, sizeof(buff));
-  if (size && ((cmd = memchr(buff, EOT_CHAR, sizeof(buff))))
-      && (ptr = malloc(((cmd - buff) + 1) * sizeof(char))))
+  if (size && ((cmd = memchr(buff, EOT_CHAR, size))))
     {
-      memcpy(ptr, buff, (cmd - buff));
-      ptr[(cmd - buff)] = '\0';
       rollback_read_buffer(fd->rbuff, size - (cmd - buff + 1));
+      buff[(cmd - buff)] = '\0';
+      if (((t_client*)fd->data)->tmpcmd != NULL
+          && (ptr = full_line(fd, buff, (cmd - buff) + 1)))
+        ptr = strdup(ptr);
+      else
+        ptr = strdup(buff);
+      full_line(fd, NULL, 0);
+      gettimeofday(&tv, NULL);
+      if (ptr)
+        server_log(RECEIVING, "%ld:%ld\t\tReceived \"%s\" from %d",
+                   tv.tv_sec, tv.tv_usec, ptr, fd->cli_num);
+      return (ptr);
     }
-  else
-    return (NULL);
-  gettimeofday(&tv, NULL);
-  server_log(RECEIVING, "%ld:%ld\t\tReceived \"%s\" from %d",
-             tv.tv_sec, tv.tv_usec, ptr, fd->cli_num);
-  return (ptr);
+  full_line(fd, buff, size);
+  return (NULL);
 }
 
 /*

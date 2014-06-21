@@ -1,9 +1,9 @@
 /*
 ** game.h for game.h in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
 ** Last update Sat May 31 20:07:55 2014 Nicolas Bridoux
 */
@@ -64,6 +64,8 @@ typedef struct	s_client
   char		orientation;
   char		flag;
   t_map		inv;
+  char		*tmpcmd;
+  size_t		tmpcmdsize;
   t_list	*cmds;
 }		t_client;
 

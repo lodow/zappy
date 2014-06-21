@@ -34,6 +34,8 @@ static int	init_new_client(t_server *serv, t_selfd *fd, t_client *client)
   client->level = 1;
   client->orientation = DOWN;
   client->flag = OK;
+  client->tmpcmd = NULL;
+  client->tmpcmdsize = 0;
   memset(&(client->inv), 0, sizeof(t_map));
   fd->cli_num = serv->game.cli_num++;
   add_to_list(&(serv->watch), fd);
