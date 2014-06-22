@@ -126,9 +126,9 @@ void			send_response(t_selfd *fd, char *to_send)
     {
       if (ring_buffer_left_write(fd->wbuff) < len + 1)
         {
-          server_log(ERROR, "Ring buffer under run when sending %s\n"
+          server_log(ERROR, "Ring buffer overflow when sending %s\n"
                      "Ring Buffer will be extend !", to_send);
-          extend_ring_buffer(fd->wbuff, len + 1);
+          extend_ring_buffer(fd->wbuff, len + 2);
         }
       CHECKWRITE(fd);
       write_buffer(fd->wbuff, to_send, len);
