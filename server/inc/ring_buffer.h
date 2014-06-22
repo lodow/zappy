@@ -12,6 +12,7 @@
 # define RING_BUFFER_H_INCLUDED
 
 # include <stdlib.h>
+# include <string.h>
 
 typedef struct	s_rbuf
 {
