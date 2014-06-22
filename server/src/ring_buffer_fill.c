@@ -12,44 +12,38 @@
 
 void		write_buffer(t_rbuf *buf, const char *data, size_t size)
 {
-  size_t	i;
   size_t	born;
   char	*buffer;
+  size_t	tmpsize;
 
   born = buf->size;
   buffer = buf->buf;
-  i = 0;
-  while (i < size)
-    {
-      buffer[(buf->idx_w + i) % born] = data[i];
-      ++i;
-    }
-  buf->idx_r += born;
-  buf->idx_w += i;
-  if (buf->idx_w >= buf->idx_r)
+  tmpsize = (2 * born - buf->idx_w) % born;
+  memcpy(&(buffer[buf->idx_w]), data, size < tmpsize ? size : tmpsize);
+  if ((int)size - (int)tmpsize > 0)
+    memcpy(buffer, &(data[tmpsize]), size - tmpsize);
+  buf->idx_w += size;
+  if (buf->idx_w >= buf->idx_r + born)
     buf->idx_r = buf->idx_w + 1;
-  buf->idx_r %= born;
   buf->idx_w %= born;
 }
 
 size_t		read_buffer(t_rbuf *buf, char *data, size_t size)
 {
-  size_t	i;
   size_t	born;
   size_t	left;
   char	*buffer;
+  size_t	tmpsize;
 
   left = ring_buffer_left_read(buf);
   born = buf->size;
   buffer = buf->buf;
-  i = 0;
   size = size < left ? size : left;
-  while (i < size)
-    {
-      data[i] = buffer[(buf->idx_r + i) % born];
-      ++i;
-    }
-  buf->idx_r = (buf->idx_r + i) % born;
+  tmpsize = (2 * born - buf->idx_r) % born;
+  memcpy(data, &(buffer[buf->idx_r]), size < tmpsize ? size : tmpsize);
+  if ((int)size - (int)tmpsize > 0)
+    memcpy(&(data[tmpsize]), buffer, size - tmpsize);
+  buf->idx_r = (buf->idx_r + size) % born;
   return (size);
 }
 
