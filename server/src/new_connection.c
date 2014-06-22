@@ -20,9 +20,7 @@ void		log_connection(t_net *sock, char *message)
       if ((ip = get_ip_addr(tmp)))
         server_log(WARNING, "%s %s:%d", message, ip, port_number(tmp));
       free(ip);
-      if (tmp && tmp->socket != -1 && close(tmp->socket) == -1)
-	perror("close");
-      free(tmp);
+      close_connection(tmp);
     }
 }
 
@@ -36,6 +34,8 @@ static int	init_new_client(t_server *serv, t_selfd *fd, t_client *client)
   client->level = 1;
   client->orientation = DOWN;
   client->flag = OK;
+  client->tmpcmd = NULL;
+  client->tmpcmdsize = 0;
   memset(&(client->inv), 0, sizeof(t_map));
   fd->cli_num = serv->game.cli_num++;
   add_to_list(&(serv->watch), fd);
@@ -62,8 +62,7 @@ int			handle_newconnection(t_selfd *fd, t_server *serv)
       || !(tmpfd = create_fd(nsock->socket, client, &handle_client)))
     {
       free(client);
-      if (nsock && nsock->socket != -1 && close(nsock->socket) == -1)
-	perror("close");
+      close_connection(nsock);
       return (EXIT_FAILURE);
     }
   client->sock = nsock;

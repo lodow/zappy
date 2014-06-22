@@ -65,9 +65,8 @@ void		quit_server(t_server *serv)
 	      free(((t_client *)tmpfd->data)->sock);
 	      rm_list(((t_client *)tmpfd->data)->cmds, &free);
 	    }
-	  free(tmpfd->rb_r);
-	  free(tmpfd->rb_w);
-	  free(tmpfd->data);
+	     destroy_ring_buffer(tmpfd->rbuff);
+	     destroy_ring_buffer(tmpfd->wbuff);
           free(tmpfd);
         }
       tmp = tmp->next;
@@ -101,7 +100,5 @@ void		clean_client(t_server *serv, t_selfd *fd)
   free(((t_client *)fd->data)->teamname);
   rm_list(((t_client *)fd->data)->cmds, &free);
   free(fd->data);
-  free(fd->rb_r);
-  free(fd->rb_w);
-  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &free);
+  rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &destroy_fd);
 }

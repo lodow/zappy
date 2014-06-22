@@ -43,6 +43,12 @@
 # define NOT_KNOWN	2
 # define USEC(x)	(1000000 * (x))
 
+# define UNKNOWN	0
+# define IA		1
+# define GUI		2
+# define BUFF_SIZE	4096
+# define EOT_CHAR '\n'
+
 typedef struct timeval t_tv;
 
 typedef struct	s_server
@@ -97,6 +103,15 @@ int	parse_command_line(t_server *server, int ac, char *av[]);
 */
 
 int	check_team_names(t_list *list, char *progname, t_server *serv);
+
+/*
+** Read/Write to/from rings buffers
+*/
+
+void	send_response(t_selfd *fd, char *to_send);
+char	*get_command(t_selfd *fd);
+int	write_to_client(t_selfd *fd);
+int	read_from_client(t_selfd *fd);
 
 /*
 ** log.c

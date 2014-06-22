@@ -18,6 +18,7 @@
 # include <errno.h>
 
 # include "liste.h"
+# include "ring_buffer.h"
 
 # define FDREAD		1
 # define FDWRITE	2
@@ -25,14 +26,6 @@
 # define ISWRITEABLE(x)	(((x)->etype & FDWRITE) == FDWRITE)
 # define CHECKREAD(x)	((x)->checktype |= FDREAD)
 # define CHECKWRITE(x)	((x)->checktype |= FDWRITE)
-# define UNKNOWN	0
-# define IA		1
-# define GUI		2
-# define READ_SIZE	2048
-# define EOT_CHAR	'\n'
-# define BUFF_SIZE	4096
-# define FD_SERV	1
-# define FD_CLI		2
 
 typedef struct	s_selfd
 {
@@ -43,22 +36,12 @@ typedef struct	s_selfd
   int		checktype;
   void		*data;
   int		(*callback)(struct s_selfd *this, void *data);
-  char		*rb_r;
-  size_t	len_r;
-  char		*rb_w;
-  size_t	len_w;
+  t_rbuf		*rbuff;
+  t_rbuf		*wbuff;
 }		t_selfd;
 
 void	do_select(t_list *fds, struct timeval *tv, void *global_arg);
 t_selfd	*create_fd(int fd, void *data, int (*call)());
-
-/*
-** ring_buffers.c
-*/
-
-int	read_from_client(t_selfd *fd);
-int	write_to_client(t_selfd *fd);
-char	*get_command(t_selfd *fd);
-void	send_response(t_selfd *fd, char *to_send);
+void		destroy_fd(void *fd);
 
 #endif /* !SELECT_H_INCLUDED */

@@ -9,6 +9,8 @@
 ##
 
 SRC		=	main.c \
+			ring_buffer.c \
+			ring_buffer_fill.c \
 			inet.c \
 			inet_accept.c \
 			inet_asynchronous_connect.c \
@@ -22,6 +24,7 @@ SRC		=	main.c \
 			new_connection.c \
 			remove_player.c \
 			add_cmd.c \
+			command_net.c \
 			log.c \
 			parse_command_line.c \
 			check_team_names.c \
@@ -30,7 +33,6 @@ SRC		=	main.c \
 			clean.c \
 			exec_cmd.c \
 			handle_callbacks.c \
-			ring_buffers.c \
 			eggs.c \
 			my_str_to_wordtab.c \
 			gen_ressources.c \
@@ -72,7 +74,7 @@ SRC		=	main.c \
 			cmd_gui/eht.c \
 			cmd_gui/edi.c \
 			cmd_gui/seg.c \
-			cmd_gui/smg.c \
+			cmd_gui/smg.c
 
 CC		=	gcc
 FILETYPE	=	.c

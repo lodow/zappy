@@ -14,6 +14,7 @@ int		handle_client(t_selfd *fd, t_server *serv)
 {
   char		*cmd;
   int		r;
+  ssize_t		swr;
 
   if (ISREADABLE(fd))
     {
@@ -24,14 +25,14 @@ int		handle_client(t_selfd *fd, t_server *serv)
           return (destroy_connection(serv, fd));
         }
     }
-  if (fd->len_w && ISWRITEABLE(fd) &&
-      (r = write_to_client(fd)) < 0 && errno != EINTR)
+  if (ISWRITEABLE(fd) && (r = write_to_client(fd)) < 0 && errno != EINTR)
     return (destroy_connection(serv, fd));
-  while (fd->len_r && (cmd = get_command(fd)))
+  while ((cmd = get_command(fd)))
     handle_add_cmd(serv, fd, cmd);
-  if (!fd->len_w && fd->to_close)
+  swr = ring_buffer_left_read(fd->wbuff);
+  if (!swr && fd->to_close)
     return (destroy_connection(serv, fd));
-  if (fd->len_w)
+  if (swr)
     CHECKWRITE(fd);
   CHECKREAD(fd);
   push_instruction(serv, fd);
