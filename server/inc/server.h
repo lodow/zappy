@@ -77,7 +77,6 @@ typedef struct	s_instr
 }		t_instr;
 
 int	listen_on_port(t_server *serv, char *port, int socktype);
-void	close_server_binds(t_server *serv);
 void	serv_verbose(t_server *serv);
 void	server_setup_select(t_server *serv);
 void	log_connection(t_net *sock, char *message);

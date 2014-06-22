@@ -30,22 +30,6 @@ void	serv_verbose(t_server *serv)
       }
 }
 
-void	close_server_binds(t_server *serv)
-{
-  int	i;
-  t_net	*tmp;
-
-  i = 0;
-  if (serv->listener)
-    while (serv->listener[i])
-      {
-        tmp = serv->listener[i];
-        close_connection(tmp);
-        rm_ptr_f_tab((void**)(serv->listener), (void*)(serv->listener[i]));
-        i++;
-      }
-}
-
 int	listen_on_port(t_server *serv, char *port, int socktype)
 {
   t_net	*bind4;

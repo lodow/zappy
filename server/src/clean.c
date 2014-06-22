@@ -72,7 +72,6 @@ void		quit_server(t_server *serv)
       tmp = tmp->next;
     }
   rm_list(serv->watch, NULL);
-  free(serv->listener);
   rm_list(serv->game.teams, &free);
   return (free_eggs_and_map(serv));
 }

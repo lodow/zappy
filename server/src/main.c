@@ -15,10 +15,7 @@ static t_server	g_serv;
 void	sig_handler(int sig)
 {
   if (sig == SIGQUIT || sig == SIGINT || sig == SIGTERM)
-    {
-      close_server_binds(&g_serv);
-      g_serv.quit = 1;
-    }
+    g_serv.quit = 1;
 }
 
 void		handle_server(t_server *serv)
@@ -45,7 +42,7 @@ int	main(int ac, char **av)
   signal(SIGQUIT, &sig_handler);
   signal(SIGTERM, &sig_handler);
   if (parse_command_line(&g_serv, ac, av) && (ret = 1))
-    close_server_binds(&g_serv);
+    free_ptr_tab((void**)g_serv.listener, (void (*)(void*))&close_connection);
   else
     {
       if (!handle_start(&g_serv))
@@ -54,6 +51,7 @@ int	main(int ac, char **av)
           handle_server(&g_serv);
         }
     }
+  free_ptr_tab((void**)g_serv.listener, (void (*)(void*))&close_connection);
   quit_server(&g_serv);
   server_log(WARNING, "Shutting down.. Now");
   return (ret);
