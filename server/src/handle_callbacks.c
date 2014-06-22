@@ -29,7 +29,7 @@ int		handle_client(t_selfd *fd, t_server *serv)
     return (destroy_connection(serv, fd));
   while ((cmd = get_command(fd)))
     handle_add_cmd(serv, fd, cmd);
-  swr = ring_buffer_left_write(fd->wbuff);
+  swr = ring_buffer_left_read(fd->wbuff);
   if (!swr && fd->to_close)
     return (destroy_connection(serv, fd));
   if (swr)
