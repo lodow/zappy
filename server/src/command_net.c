@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue Apr 29 14:37:39 2014 Nicolas Bridoux
-** Last update Fri May 30 18:26:38 2014 Nicolas Bridoux
+** Last update Mon Jun 23 23:20:10 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -35,7 +35,7 @@ int		read_from_client(t_selfd *fd)
 int		write_to_client(t_selfd *fd)
 {
   size_t	size;
-  char	buff[BUFSIZ];
+  char		buff[BUFSIZ];
   int		w;
 
   w = 0;
@@ -82,7 +82,7 @@ char			*get_command(t_selfd *fd)
   char			*cmd;
   char			*ptr;
   struct timeval	tv;
-  size_t			size;
+  size_t		size;
   char			buff[512];
 
   size = read_buffer(fd->rbuff, buff, sizeof(buff));
@@ -125,11 +125,7 @@ void			send_response(t_selfd *fd, char *to_send)
   if ((len = strlen(to_send)))
     {
       if (ring_buffer_left_write(fd->wbuff) < len + 1)
-        {
-          server_log(ERROR, "Ring buffer overflow when sending %s\n"
-                     "Ring Buffer will be extend !", to_send);
-          extend_ring_buffer(fd->wbuff, len + 2);
-        }
+	extend_ring_buffer(fd->wbuff, len + 2);
       CHECKWRITE(fd);
       write_buffer(fd->wbuff, to_send, len);
       write_buffer(fd->wbuff, &c, 1);

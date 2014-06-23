@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Sat Jun  7 14:58:56 2014 Nicolas Bridoux
+** Last update Mon Jun 23 23:44:28 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -66,18 +66,15 @@ static int	gen_world(t_server *server)
       if (!(server->map[y] = malloc(sizeof(t_map) * (server->game.width))))
 	return (EXIT_FAILURE);
       while (x < server->game.width)
-	{
-	  server->map[y][x].food = 0;
-	  server->map[y][x].linemate = rand() % MAX_ITEM_MAP;
-	  server->map[y][x].deraumere = rand() % MAX_ITEM_MAP;
-	  server->map[y][x].sibur = rand() % MAX_ITEM_MAP;
-	  server->map[y][x].mendiane = rand() % MAX_ITEM_MAP;
-	  server->map[y][x].phiras = rand() % MAX_ITEM_MAP;
-	  server->map[y][x].thystame = rand() % MAX_ITEM_MAP;
-	  ++x;
-	}
+	memset(&(server->map[y][x++]), 0, sizeof(t_map));
       ++y;
     }
+  gen_ressource(server, "linemate", DEMI_PERIMETER * 2);
+  gen_ressource(server, "deraumere", DEMI_PERIMETER * 2);
+  gen_ressource(server, "sibur", DEMI_PERIMETER * 2);
+  gen_ressource(server, "mendiane", DEMI_PERIMETER);
+  gen_ressource(server, "phiras", DEMI_PERIMETER);
+  gen_ressource(server, "thystame", DEMI_PERIMETER / 4);
   return (EXIT_SUCCESS);
 }
 

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Wed Jun 18 12:10:57 2014 Nicolas Bridoux
+** Last update Mon Jun 23 23:43:47 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -42,12 +42,13 @@
 # define NOT_ALLOWED	1
 # define NOT_KNOWN	2
 # define USEC(x)	(1000000 * (x))
+# define DEMI_PERIMETER	(server->game.width + server->game.height)
 
 # define UNKNOWN	0
 # define IA		1
 # define GUI		2
 # define BUFF_SIZE	4096
-# define EOT_CHAR '\n'
+# define EOT_CHAR	'\n'
 
 typedef struct timeval t_tv;
 
@@ -185,7 +186,7 @@ char	**my_str_to_wordtab(char *str, char delim);
 */
 
 void	gen_food(t_server *serv);
-void	gen_single_food(t_server *serv, char *ressource);
+void	gen_ressource(t_server *serv, char *name, int nb);
 void	gen_rocks(t_server *serv, t_map *need);
 
 /*

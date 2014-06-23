@@ -5,12 +5,12 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Fri May 30 18:41:16 2014 Nicolas Bridoux
+** Last update Mon Jun 23 23:18:33 2014 Nicolas Bridoux
 */
 
 #include "ring_buffer.h"
 
-t_rbuf	*create_ring_buffer(size_t size)
+t_rbuf		*create_ring_buffer(size_t size)
 {
   t_rbuf	*rbuf;
 
@@ -27,7 +27,7 @@ t_rbuf	*create_ring_buffer(size_t size)
   return (rbuf);
 }
 
-void	destroy_ring_buffer(void *ptr)
+void		destroy_ring_buffer(void *ptr)
 {
   t_rbuf	*buf;
 

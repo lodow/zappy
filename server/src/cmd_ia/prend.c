@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Tue May 20 18:13:17 2014 Nicolas Bridoux
-** Last update Sat Jun  7 15:41:09 2014 Nicolas Bridoux
+** Last update Mon Jun 23 22:55:44 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -37,7 +37,8 @@ void		prend(t_server *serv, t_selfd *fd, char **args)
 	  {
 	    --(*((size_t *)&(serv->map[client->y][client->x]) + i));
 	    ++(*((size_t *)&client->inv + i));
-	    gen_single_food(serv, args[0]);
+	    gen_ressource(serv, !strcmp(args[0], "nourriture")
+			  ? args[0] : NULL, 1);
 	    send_response(fd, "ok");
 	    pgt(serv, fd, i);
 	    return ;

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 20:03:06 2014 Nicolas Bridoux
-** Last update Wed Jun 18 15:18:39 2014 Nicolas Bridoux
+** Last update Mon Jun 23 22:51:48 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -113,7 +113,7 @@ static void	send_level_up(t_server *serv, t_client *client)
 }
 
 void		incantation(t_server *serv, t_selfd *fd,
-		     __attribute__((unused))char **args)
+			    __attribute__((unused))char **args)
 {
   if (!check_incant(serv, fd, KO))
     {

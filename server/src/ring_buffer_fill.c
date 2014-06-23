@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Fri May 30 18:41:16 2014 Nicolas Bridoux
+** Last update Mon Jun 23 23:13:58 2014 Nicolas Bridoux
 */
 
 #include "ring_buffer.h"
@@ -13,7 +13,7 @@
 void		write_buffer(t_rbuf *buf, const char *data, size_t size)
 {
   size_t	born;
-  char	*buffer;
+  char		*buffer;
   size_t	tmpsize;
 
   born = buf->size;
@@ -32,7 +32,7 @@ size_t		read_buffer(t_rbuf *buf, char *data, size_t size)
 {
   size_t	born;
   size_t	left;
-  char	*buffer;
+  char		*buffer;
   size_t	tmpsize;
 
   left = ring_buffer_left_read(buf);
