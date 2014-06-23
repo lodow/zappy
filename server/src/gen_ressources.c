@@ -5,23 +5,34 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat Jun  7 14:31:38 2014 Nicolas Bridoux
-** Last update Sat Jun  7 16:12:55 2014 Nicolas Bridoux
+** Last update Mon Jun 23 23:03:57 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-void		gen_single_food(t_server *serv, char *ressource)
+extern char	*g_off[8];
+
+void		gen_ressource(t_server *serv, char *name, int nb)
 {
   size_t	x;
   size_t	y;
+  size_t	i;
 
-  if (ressource && !strcmp(ressource, "nourriture"))
-    {
-      x = rand() % serv->game.height;
-      y = rand() % serv->game.width;
-      serv->map[y][x].food++;
-      bct_event(serv, &serv->map[y][x], x, y);
-    }
+  if (!name)
+    return ;
+  i = -1;
+  while (g_off[++i])
+    if (!strcmp(name, g_off[i]))
+      {
+	while (nb > 0)
+	  {
+	    x = rand() % serv->game.width;
+	    y = rand() % serv->game.height;
+	    ++(*((size_t *)&(serv->map[y][x]) + i));
+	    --nb;
+	  }
+	break ;
+      }
 }
 
 void		gen_food(t_server *serv)
