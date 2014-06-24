@@ -12,7 +12,7 @@
         jar="/home/max/projet/actu/zappy/android/Zappy/core/build/libs/core-1.0.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="6abe20b40692c6d99eeb74c9c4894f59c2b009d8"/>
+        sha1="30ec411c8c45ea479043e576435ea1ea425fd492"/>
     <item
         dex="/home/max/projet/actu/zappy/android/Zappy/android/build/pre-dexed/debug/gdx-1.2.0-93cd1686d267d475d9f491df6978b24a1ae1894a.jar"
         jar="/home/max/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.2.0/eb55d6eb1165daf6be23189767c19d811ca5eb36/gdx-1.2.0.jar"
