@@ -1,8 +1,10 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -14,10 +16,6 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
 
-/**
- * See: http://blog.xoppa.com/loading-models-using-libgdx/
- * @author Xoppa
- */
 public class MyGdxGame implements ApplicationListener {
     public PerspectiveCamera cam;
     public CameraInputController camController;
@@ -33,15 +31,15 @@ public class MyGdxGame implements ApplicationListener {
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.position.set(7f, 7f, 7f);
         cam.lookAt(0,0,0);
         cam.near = 0f;
         cam.far = 300f;
         cam.update();
+        camController = new Camperso(cam);
 
-        camController = new CameraInputController(cam);
         Gdx.input.setInputProcessor(camController);
 
         assets = new AssetManager();
@@ -69,7 +67,6 @@ public class MyGdxGame implements ApplicationListener {
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
         modelBatch.begin(cam);
         modelBatch.render(instances, environment);
         modelBatch.end();

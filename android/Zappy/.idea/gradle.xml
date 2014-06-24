@@ -7,9 +7,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Users\debas_e\Desktop\zappy_android" />
-            <option value="C:\Users\debas_e\Desktop\zappy_android\android" />
-            <option value="C:\Users\debas_e\Desktop\zappy_android\core" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/android" />
+            <option value="$PROJECT_DIR$/core" />
           </set>
         </option>
       </GradleProjectSettings>
