@@ -75,19 +75,18 @@
 
 		var launchIncant = function () {
 			cli.debug("Il y a le bon nombre de joueurs, je lance l'incantation");
-				cli.broadcast(cli.lvl.toString() + "-ok", function (res) {
-					cli.incantation(function (res) {
-						if (!res) {
-							cli.broadcast(cli.lvl.toString() + "-ko", function (res) {
-								cli.avance(function (res) {
-									begin((cli.lvl + 1) * 10);
-								});
+			cli.broadcast(cli.lvl.toString() + "-ok", function (res) {
+				cli.incantation(function (res) {
+					if (!res) {
+						cli.broadcast(cli.lvl.toString() + "-ko", function (res) {
+							cli.avance(function (res) {
+								begin((cli.lvl + 1) * 10);
 							});
-						}
-					});
+						});
+					}
 				});
+			});
 		}
-
 
 		var callTeam = function (square) {
 			cli.debug("Je vérifie le nombre de joueurs");
@@ -97,7 +96,7 @@
 			} else if (square.joueur < incant[cli.lvl].joueur) {
 				cli.debug("Nous ne sommes pas assez, j'appele des gens");
 				return (cli.broadcast(cli.lvl.toString() + "-help", function (res) {
-							// cli.incant = true; // Je considère l'incantation comme en cours
+							cli.incant = true;
 
 							cli.voir(function (see) {
 								callTeam(see[0]);
@@ -114,7 +113,7 @@
 		// =====> Gestion des pierres
 		var possibleIncant = function (square) {
 			for (s in square)
-				if (s != "joueur" && square[s] + cli.inv[s] < incant[cli.lvl][s])
+				if (s != "joueur" && s != "nourriture" && square[s] + cli.inv[s] < incant[cli.lvl][s])
 					return (false);
 			return (true);
 		}
@@ -125,14 +124,14 @@
 			for (var i = 0; i < 4; ++i) {
 				score = 0;
 				for (s in see[i]) {
-					if (s != "joueur") {
+					if (s != "joueur" && s != "nourriture") {
 						if (see[i][s] > 0 && incant[cli.lvl][s]) {
 							score += 10;
 						}
 						if (see[i][s] > 0 && incant[cli.lvl + 1 == 7 ? cli.lvl : cli.lvl][s]) {
 							score += 1;
 						}
-					} else {
+					} else if (s == "joueur") {
 						if (see[i][s] > 0)
 							score -= 10 * see[i][s];
 					}
@@ -168,7 +167,6 @@
 
 			for (s in square)
 				if (s != "joueur" && square[s] && (incant[cli.lvl][s] || incant[nextLvl][s])) {
-				 // if (cli.inv[s] < incant[cli.lvl][s] || cli.inv[s] < incant[nextLvl][s]) // On prend uniquement si on en a pas deja assez
 						return (cli.prend(s, function (res) {
 									cli.voir(function (see) {
 										takeStonesAndMove(see);
@@ -241,7 +239,7 @@
 
 		cli.fork(function (res) {
 			cli.setLevelCallback(begin, function () {
-				begin(10);
+				begin((cli.lvl + 1) * 10);
 			});
 		});
 	}

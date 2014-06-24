@@ -35,6 +35,9 @@
         this.msg = null;
         this.id = cliId;
         this.lvl = 0;
+        
+        this.incant = false;
+
         this.inv = {linemate : 0, deraumere : 0, sibur : 0, mendiane : 0, phiras : 0, thystame : 0};
 
         // =================== Creating socket connection ================
@@ -109,7 +112,7 @@
         // ================= Sending and Receiving procedures ================
 
         this.getResponse = function (data) {
-        	print.recv("[" + self.id + "] : " + data);
+        	// print.recv("[" + self.id + "] : " + data);
         	if (data == "mort")
                 return (self.socket.destroy());
             if (data == 'ko' && self.incant) {
@@ -130,7 +133,7 @@
                 data = data.split(',');
                 data[0] = data[0].split(' ')[1];
                 if (parseInt(data[1].split('-')[0]) == self.lvl) {
-                    if (self.inv.nourriture < (self.lvl + 1) * 10 / 2 || !self.levelCallback || self.incant) // certains joueurs ne bougent plus ou vont dans la même direction ?
+                    if (self.inv.nourriture < (self.lvl + 1) * 10 / 2 || !self.levelCallback || self.incant == true) // certains joueurs ne bougent plus ou vont dans la même direction ?
                         return ;
 
                     self.msg = { direction : parseInt(data[0]) , msg : data[1].split('-')[1] };
@@ -177,7 +180,7 @@
                 return ;
             }
 
-        	print.send("[" + self.id + "] : " + cmd);
+        	// print.send("[" + self.id + "] : " + cmd);
         	self.cmds.push({cmd : cmd, callback : callback});
         	self.socket.write(cmd + '\n');
         }
@@ -255,7 +258,7 @@
         }
 
         this.debug = function (msg) {
-            console.log("[" + self.id + "] ", msg);
+            console.log("[" + self.id + "] " + " (" + parseInt(self.lvl + 1) + ") ", msg);
         }
 
         this.setLevelCallback = function (toSetCallback, callback) {
@@ -428,8 +431,8 @@
 
 		this.incantation = function (callback) {
 			this.sendCmd("incantation", function (rep) {
-                if (rep == "elevation en cours")
-                    self.incant = true;
+                if (rep != "elevation en cours")
+                    self.incant = false;
 				callback(rep == "elevation en cours");
 			});
 		}
