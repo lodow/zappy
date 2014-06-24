@@ -2,26 +2,26 @@
 <pre-dex-items>
 
     <item
-        dex="/home/max/projet/actu/zappy/android/Zappy/android/build/pre-dexed/debug/gdx-backend-android-1.2.0-12255c30a3d6012dab3da293decd16eb1deb72cd.jar"
-        jar="/home/max/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-android/1.2.0/2ed57a7d155e5060ea773eed21804a23342fb47/gdx-backend-android-1.2.0.jar"
+        dex="C:\Users\debas_e\zappy\android\Zappy\android\build\pre-dexed\debug\core-1.0-82c33bb51e29a6ad4a6a1c5638bb37c8d42b791d.jar"
+        jar="C:\Users\debas_e\zappy\android\Zappy\core\build\libs\core-1.0.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="02ed57a7d155e5060ea773eed21804a23342fb47"/>
+        sha1="043cfb8ea22c63e237fdc9b59846f07533dd0be6"/>
     <item
-        dex="/home/max/projet/actu/zappy/android/Zappy/android/build/pre-dexed/debug/core-1.0-44a221a9cf954078fe1b8727cae939473655f6cb.jar"
-        jar="/home/max/projet/actu/zappy/android/Zappy/core/build/libs/core-1.0.jar"
+        dex="C:\Users\debas_e\zappy\android\Zappy\android\build\pre-dexed\debug\gdx-backend-android-1.2.0-6890fb1228be73f2bd6d22395305f6a968533551.jar"
+        jar="C:\Users\debas_e\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-backend-android\1.2.0\2ed57a7d155e5060ea773eed21804a23342fb47\gdx-backend-android-1.2.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="30ec411c8c45ea479043e576435ea1ea425fd492"/>
     <item
-        dex="/home/max/projet/actu/zappy/android/Zappy/android/build/pre-dexed/debug/gdx-1.2.0-93cd1686d267d475d9f491df6978b24a1ae1894a.jar"
-        jar="/home/max/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.2.0/eb55d6eb1165daf6be23189767c19d811ca5eb36/gdx-1.2.0.jar"
+        dex="C:\Users\debas_e\zappy\android\Zappy\android\build\pre-dexed\debug\gdx-1.2.0-6fd17473b11e9e2728552287a5f4baf924495d4f.jar"
+        jar="C:\Users\debas_e\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx\1.2.0\eb55d6eb1165daf6be23189767c19d811ca5eb36\gdx-1.2.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="eb55d6eb1165daf6be23189767c19d811ca5eb36"/>
     <item
-        dex="/home/max/projet/actu/zappy/android/Zappy/android/build/pre-dexed/debug/gdx-box2d-1.2.0-0ff4bbe90e3d679d7a1d2afdb466b93593cc424e.jar"
-        jar="/home/max/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d/1.2.0/cc39fa3dbad14b247655266c10e64367418564bd/gdx-box2d-1.2.0.jar"
+        dex="C:\Users\debas_e\zappy\android\Zappy\android\build\pre-dexed\debug\gdx-box2d-1.2.0-11be63723960477733146e7b11ab1865aa4c8a12.jar"
+        jar="C:\Users\debas_e\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-box2d\1.2.0\cc39fa3dbad14b247655266c10e64367418564bd\gdx-box2d-1.2.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="cc39fa3dbad14b247655266c10e64367418564bd"/>

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -51,7 +50,7 @@ public class MyGdxGame implements ApplicationListener {
         Model ship = assets.get("ship.obj", Model.class);
         for (float x = -5f; x <= 5f; x += 2f) {
             for (float z = -5f; z <= 5f; z += 2f) {
-                ModelInstance shipInstance = new ModelInstance(ship);
+                ModelInstance shipInstance = new ModelInstance(ship).copy();
                 shipInstance.transform.setToTranslation(x, 0, z);
                 instances.add(shipInstance);
             }
@@ -67,6 +66,7 @@ public class MyGdxGame implements ApplicationListener {
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
         modelBatch.begin(cam);
         modelBatch.render(instances, environment);
         modelBatch.end();
