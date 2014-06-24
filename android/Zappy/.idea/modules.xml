@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/Zappy.iml" filepath="$PROJECT_DIR$/Zappy.iml" />
       <module fileurl="file://$PROJECT_DIR$/android/android.iml" filepath="$PROJECT_DIR$/android/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/zappy_android.iml" filepath="$PROJECT_DIR$/zappy_android.iml" />
     </modules>
   </component>
 </project>
