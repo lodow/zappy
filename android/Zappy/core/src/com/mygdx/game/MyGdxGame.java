@@ -62,6 +62,7 @@ public class MyGdxGame implements ApplicationListener {
     public void render () {
         if (loading && assets.update())
             doneLoading();
+
         camController.update();
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
