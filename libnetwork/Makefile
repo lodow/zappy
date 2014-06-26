@@ -8,82 +8,32 @@
 ## Last update Sat Jun  7 15:08:10 2014 Nicolas Bridoux
 ##
 
-SRC		=	main.c \
-			liste_instr.c \
-			ptr_tab.c \
-			server_network.c \
-			new_connection.c \
-			remove_player.c \
-			add_cmd.c \
-			command_net.c \
-			log.c \
-			parse_command_line.c \
-			check_team_names.c \
-			timeout.c \
-			manage_instr.c \
-			clean.c \
-			exec_cmd.c \
-			handle_callbacks.c \
-			eggs.c \
-			my_str_to_wordtab.c \
-			gen_ressources.c \
-			cmd_ia/avance.c \
-			cmd_ia/droite.c \
-			cmd_ia/gauche.c \
-			cmd_ia/inventaire.c \
-			cmd_ia/prend.c \
-			cmd_ia/pose.c \
-			cmd_ia/connect_nbr.c \
-			cmd_ia/voir.c \
-			cmd_ia/fill_square_voir.c \
-			cmd_ia/ia_fork.c \
-			cmd_ia/expulse.c \
-			cmd_ia/incantation.c \
-			cmd_ia/end_game.c \
-			cmd_ia/broadcast.c \
-			cmd_gui/msz.c \
-			cmd_gui/bct.c \
-			cmd_gui/mct.c \
-			cmd_gui/tna.c \
-			cmd_gui/ppo.c \
-			cmd_gui/plv.c \
-			cmd_gui/pin.c \
-			cmd_gui/sgt.c \
-			cmd_gui/sst.c \
-			cmd_gui/send.c \
-			cmd_gui/pnw.c \
-			cmd_gui/ebo.c \
-			cmd_gui/pex.c \
-			cmd_gui/pbc.c \
-			cmd_gui/pic.c \
-			cmd_gui/pie.c \
-			cmd_gui/pfk.c \
-			cmd_gui/enw.c \
-			cmd_gui/pdr.c \
-			cmd_gui/pgt.c \
-			cmd_gui/pdi.c \
-			cmd_gui/eht.c \
-			cmd_gui/edi.c \
-			cmd_gui/seg.c \
-			cmd_gui/smg.c
+SRC		=	ring_buffer.c \
+			ring_buffer_fill.c \
+			inet.c \
+			inet_accept.c \
+			inet_asynchronous_connect.c \
+			inet_reuse.c \
+			liste.c \
+			liste_find.c \
+			select.c
 
 CC		=	gcc
 FILETYPE	=	.c
 
 RM		=	rm -f
 
-NAME		=	zappy
+NAME		=	libnet.a
 
 OBJDIR		=	obj/
 SRCDIR		=	src/
 INCDIR		=	inc/
 
-CFLAGS		+=	-I$(INCDIR) -I../libnetwork/inc/
+CFLAGS		+=	-I$(INCDIR)
 CFLAGS		+=	-Wall -Wextra -Winit-self
 CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
+CFLAGS		+=	-static
 
-LDFLAGS		+=	-Wl,-O1
-LDFLAGS		+=	-L../libnetwork/ -lnet
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
 DEPS		=	$(patsubst %${FILETYPE}, ${OBJDIR}%.d, $(SRC))
@@ -115,13 +65,13 @@ endif
 
 $(NAME):	$(OBJ)
 ifneq ("$(shell tty)", "not a tty")
-		@echo -e "Linking $@ { $(LDFLAGS) }" | sed 's/^-e //' \
+		@echo -e "Archiving $@" | sed 's/^-e //' \
 		| sed 's/[-a-zA-Z]\+/\x1B[34m&\x1B[0m/g'
-		@$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
-		@cp -f $(NAME) ../$(NAME)
+		@ar rcs ${NAME} ${OBJ}
+		@ranlib ${NAME}
 else
-		$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
-		@cp -f $(NAME) ../$(NAME)
+		ar rcs ${NAME} ${OBJ}
+		ranlib ${NAME}
 endif
 
 -include $(DEPS)

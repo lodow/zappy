@@ -10,7 +10,8 @@
 
 NAME	=	zappy
 
-SUBDIRS	=	server \
+SUBDIRS	=	libnetwork \
+		server \
 		ia \
 		gui
 
