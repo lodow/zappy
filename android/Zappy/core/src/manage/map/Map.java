@@ -30,4 +30,8 @@ public class Map {
     public Boolean setMap(int x, int y, eType type, int number) {
         return true;
     }
+
+    public Boolean addPlayer(Player player) { return true; }
+
+    public Boolean addEgg(Egg egg) { return true; }
 }
