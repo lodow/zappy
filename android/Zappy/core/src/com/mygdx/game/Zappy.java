@@ -7,10 +7,10 @@ import com.badlogic.gdx.Game;
  */
 public class Zappy extends Game {
 
-        private String host, port;
         @Override
         public void create() {
-            setScreen(new GetHostInfo(this));
+            Assets.Load();
+            setScreen(new MainMenuScreen(this));
         }
 
         @Override
