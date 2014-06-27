@@ -55,7 +55,7 @@ void		extend_ring_buffer(t_rbuf *buf, size_t addsize)
         return ;
       addsize = read_buffer(buf, tmp, addsize);
       buf->size = fsize;
-      buf->idx_r = buf->size;
+      buf->idx_r = fsize;
       buf->idx_w = 0;
       write_buffer(buf, tmp, addsize);
       buf->idx_r = 0;
