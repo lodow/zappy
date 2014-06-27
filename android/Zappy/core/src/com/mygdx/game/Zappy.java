@@ -7,6 +7,8 @@ import com.badlogic.gdx.Game;
  */
 public class Zappy extends Game {
 
+        public boolean music = true;
+
         @Override
         public void create() {
             Assets.Load();

@@ -3,7 +3,6 @@ package com.mygdx.game;
 /**
  * Created by debas_e on 27/06/2014.
  */
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -20,7 +19,7 @@ public class OverlapTester {
     }
 
     public static boolean pointInRectangle (Rectangle r, float x, float y) {
-        Gdx.app.log("collision : ", "r.x = " + r.x + " - r.y = " + r.y + " - r.x + r.witdh = " + (r.x + r.width) + " - r.y + r.height = " + (r.y + r.height));
+       // Gdx.app.log("collision : ", "r.x = " + r.x + " - r.y = " + r.y + " - r.x + r.witdh = " + (r.x + r.width) + " - r.y + r.height = " + (r.y + r.height));
         return r.x <= x && r.x + r.width >= x && r.y >= y && r.y - r.height <= y;
     }
 }
