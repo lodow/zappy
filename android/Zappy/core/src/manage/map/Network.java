@@ -1,5 +1,6 @@
 package manage.map;
 
+
 import com.badlogic.gdx.math.Vector2;
 
 import java.io.BufferedReader;
@@ -39,13 +40,13 @@ public class Network {
         parts = tmp.split(" ");
         while (parts[0].compareTo("bct") == 0) {
             // resources in the map
-            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Map.eType.Nourriture, Integer.parseInt(parts[3]));
-            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Map.eType.Linemate, Integer.parseInt(parts[4]));
-            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Map.eType.Deraumere, Integer.parseInt(parts[5]));
-            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Map.eType.Sibur, Integer.parseInt(parts[6]));
-            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Map.eType.Mendiane, Integer.parseInt(parts[7]));
-            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Map.eType.Phiras, Integer.parseInt(parts[8]));
-            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Map.eType.Thystame, Integer.parseInt(parts[9]));
+            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Nourriture, Integer.parseInt(parts[3]));
+            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Linemate, Integer.parseInt(parts[4]));
+            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Deraumere, Integer.parseInt(parts[5]));
+            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Sibur, Integer.parseInt(parts[6]));
+            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Mendiane, Integer.parseInt(parts[7]));
+            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Phiras, Integer.parseInt(parts[8]));
+            map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Thystame, Integer.parseInt(parts[9]));
             tmp = input.readLine();
             parts = tmp.split(" ");
         }
