@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu May  1 18:05:05 2014 Nicolas Bridoux
+** Last update Fri May 30 20:04:18 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -24,27 +24,9 @@ void	serv_verbose(t_server *serv)
         ip = get_ip_addr(tmp);
         if (ip)
           printf("Listening on %s:%s%d%s\n", ip, GREEN,
-		 port_number(tmp), WHITE);
+                 port_number(tmp), WHITE);
         free(ip);
         ++i;
-      }
-}
-
-void	close_server_binds(t_server *serv)
-{
-  int	i;
-  t_net	*tmp;
-
-  i = 0;
-  if (serv->listener)
-    while (serv->listener[i])
-      {
-        tmp = serv->listener[i];
-        if (tmp->socket != -1)
-          close(tmp->socket);
-        tmp->socket = -1;
-        rm_ptr_f_tab((void**)(serv->listener), (void*)(serv->listener[i]));
-        i++;
       }
 }
 
@@ -56,9 +38,9 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
   bind4 = NULL;
   bind6 = NULL;
   if (!port || !(bind4 = create_connection(listening(AF_INET), port,
-                         socktype, &bind))
+                         socktype, &bind_reuse))
       || !(bind6 = create_connection(listening(AF_INET6), port,
-                                     socktype, &bind))
+                                     socktype, &bind_reuse))
       || (listen(bind4->socket, MAX_QUEUE) == -1)
       || (listen(bind6->socket, MAX_QUEUE) == -1))
     {
@@ -73,23 +55,6 @@ int	listen_on_port(t_server *serv, char *port, int socktype)
   serv->listener = (t_net**)add_ptr_t_tab((void**)serv->listener,
                                           (void*)bind6);
   return (0);
-}
-
-void		quit_server(t_server *serv)
-{
-  t_list	*tmp;
-  t_selfd	*tmpfd;
-
-  tmp = serv->watch;
-  while (tmp)
-    {
-      if ((tmpfd = (t_selfd*)tmp->data))
-        {
-          free(tmpfd->data);
-          free(tmpfd);
-        }
-      tmp = tmp->next;
-    }
 }
 
 void		server_setup_select(t_server *serv)
