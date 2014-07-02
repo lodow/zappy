@@ -8,8 +8,11 @@
 ## Last update Fri May  2 09:51:52 2014 fabien.linardon
 ##
 
-SRC		=	main.cpp	\
-			Sfml.cpp	\
+SRC		=	main.cpp		\
+			FontText.cpp	\
+			GameEngine.cpp	\
+			Ground.cpp		\
+			Parser.cpp		\
 
 CC		=	g++
 FILETYPE	=	.cpp
