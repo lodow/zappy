@@ -9,6 +9,7 @@
 			'team': {key: 'n', args: 1, description: "IA's teamname", mandatory: true},
 		    'port': {key: 'p', args: 1, description: 'Connexion port', mandatory: false},
 		    'host': {key: 'h', args: 1, description: 'Connexion host', mandatory: false},
+		    'debug' : {key: 'd', args: 1, description: 'debug mode (network | verbose)', mandatory: false}
 		});
 	} catch(e) {
 		console.log("Error getopt !");
@@ -37,7 +38,7 @@
 	var doAlgo = function (cli, mapX, mapY) {
 
 
-		// ====> Chercher de la nourriture uniquement
+		// ====> Search food only
 		var survive = function (nbFood, see) {
 			if (cli.inv.nourriture > nbFood) {
 				cli.debug("Finis la survie");
@@ -71,7 +72,7 @@
 					}));
 		}
 
-		// =====> Gestion du nombre de joueurs et incantation
+		// =====> Incantation and number of player management
 
 		var launchIncant = function () {
 			cli.debug("Il y a le bon nombre de joueurs, je lance l'incantation");
@@ -110,7 +111,7 @@
 			}
 		}
 
-		// =====> Gestion des pierres
+		// =====> Stones management
 		var possibleIncant = function (square) {
 			for (s in square)
 				if (s != "joueur" && s != "nourriture" && square[s] + cli.inv[s] < incant[cli.lvl][s])
@@ -222,7 +223,7 @@
 			return (callTeam(square));
 		}
 
-		// ====> Tout début de la "boucle de vie"
+		// ====> Begin of the life loop
 		var begin = function (nbFood) {
 			cli.inventaire(function (inv) {
 				cli.voir(function (see) {
