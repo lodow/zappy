@@ -16,7 +16,7 @@ int	main(__attribute__ ((__unused__)) int ac,
     return (1);
   int status;
   std::cout << "Connecting . ";
-  while ((status = is_connected(client)))
+  while ((status = is_connected(client)) == 1)
     {
       usleep(500);
       std::cout << ".";
