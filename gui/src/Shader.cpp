@@ -142,11 +142,11 @@ void Shader::bindAttribLocation()
 {
     // Verrouillage des entrées Shader
 
-    glBindAttribLocation(m_programID, 0, "in_Vertex");
-    glBindAttribLocation(m_programID, 1, "in_Color");
-    glBindAttribLocation(m_programID, 2, "in_TexCoord0");
-    glBindAttribLocation(m_programID, 3, "in_Normal");
-    glBindAttribLocation(m_programID, 4, "in_Tangent");
+    glBindAttribLocation(m_programID, 0, "vPosition");
+    glBindAttribLocation(m_programID, 1, "vColor");
+    glBindAttribLocation(m_programID, 2, "vNormal");
+    glBindAttribLocation(m_programID, 3, "vTexCoord");
+//    glBindAttribLocation(m_programID, 4, "vTangent");
 }
 
 void Shader::bindUniformMap()
@@ -173,6 +173,36 @@ void Shader::bindUniformMap()
     }
 
     delete[] temp_buffer;
+}
+
+bool Shader::setUniform(const std::string &name, const glm::vec3 &vector) const
+{
+    int location = glGetUniformLocation(m_programID, name.c_str());
+    if (location == -1)
+    {
+        std::cerr << "Error Shader::setUniform vec3" << std::endl;
+        return (false);
+    }
+    glUniform3fv(location, 1, glm::value_ptr(vector));
+    return (true);
+}
+
+bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
+{
+    int location = glGetUniformLocation(m_programID, name.c_str());
+    if (location == -1)
+    {
+        std::cerr << "Error Shader::setUniform mat4" << std::endl;
+        return (false);
+    }
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    
+    return (true);
+}
+
+void Shader::bind() const
+{
+    glUseProgram(m_programID);
 }
 
 int Shader::operator[](std::string uni_string)
@@ -230,5 +260,3 @@ GLuint Shader::getProgramID() const
 {
     return m_programID;
 }
-
-#include "../Utilities/DebugNewOff.h"
