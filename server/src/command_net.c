@@ -83,7 +83,7 @@ char			*get_command(t_selfd *fd)
   char			*ptr;
   struct timeval	tv;
   size_t		size;
-  char			buff[512];
+  char			buff[BUFSIZ];
 
   size = read_buffer(fd->rbuff, buff, sizeof(buff));
   if (size && ((cmd = memchr(buff, EOT_CHAR, size))))
