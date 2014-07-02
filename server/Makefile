@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Sat Jun  7 15:08:10 2014 Nicolas Bridoux
+## Last update Wed Jul  2 17:59:50 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
