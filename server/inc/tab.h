@@ -20,7 +20,7 @@
 
 # define UNSEDP __attribute__((unused))
 
-# define PTRT_PACK 10
+# define PTRT_PACK 20
 
 int	ptr_tab_size(void **tab);
 void	**add_ptr_t_tab(void **tab, void *add);
