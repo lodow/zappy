@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Fri May 30 18:40:41 2014 Nicolas Bridoux
+** Last update Tue Jul  1 18:13:59 2014 fabien.linardon
 */
 
 #ifndef SELECT_H_INCLUDED
@@ -35,13 +35,13 @@ typedef struct	s_selfd
   int		etype;
   int		checktype;
   void		*data;
-  int		(*callback)(struct s_selfd *this, void *data);
-  t_rbuf		*rbuff;
-  t_rbuf		*wbuff;
+  int		(*callback)(struct s_selfd *_this, void *data);
+  t_rbuf	*rbuff;
+  t_rbuf	*wbuff;
 }		t_selfd;
 
 void	do_select(t_list *fds, struct timeval *tv, void *global_arg);
 t_selfd	*create_fd(int fd, void *data, int (*call)());
-void		destroy_fd(void *fd);
+void	destroy_fd(void *fd);
 
 #endif /* !SELECT_H_INCLUDED */

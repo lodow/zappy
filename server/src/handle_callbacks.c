@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu May 22 18:30:00 2014 Nicolas Bridoux
-** Last update Sat May 31 19:38:30 2014 Nicolas Bridoux
+** Last update Tue Jul  1 17:32:47 2014 fabien.linardon
 */
 
 #include "server.h"
@@ -14,7 +14,7 @@ int		handle_client(t_selfd *fd, t_server *serv)
 {
   char		*cmd;
   int		r;
-  ssize_t		swr;
+  ssize_t      	swr;
 
   if (ISREADABLE(fd))
     {
