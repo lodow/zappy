@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -82,7 +83,134 @@ public class Network {
         return map;
     }
 
-    public boolean update() {
+    public boolean update() throws IOException {
+        if (parts[0].compareTo("") == 0)
+            parse();
+        String tmp;
+        while (input.ready()) {
+            tmp = input.readLine();
+            parts = tmp.split(" ");
+            parse();
+        }
+        parts[0] = "";
         return true;
+    }
+
+    private void parse() {
+        java.lang.reflect.Method method;
+        try {
+            method = this.getClass().getMethod(parts[0]);
+            method.invoke(parts[0]);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void msz() {
+        // taille de la carte
+    }
+
+    private void bct() {
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Nourriture, Integer.parseInt(parts[3]));
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Linemate, Integer.parseInt(parts[4]));
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Deraumere, Integer.parseInt(parts[5]));
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Sibur, Integer.parseInt(parts[6]));
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Mendiane, Integer.parseInt(parts[7]));
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Phiras, Integer.parseInt(parts[8]));
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Thystame, Integer.parseInt(parts[9]));
+    }
+
+    private void tna() {
+        // name of teams
+    }
+
+    private void pnw() {
+        map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.valueOf(parts[4])));
+    }
+
+    private void ppo() {
+        Player x =  map.getPlayer(Integer.parseInt(parts[1]));
+        x.set_dir(Player.eDirection.valueOf(parts[4]));
+        x.set_pos(new Vector2(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+    }
+
+    private void plv() {
+        Player x =  map.getPlayer(Integer.parseInt(parts[1]));
+        x.set_level(Integer.parseInt(parts[2]));
+    }
+
+    private void pin() {
+        // inventaire d'un joueur
+    }
+
+    private void pex() {
+        map.deletePlayer(Integer.parseInt(parts[0]));
+    }
+
+    private void pbc() {
+        // broadcast
+    }
+
+    private void pic() {
+        // debut incentation
+    }
+
+    private void pie() {
+        // fin incentation
+    }
+
+    private void pfk() {
+    }
+
+    private void pdr() {
+        // jette ressource
+    }
+
+    private void pgt() {
+        // prend ressource
+    }
+
+    private void pdi() {
+        // mort de faim
+    }
+
+    private void enw() {
+        //new oeuf
+    }
+
+    private void eht() {
+        // oeuf eclot
+    }
+
+    private void ebo() {
+        // delete egg
+    }
+
+    private void edi() {
+        // delete egg (mort faim)
+    }
+
+    private void sgt() {
+        // time of server
+    }
+
+    private void seg() {
+        // fin l'equipe x a gagner
+    }
+
+    private void smg() {
+        //msg du server
+    }
+
+    private void suc() {
+        // bad command
+    }
+
+    private void sbp() {
+        // bad params
     }
 }
