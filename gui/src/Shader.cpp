@@ -1,6 +1,5 @@
-#include "Shader.h"
 
-#include "../Utilities/DebugNew.h"
+#include "Shader.hpp"
 
 Shader::Shader(std::string vertexSource, std::string fragmentSource) : m_vertexSource(vertexSource), m_fragmentSource(fragmentSource), m_vertexID(0), m_fragmentID(0), m_programID(0), m_initialise(false)
 {
@@ -58,7 +57,8 @@ void Shader::initialiser()
         erreur[tailleErreur] = '\0';
 
         //Envoie de l'erreur
-        throw Erreur(std::string("Shader file: ")+std::string(" failed to link: ")+std::string(erreur),-1);
+//        throw Erreur(std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur), -1);
+        std::cerr << std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur) << std::endl;
 
         delete[] erreur;
     }
@@ -81,7 +81,8 @@ void Shader::initialiserTypeShader(GLuint &shader, GLenum type, std::string cons
     else
     {
         glDeleteShader(shader);
-        throw Erreur(std::string("Shader file: ")+source+std::string(" have a wrong type "),-1);
+//        throw Erreur(std::string("Shader file: ") + source + std::string(" have a wrong type "), -1);
+        std::cerr << std::string("Shader file: ") + source + std::string(" have a wrong type ") << std::endl;
     }
 
     // Ouverture du fichier source
@@ -92,7 +93,8 @@ void Shader::initialiserTypeShader(GLuint &shader, GLenum type, std::string cons
     if(!fichierSource)
     {
         glDeleteShader(shader);
-        throw Erreur(std::string("Shader file: ")+source+std::string(" can't be open "),-1);
+//        throw Erreur(std::string("Shader file: ") + source+std::string(" can't be open "), -1);
+        std::cerr << std::string("Shader file: ") + source+std::string(" can't be open ") << std::endl;
     }
 
     // Si le fichier existe et qu'il est ouvert, alors on peut lire son contenu
@@ -127,7 +129,8 @@ void Shader::initialiserTypeShader(GLuint &shader, GLenum type, std::string cons
 
 
         //Envoie de l'erreur
-        throw Erreur(std::string("Shader file: ")+source+std::string(" failed to compile: ")+std::string(erreur),-1);
+//        throw Erreur(std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur), -1);
+        std::cerr << std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur) << std::endl;
 
         // On libère la mémoire
         delete[] erreur;
