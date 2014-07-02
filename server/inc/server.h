@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Wed Jul  2 19:21:22 2014 Nicolas Bridoux
+** Last update Wed Jul  2 20:15:05 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -54,6 +54,7 @@ typedef struct timeval t_tv;
 
 typedef struct	s_server
 {
+  char		debug;
   int		quit;
   t_net		**listener;
   t_list	*watch;

@@ -5,12 +5,12 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Wed Jul  2 19:45:06 2014 Nicolas Bridoux
+** Last update Wed Jul  2 20:17:34 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-static t_server	g_serv;
+t_server	g_serv;
 
 void	sig_handler(int sig)
 {
@@ -18,9 +18,9 @@ void	sig_handler(int sig)
     g_serv.quit = 1;
 }
 
-void		handle_server(t_server *serv)
+void	handle_server(t_server *serv)
 {
-  struct timeval	tv;
+  t_tv	tv;
 
   while (!serv->quit)
     {
