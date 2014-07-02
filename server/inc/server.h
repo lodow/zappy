@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Mon Jun 23 23:43:47 2014 Nicolas Bridoux
+** Last update Wed Jul  2 19:21:22 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED

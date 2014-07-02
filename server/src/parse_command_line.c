@@ -5,10 +5,12 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
-** Last update Fri Jun 27 10:13:39 2014 Nicolas Bridoux
+** Last update Wed Jul  2 19:23:17 2014 Nicolas Bridoux
 */
 
 #include "server.h"
+
+char	g_debug;
 
 static int	check_options(t_server *server, int ac, char *av[])
 {
@@ -16,7 +18,7 @@ static int	check_options(t_server *server, int ac, char *av[])
     {
       fprintf(stderr, "usage: %s [[[-p port] -p port] ...]"
 	      " [-x world_x] [-y world_y] [-c max_clients]"
-	      " [-t speed] -n team_name_1 team_name_2 ...\n", av[0]);
+	      " [-t speed] [-d] -n team_name_1 team_name_2 ...\n", av[0]);
       return (EXIT_FAILURE);
     }
   if (!server->listener && listen_on_port(server, "4242", SOCK_STREAM))
@@ -62,6 +64,7 @@ static void	init_serv(t_server *server)
   server->game.time = 100;
   server->game.max_cli = 1;
   server->game.cli_num = 1;
+  g_debug = 0;
 }
 
 static void	add_team_names(t_team *t, t_server *server, int ac, char *av[])
@@ -83,7 +86,7 @@ int		parse_command_line(t_server *server, int ac, char *av[])
   t_team	*t;
 
   init_serv(server);
-  while ((c = getopt(ac, av, "p:x:y:c:t:n:")) != -1)
+  while ((c = getopt(ac, av, "dp:x:y:c:t:n:")) != -1)
     {
       if (c == '?')
 	return (EXIT_FAILURE);
@@ -91,6 +94,8 @@ int		parse_command_line(t_server *server, int ac, char *av[])
 	return (EXIT_FAILURE);
       if (add_numbers(c, server, optarg))
 	return (EXIT_FAILURE);
+      if (c == 'd')
+	g_debug = 1;
       if (c == 'n' && (t = malloc(sizeof(t_team))))
 	add_team_names(t, server, ac, av);
     }
