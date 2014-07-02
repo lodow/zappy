@@ -38,7 +38,7 @@ GameEngine::GameEngine(const int &x, const int &y) :
     return ;
   int status;
   std::cout << "Connecting . ";
-  while ((status = is_connected(_client))) {
+  while ((status = is_connected(_client)) == 1) {
       usleep(500);
       std::cout << ".";
   }
