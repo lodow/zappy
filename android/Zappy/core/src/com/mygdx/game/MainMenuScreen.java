@@ -17,6 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import java.io.IOException;
+
+import manage.map.Network;
+
 /**
  * Created by debas_e on 24/06/2014.
  */
@@ -179,10 +183,13 @@ public class MainMenuScreen implements Screen {
 
         @Override
         public void clicked(InputEvent event, float x, float y) {
-            if (mButton == CONNECT_BUTTON_ID) {
+            if (mButton == CONNECT_BUTTON_ID && !connectionButton.isDisabled()) {
                 boolean error = false;
+                ipString = ipTextField.getText();
+                portString = portTextField.getText();
+
                 try {
-                    port = Integer.parseInt(portTextField.getText());
+                    port = Integer.parseInt(portString);
                 } catch (NumberFormatException e) {
                     error = true;
                 }
@@ -193,12 +200,7 @@ public class MainMenuScreen implements Screen {
                     label.setFontScale(.8f);
                     label.setAlignment(Align.center);
 
-                    Dialog dialog =
-                            new Dialog("", skin, "dialog") {
-                                protected void result (Object object) {
-                                    System.out.println("Chosen: " + object);
-                                }
-                            };
+                    Dialog dialog = new Dialog("", skin, "dialog");
 
                     dialog.padTop(50).padBottom(50);
                     dialog.getContentTable().add(label).width(850).row();
@@ -211,6 +213,38 @@ public class MainMenuScreen implements Screen {
                     dialog.invalidate();
                     dialog.layout();
                     dialog.show(stage);
+                }
+                else {
+                    try {
+                        Network network = new Network(ipString, port);
+                    } catch (IOException e) {
+                        Gdx.app.log("network", "error network" + ipString + " - " + port);
+                        error = true;
+                    } catch (NumberFormatException e) {
+                        Gdx.app.log("network", "error network" + ipString + " - " + port);
+                        error = true;
+                    }
+                    if (error) {
+                        Label label = new Label("Error establishing connection with\nIp : " + ipString + "\n" + "Port : " + port, skin);
+                        label.setWrap(true);
+                        label.setFontScale(.8f);
+                        label.setAlignment(Align.center);
+
+                        Dialog dialog = new Dialog("", skin, "dialog");
+
+                        dialog.padTop(50).padBottom(50);
+                        dialog.getContentTable().add(label).width(850).row();
+                        dialog.getButtonTable().padTop(50);
+
+                        TextButton retry = new TextButton("Retry", skin);
+                        dialog.button(retry);
+
+                        dialog.invalidateHierarchy();
+                        dialog.invalidate();
+                        dialog.layout();
+                        dialog.show(stage);
+
+                    }
                 }
             }
         };
