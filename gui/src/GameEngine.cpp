@@ -33,8 +33,6 @@ std::string               get_command(t_selfd *fd)
 GameEngine::GameEngine(const int &x, const int &y) :
 _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSettings(32, 0, 3, 3, 0)) {
     
-    this->run();
-    
     /* Init connexion */
     _client = create_connection("::1", "4242", SOCK_STREAM, &connect_nb);
     if (!_client)
@@ -59,9 +57,11 @@ _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSetting
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     
-    _map.push_back(new FontText(sf::Vector2i(50, 50), "Bonjour Fabulus!", 12, sf::Color::Black));
-    _map.push_back(new FontText(sf::Vector2i(50, 100), "Bonjour Fabulus!", 12, sf::Color::Black));
+//    _map.push_back(new FontText(sf::Vector2i(50, 50), "Bonjour Fabulus!", 12, sf::Color::Black));
+//    _map.push_back(new FontText(sf::Vector2i(50, 100), "Bonjour Fabulus!", 12, sf::Color::Black));
     _parser = new Parser(&_map);
+    
+    this->run();
 }
 
 GameEngine::~GameEngine() {
@@ -101,15 +101,18 @@ void	GameEngine::run() {
             camera.translate(glm::vec3(-0.1, 0, 0));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
             camera.translate(glm::vec3(0.1, 0, 0));
-
+        
         model.draw(shader);
         
-//        model.rotate(glm::vec3(0, 1, 0), 0.1);
+        //        model.rotate(glm::vec3(0, 1, 0), 0.1);
         
-        //      do_select(_elem, &_tv, _parser);
+        do_select(_elem, &_tv, _parser);
         
-//        for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
-//            (*it)->draw(_window);
+        for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+        {
+            (*it)->draw(_window);
+            std::cout << (*it)->getPos().x << std::endl;
+        }
         sf::sleep(sf::milliseconds(10));
         _window.display();
     }
