@@ -5,15 +5,19 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Wed Jul  2 18:02:55 2014 Nicolas Bridoux
+** Last update Thu Jul  3 23:34:02 2014 Nicolas Bridoux
 */
 
 #include "server.h"
+
+extern t_server g_serv;
 
 void		server_log(char warn_level, const char *fmt, ...)
 {
   va_list	ap;
 
+  if (!g_serv.debug)
+    return ;
   va_start(ap, fmt);
   if (warn_level == WARNING)
     printf("%s*** ", YELLOW);
@@ -87,6 +91,8 @@ int	handle_start(t_server *server)
       return (EXIT_FAILURE);
     }
   printf("%sdone%s\n\n", GREEN, WHITE);
+  printf("%s", PROMPT);
+  fflush(stdout);
   return (EXIT_SUCCESS);
 }
 

@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Wed Jul  2 17:59:50 2014 Nicolas Bridoux
+## Last update Thu Jul  3 22:48:12 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -27,6 +27,8 @@ SRC		=	main.c \
 			eggs.c \
 			my_str_to_wordtab.c \
 			gen_ressources.c \
+			manage_prompt.c \
+			server_commands.c \
 			cmd_ia/avance.c \
 			cmd_ia/droite.c \
 			cmd_ia/gauche.c \

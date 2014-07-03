@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 20:03:06 2014 Nicolas Bridoux
-** Last update Mon Jun 23 22:51:48 2014 Nicolas Bridoux
+** Last update Thu Jul  3 18:55:18 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -118,7 +118,8 @@ void		incantation(t_server *serv, t_selfd *fd,
   if (!check_incant(serv, fd, KO))
     {
       pie(serv, fd, KO);
-      send_response(fd, "ko");
+      send_to_everyone_on_square(serv, ((t_client *)fd->data)->x,
+				 ((t_client *)fd->data)->y, "ko");
     }
   else
     {

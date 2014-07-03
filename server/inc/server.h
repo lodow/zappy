@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Wed Jul  2 20:15:05 2014 Nicolas Bridoux
+** Last update Thu Jul  3 23:09:10 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -16,6 +16,7 @@
 # include <stdarg.h>
 # include <time.h>
 # include <sys/time.h>
+# include <termios.h>
 
 # include "tab.h"
 # include "network.h"
@@ -35,6 +36,7 @@
 # define MAGENTA	"\033[0;35m"
 # define CYAN		"\033[0;36m"
 # define WHITE		"\033[0;0m"
+# define PROMPT		MAGENTA"Yolo"YELLOW"Swag"BLUE" $> "WHITE
 # define WARNING	1
 # define ERROR		2
 # define SENDING	3
@@ -44,6 +46,8 @@
 # define USEC(x)	(1000000 * (x))
 # define DEMI_PERIMETER	(server->game.width + server->game.height)
 
+# define ON		1
+# define OFF		2
 # define UNKNOWN	0
 # define IA		1
 # define GUI		2
@@ -51,6 +55,7 @@
 # define EOT_CHAR	'\n'
 
 typedef struct timeval t_tv;
+typedef struct termios t_term;
 
 typedef struct	s_server
 {
@@ -86,6 +91,19 @@ int	destroy_connection(t_server *serv, t_selfd *fd);
 
 int	handle_newconnection(t_selfd *fd, t_server *serv);
 int	handle_client(t_selfd *fd, t_server *serv);
+
+/*
+** server_commands.c
+*/
+
+void	exec_server_command(t_server *serv, char *cmd);
+
+/*
+** manage_prompt.c
+*/
+
+int	handle_prompt(t_selfd *fd, t_server *serv);
+int	raw_mode(char flag);
 
 /*
 ** add_cmd.c

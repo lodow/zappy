@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Sat May 31 20:07:55 2014 Nicolas Bridoux
+** Last update Thu Jul  3 21:44:43 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_

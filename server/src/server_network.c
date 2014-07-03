@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Fri May 30 20:04:18 2014 Nicolas Bridoux
+** Last update Thu Jul  3 22:08:30 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -72,4 +72,7 @@ void		server_setup_select(t_server *serv)
           add_to_list(&(serv->watch), fd);
         i++;
       }
+  raw_mode(ON);
+  if ((fd = create_fd(STDIN_FILENO, NULL, &handle_prompt)))
+    add_to_list(&(serv->watch), fd);
 }
