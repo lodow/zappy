@@ -1,6 +1,5 @@
-#include "Shader.h"
 
-#include "../Utilities/DebugNew.h"
+#include "Shader.hpp"
 
 Shader::Shader(std::string vertexSource, std::string fragmentSource) : m_vertexSource(vertexSource), m_fragmentSource(fragmentSource), m_vertexID(0), m_fragmentID(0), m_programID(0), m_initialise(false)
 {
@@ -58,7 +57,8 @@ void Shader::initialiser()
         erreur[tailleErreur] = '\0';
 
         //Envoie de l'erreur
-        throw Erreur(std::string("Shader file: ")+std::string(" failed to link: ")+std::string(erreur),-1);
+//        throw Erreur(std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur), -1);
+        std::cerr << std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur) << std::endl;
 
         delete[] erreur;
     }
@@ -81,7 +81,8 @@ void Shader::initialiserTypeShader(GLuint &shader, GLenum type, std::string cons
     else
     {
         glDeleteShader(shader);
-        throw Erreur(std::string("Shader file: ")+source+std::string(" have a wrong type "),-1);
+//        throw Erreur(std::string("Shader file: ") + source + std::string(" have a wrong type "), -1);
+        std::cerr << std::string("Shader file: ") + source + std::string(" have a wrong type ") << std::endl;
     }
 
     // Ouverture du fichier source
@@ -92,7 +93,8 @@ void Shader::initialiserTypeShader(GLuint &shader, GLenum type, std::string cons
     if(!fichierSource)
     {
         glDeleteShader(shader);
-        throw Erreur(std::string("Shader file: ")+source+std::string(" can't be open "),-1);
+//        throw Erreur(std::string("Shader file: ") + source+std::string(" can't be open "), -1);
+        std::cerr << std::string("Shader file: ") + source+std::string(" can't be open ") << std::endl;
     }
 
     // Si le fichier existe et qu'il est ouvert, alors on peut lire son contenu
@@ -127,7 +129,8 @@ void Shader::initialiserTypeShader(GLuint &shader, GLenum type, std::string cons
 
 
         //Envoie de l'erreur
-        throw Erreur(std::string("Shader file: ")+source+std::string(" failed to compile: ")+std::string(erreur),-1);
+//        throw Erreur(std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur), -1);
+        std::cerr << std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur) << std::endl;
 
         // On libère la mémoire
         delete[] erreur;
@@ -139,11 +142,11 @@ void Shader::bindAttribLocation()
 {
     // Verrouillage des entrées Shader
 
-    glBindAttribLocation(m_programID, 0, "in_Vertex");
-    glBindAttribLocation(m_programID, 1, "in_Color");
-    glBindAttribLocation(m_programID, 2, "in_TexCoord0");
-    glBindAttribLocation(m_programID, 3, "in_Normal");
-    glBindAttribLocation(m_programID, 4, "in_Tangent");
+    glBindAttribLocation(m_programID, 0, "vPosition");
+    glBindAttribLocation(m_programID, 1, "vColor");
+    glBindAttribLocation(m_programID, 2, "vNormal");
+    glBindAttribLocation(m_programID, 3, "vTexCoord");
+//    glBindAttribLocation(m_programID, 4, "vTangent");
 }
 
 void Shader::bindUniformMap()
@@ -170,6 +173,36 @@ void Shader::bindUniformMap()
     }
 
     delete[] temp_buffer;
+}
+
+bool Shader::setUniform(const std::string &name, const glm::vec3 &vector) const
+{
+    int location = glGetUniformLocation(m_programID, name.c_str());
+    if (location == -1)
+    {
+        std::cerr << "Error Shader::setUniform vec3" << std::endl;
+        return (false);
+    }
+    glUniform3fv(location, 1, glm::value_ptr(vector));
+    return (true);
+}
+
+bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
+{
+    int location = glGetUniformLocation(m_programID, name.c_str());
+    if (location == -1)
+    {
+        std::cerr << "Error Shader::setUniform mat4" << std::endl;
+        return (false);
+    }
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    
+    return (true);
+}
+
+void Shader::bind() const
+{
+    glUseProgram(m_programID);
 }
 
 int Shader::operator[](std::string uni_string)
@@ -227,5 +260,3 @@ GLuint Shader::getProgramID() const
 {
     return m_programID;
 }
-
-#include "../Utilities/DebugNewOff.h"

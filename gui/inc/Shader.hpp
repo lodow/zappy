@@ -1,27 +1,14 @@
-#ifndef DEF_SHADER
-#define DEF_SHADER
 
+#ifndef SHADER_HPP_
+# define SHADER_HPP_
 
-// Includes
-
-#ifdef WIN32
-#include <GL/glew.h>
-
-#elif __APPLE__
-#include <OpenGL/gl3.h>
-
-#else
-#define GL3_PROTOTYPES 1
-#include <GL3/gl3.h>
-
-#endif
-
-#include "../Utilities/Erreur.h"
-
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <map>
+# include <SFML/OpenGL.hpp>
+# include <glm/glm.hpp>
+# include <glm/gtc/type_ptr.hpp>
+# include <iostream>
+# include <string>
+# include <fstream>
+# include <map>
 
 #define BUFFER_OFFSET(a) ((char*)NULL + (a)) //Pour les VBO
 
@@ -37,6 +24,12 @@ public:
 
     void initialiser();
     void detruire();
+    
+    void bind() const;
+    
+    bool setUniform(std::string const& name, glm::vec3 const& vector) const;
+    bool setUniform(std::string const& name, glm::mat4 const& matrix) const;
+    
     GLuint getProgramID() const;
     Shader& operator=(Shader const &shader);
 
