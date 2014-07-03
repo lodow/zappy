@@ -1,3 +1,4 @@
+
 #include "AObject.hpp"
 
 AObject::AObject() :
@@ -34,6 +35,11 @@ void AObject::scale(const glm::vec3& scale)
 {
   _scale *= scale;
   _modified = true;
+}
+
+const glm::vec3   &AObject::getPos() const
+{
+    return (_position);
 }
 
 void AObject::setPosition(const glm::vec3& pos)

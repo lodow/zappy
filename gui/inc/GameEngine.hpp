@@ -2,7 +2,6 @@
 #ifndef GAMEENGINE_HPP_
 # define GAMEENGINE_HPP_
 
-
 # include <glm/glm.hpp>
 # include <glm/gtx/transform.hpp>
 # include <SFML/Graphics.hpp>
@@ -14,6 +13,7 @@
 # include "Model.hpp"
 # include "FontText.hpp"
 # include "Camera.hpp"
+#include "Cube.hpp"
 
 extern "C"
 {
@@ -25,7 +25,7 @@ extern "C"
 
 # define UNUSED         __attribute__ ((__unused__))
 # define WINDOW_NAME	"ZAPPY"
-# define REFRESH_RATE	(1 / 60) * 1000
+# define FPS            60
 
 typedef std::list<sf::Text> TextList;
 typedef std::list<IEntity *> Map;
@@ -35,6 +35,7 @@ typedef std::list<IEntity *> Map;
 class GameEngine {
 private:
     Camera            _camera;
+    Cube              *_cube;
     
     sf::RenderWindow  _window;
     sf::Font          _font;

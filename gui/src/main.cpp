@@ -1,8 +1,7 @@
 #include "GameEngine.hpp"
 
-int	main(__attribute__ ((__unused__)) int ac,
-         __attribute__ ((__unused__)) char **av)
+int	main(UNUSED int ac, UNUSED char **av)
 {
-  GameEngine	lib(500, 500);
-  return 0;
+    GameEngine	lib(500, 500);
+    return 0;
 }

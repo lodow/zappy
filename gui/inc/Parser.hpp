@@ -5,20 +5,33 @@
 # include <SFML/Window.hpp>
 # include <SFML/OpenGL.hpp>
 # include <list>
+# include <map>
+# include <string>
 # include <iostream>
-# include "IEntity.hpp"
+# include <sstream>
+# include "Cube.hpp"
 
 typedef std::list<IEntity *> Map;
 
 class Parser
 {
-public:
-  Parser(Map *map);
-  virtual ~Parser();
-  void parseCmd(std::string &cmd);
-
 private:
-  Map *_map;
+    typedef void (Parser::*parse)(const std::string &cmd);
+    typedef std::map<std::string, parse> Parse;
+    
+public:
+    Parser(Map *map, Cube *cube);
+    virtual ~Parser();
+    void parseCmd(std::string &cmd);
+    void parseBct(const std::string &cmd);
+    
+private:
+    int getNbFromString(const std::string &str) const;
+    
+private:
+    Cube    *_cube;
+    Map     *_map;
+    Parse   _parse;
 };
 
 #endif /* PARSER_HPP_ */

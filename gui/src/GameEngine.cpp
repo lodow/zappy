@@ -30,15 +30,30 @@ std::string               get_command(t_selfd *fd)
     return (std::string(""));
 }
 
-GameEngine::GameEngine(const int &x, const int &y) :
-_window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSettings(32, 0, 3, 3, 0)) {
+GameEngine::GameEngine(const int &x, const int &y)
+: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSettings(32, 8, 3, 3, 0))
+{
+    _window.setFramerateLimit(FPS);
+    
+    _cube = new Cube;
+    _cube->build();
+    _cube->loadTexture("res/textures/grass.png");
+    
+//    for (int y = 0; y < 100; ++y) {
+//        for (int x = 0; x < 100; ++x) {
+//            _map.push_back(new Cube(*_cube));
+//            _map.back()->translate(glm::vec3(x, 0, y));
+//        }
+//    }
+    
+//    run();
     
     /* Init connexion */
-    _client = create_connection("::1", "4242", SOCK_STREAM, &connect_nb);
+    _client = create_connection("lodow.net", "4242", SOCK_STREAM, &connect_nb);
     if (!_client)
         return ;
     int status;
-    std::cout << "Connecting . ";
+    std::cout << "Connecting . " << std::endl;
     while ((status = is_connected(_client)) == 1) {
         usleep(500);
         std::cout << ".";
@@ -53,19 +68,18 @@ _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSetting
     
     _tv.tv_sec = 0;
     _tv.tv_usec = 100000;
-    _parser = new Parser(&_map);
+    
+    _parser = new Parser(&_map, _cube);
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     
-//    _map.push_back(new FontText(sf::Vector2i(50, 50), "Bonjour Fabulus!", 12, sf::Color::Black));
-//    _map.push_back(new FontText(sf::Vector2i(50, 100), "Bonjour Fabulus!", 12, sf::Color::Black));
-    _parser = new Parser(&_map);
-    
-    this->run();
+    run();
 }
 
-GameEngine::~GameEngine() {
+GameEngine::~GameEngine()
+{
     delete _parser;
+    delete _cube;
 }
 
 void	GameEngine::run() {
@@ -74,12 +88,9 @@ void	GameEngine::run() {
     
     Shader *shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
     Camera camera;
-    Model model;
     
-    model.loadObj("res/models/barney/barney.obj", true);
-    model.scale(glm::vec3(0.5, 0.5, 0.5));
-    camera.setPos(glm::vec3(0, 1, 2));
-    camera.setPointView(glm::vec3(0, 1, 0));
+    camera.setPos(glm::vec3(0, 3, 2));
+    camera.setPointView(glm::vec3(0, 0, 0));
     shader->initialiser();
     
     while (_window.isOpen()) {
@@ -97,25 +108,25 @@ void	GameEngine::run() {
         shader->setUniform("projection", camera.getProjection());
         shader->setUniform("view", camera.getTransformation());
         
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+            camera.translate(glm::vec3(0, 0, -0.1));
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+            camera.translate(glm::vec3(0, 0, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
             camera.translate(glm::vec3(-0.1, 0, 0));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
             camera.translate(glm::vec3(0.1, 0, 0));
         
-        model.draw(shader);
-        
-        //        model.rotate(glm::vec3(0, 1, 0), 0.1);
-        
         do_select(_elem, &_tv, _parser);
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
         {
-            (*it)->draw(_window);
-            std::cout << (*it)->getPos().x << std::endl;
+            (*it)->draw(shader);
+            //            std::cout << (*it)->getPos().x << std::endl;
         }
-        sf::sleep(sf::milliseconds(10));
         _window.display();
     }
+    delete shader;
 }
 
 int handle_server(t_selfd *fd, void *parser)
