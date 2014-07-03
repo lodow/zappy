@@ -10,10 +10,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by max on 24/06/14.
@@ -102,7 +100,7 @@ public class Network {
             method = this.getClass().getMethod(parts[0]);
             method.invoke(parts[0]);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            System.err.println("no such method : " + parts[0]);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
