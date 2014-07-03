@@ -76,4 +76,28 @@ public class Map {
         eggs.add(egg);
         return true;
     }
+
+    public Egg getEgg(Integer id) {
+        Iterator i = eggs.iterator();
+
+        while (i.hasNext()) {
+            Egg x = (Egg) i.next();
+            if (x.get_id() == id)
+                return x;
+        }
+        throw new NullPointerException();
+    }
+
+    public Boolean deleteEgg(Integer id) {
+        Iterator i = eggs.iterator();
+
+        while (i.hasNext()) {
+            Egg x = (Egg) i.next();
+            if (x.get_id() == id) {
+                i.remove();
+                return true;
+            }
+        }
+        return false;
+    }
 }

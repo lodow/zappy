@@ -17,7 +17,7 @@ public class Egg {
     private int _id;
 
     Egg(Vector2 pos, int id) {
-
+        _state = eState.Laid;
     }
 
     public void set_pos(Vector2 _pos) {

@@ -148,7 +148,7 @@ public class Network {
     }
 
     private void pex() {
-        map.deletePlayer(Integer.parseInt(parts[0]));
+        // un joueur expulse
     }
 
     private void pbc() {
@@ -175,23 +175,23 @@ public class Network {
     }
 
     private void pdi() {
-        // mort de faim
+        map.deletePlayer(Integer.parseInt(parts[0]));
     }
 
     private void enw() {
-        //new oeuf
+        map.addEgg(new Egg(new Vector2(Integer.parseInt(parts[3]), Integer.parseInt(parts[4])), Integer.parseInt(parts[1])));
     }
 
     private void eht() {
-        // oeuf eclot
+        map.getEgg(Integer.parseInt(parts[0])).set_state(Egg.eState.Bloom);
     }
 
     private void ebo() {
-        // delete egg
+        map.deleteEgg(Integer.parseInt(parts[0]));
     }
 
     private void edi() {
-        // delete egg (mort faim)
+        map.deleteEgg(Integer.parseInt(parts[0]));
     }
 
     private void sgt() {
