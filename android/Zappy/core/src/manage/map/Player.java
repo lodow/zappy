@@ -1,11 +1,21 @@
 package manage.map;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.game.Assets;
+
+import java.util.HashMap;
 
 /**
  * Created by max on 26/06/14.
  */
-public class Player {
+public class Player extends Actor {
 
     public enum eDirection {
         Nord(1),
@@ -25,13 +35,42 @@ public class Player {
     private int _id;
     private int _level;
     private eDirection _dir;
+    private HashMap<eDirection, Animation> player_animation;
+    private float state_time = 0;
+    private TextureRegion currentFrame;
 
-    Player(Vector2 pos, String team, int id, int level, eDirection dir) {
+    public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
         _team = team;
         _id = id;
         _level = level;
         _dir = dir;
+        player_animation = Assets.getAnimationPlayer();
+    }
+
+    @Override
+    public void act(float delta) {
+        Animation currentAnimation = player_animation.get(_dir);
+
+        state_time += delta;
+        currentFrame = currentAnimation.getKeyFrame(state_time, true);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        Sprite current = new Sprite(currentFrame);
+        Matrix4 matTmp = new Matrix4();
+
+        current.setSize(1f, 1f);
+
+        matTmp.translate(_pos.x, 0, -_pos.y);
+        matTmp.rotate(new Vector3(0, 1, 0), 45);
+
+        batch.setTransformMatrix(matTmp);
+
+        batch.begin();
+        current.draw(batch);
+        batch.end();
     }
 
     public void set_dir(eDirection _dir) {
