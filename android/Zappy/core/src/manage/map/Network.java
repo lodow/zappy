@@ -106,8 +106,8 @@ public class Network {
     private void parse() {
         java.lang.reflect.Method method;
         try {
-            method = this.getClass().getMethod(parts[0]);
-            method.invoke(parts[0]);
+            method = this.getClass().getDeclaredMethod(parts[0]);
+            method.invoke(this);
         } catch (NoSuchMethodException e) {
             System.err.println("no such method : " + parts[0]);
         } catch (InvocationTargetException e) {
@@ -141,13 +141,17 @@ public class Network {
 
     private void ppo() {
         Player x =  map.getPlayer(Integer.parseInt(parts[1]));
-        x.set_dir(Player.eDirection.valueOf(parts[4]));
-        x.set_pos(new Vector2(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        if (x != null) {
+            x.set_dir(Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]);
+            x.set_pos(new Vector2(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+        }
     }
 
     private void plv() {
         Player x =  map.getPlayer(Integer.parseInt(parts[1]));
-        x.set_level(Integer.parseInt(parts[2]));
+        if (x != null) {
+            x.set_level(Integer.parseInt(parts[2]));
+        }
     }
 
     private void pin() {
@@ -182,7 +186,7 @@ public class Network {
     }
 
     private void pdi() {
-        map.deletePlayer(Integer.parseInt(parts[0]));
+        map.deletePlayer(Integer.parseInt(parts[1]));
     }
 
     private void enw() {
@@ -190,15 +194,17 @@ public class Network {
     }
 
     private void eht() {
-        map.getEgg(Integer.parseInt(parts[0])).set_state(Egg.eState.Bloom);
+        Egg x = map.getEgg(Integer.parseInt(parts[1]));
+        if (x != null)
+            x.set_state(Egg.eState.Bloom);
     }
 
     private void ebo() {
-        map.deleteEgg(Integer.parseInt(parts[0]));
+        map.deleteEgg(Integer.parseInt(parts[1]));
     }
 
     private void edi() {
-        map.deleteEgg(Integer.parseInt(parts[0]));
+        map.deleteEgg(Integer.parseInt(parts[1]));
     }
 
     private void sgt() {

@@ -82,7 +82,7 @@ public class Map {
             if (x.get_id() == id)
                 return x;
         }
-        throw new NullPointerException();
+        return null;
     }
 
     public Boolean deleteEgg(Integer id) {
