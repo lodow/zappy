@@ -35,7 +35,7 @@ public class MainMenuScreen implements Screen {
     private int IP_TEXT_FIELD_ID = 0;
     private int PORT_TEXT_FIELD_ID = 1;
     private int CONNECT_BUTTON_ID = 2;
-    Zappy game;
+    private Zappy game;
 
     public static int WIDTH, HEIGHT;
 
@@ -53,9 +53,10 @@ public class MainMenuScreen implements Screen {
 
         Table table = new Table();
         table.setFillParent(true);
+        table.setSize(WIDTH, HEIGHT);
 
-        ipTextField = new TextField("", skin);
-        portTextField = new TextField("", skin);
+        ipTextField = new TextField("lodow.net", skin);
+        portTextField = new TextField("4242", skin);
 
         Label ipLabel = new Label(  "Ip   : ", skin);
         Label portLabel = new Label("port : ", skin);
@@ -63,12 +64,6 @@ public class MainMenuScreen implements Screen {
         connectionButton = new TextButton("Connect", skin);
         connectionButton.setDisabled(true);
         connectionButton.addListener(new ConnectListener(CONNECT_BUTTON_ID));
-/*        {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("clicked");
-            }
-        });*/
 
         background = new Group();
         background.setBounds(0, 0, WIDTH, HEIGHT);
@@ -154,24 +149,6 @@ public class MainMenuScreen implements Screen {
         skin.dispose();
     }
 
-    class CrossListener extends ClickListener {
-
-        CrossListener(int button) {
-            super(button);
-        }
-
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
-        {
-            if (button == IP_TEXT_FIELD_ID) {
-                ipTextField.setText("");
-            }
-            if (button == PORT_TEXT_FIELD_ID) {
-                portTextField.setText("");
-            }
-            return true;
-        }
-    }
-
     class ConnectListener extends ClickListener {
 
         private int mButton = -1;
@@ -217,6 +194,8 @@ public class MainMenuScreen implements Screen {
                 else {
                     try {
                         Network network = new Network(ipString, port);
+
+                        game.setScreen(new MapViewer(network, game, MainMenuScreen.this));
                     } catch (IOException e) {
                         Gdx.app.log("network", "error network" + ipString + " - " + port);
                         error = true;
