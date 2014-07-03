@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Wed Jun 18 14:42:37 2014 Nicolas Bridoux
+** Last update Wed Jun 25 18:12:28 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -65,8 +65,8 @@ void		quit_server(t_server *serv)
 	      free(((t_client *)tmpfd->data)->sock);
 	      rm_list(((t_client *)tmpfd->data)->cmds, &free);
 	    }
-	     destroy_ring_buffer(tmpfd->rbuff);
-	     destroy_ring_buffer(tmpfd->wbuff);
+	  destroy_ring_buffer(tmpfd->rbuff);
+	  destroy_ring_buffer(tmpfd->wbuff);
           free(tmpfd);
         }
       tmp = tmp->next;

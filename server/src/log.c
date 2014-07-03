@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Mon Jun 23 23:44:28 2014 Nicolas Bridoux
+** Last update Wed Jul  2 18:02:55 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -69,12 +69,12 @@ static int	gen_world(t_server *server)
 	memset(&(server->map[y][x++]), 0, sizeof(t_map));
       ++y;
     }
-  gen_ressource(server, "linemate", DEMI_PERIMETER * 2);
-  gen_ressource(server, "deraumere", DEMI_PERIMETER * 2);
-  gen_ressource(server, "sibur", DEMI_PERIMETER * 2);
-  gen_ressource(server, "mendiane", DEMI_PERIMETER);
-  gen_ressource(server, "phiras", DEMI_PERIMETER);
-  gen_ressource(server, "thystame", DEMI_PERIMETER / 4);
+  gen_ressource(server, "linemate", DEMI_PERIMETER * 3);
+  gen_ressource(server, "deraumere", DEMI_PERIMETER * 3);
+  gen_ressource(server, "sibur", DEMI_PERIMETER * 3);
+  gen_ressource(server, "mendiane", DEMI_PERIMETER * 2);
+  gen_ressource(server, "phiras", DEMI_PERIMETER * 2);
+  gen_ressource(server, "thystame", DEMI_PERIMETER / 2);
   return (EXIT_SUCCESS);
 }
 

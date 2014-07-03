@@ -5,10 +5,12 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue Apr 29 14:37:39 2014 Nicolas Bridoux
-** Last update Mon Jun 23 23:20:10 2014 Nicolas Bridoux
+** Last update Wed Jul  2 20:16:21 2014 Nicolas Bridoux
 */
 
 #include "server.h"
+
+extern t_server g_serv;
 
 /*
 ** return the number of characters read and placed in the circular buffer
@@ -83,7 +85,7 @@ char			*get_command(t_selfd *fd)
   char			*ptr;
   struct timeval	tv;
   size_t		size;
-  char			buff[512];
+  char			buff[BUFSIZ];
 
   size = read_buffer(fd->rbuff, buff, sizeof(buff));
   if (size && ((cmd = memchr(buff, EOT_CHAR, size))))
@@ -97,7 +99,7 @@ char			*get_command(t_selfd *fd)
         ptr = strdup(buff);
       full_line(fd, NULL, 0);
       gettimeofday(&tv, NULL);
-      if (ptr)
+      if (ptr && g_serv.debug)
         server_log(RECEIVING, "%ld:%ld\t\tReceived \"%s\" from %d",
                    tv.tv_sec, tv.tv_usec, ptr, fd->cli_num);
       return (ptr);
@@ -119,9 +121,12 @@ void			send_response(t_selfd *fd, char *to_send)
   c = EOT_CHAR;
   if (!to_send || fd->to_close)
     return ;
-  gettimeofday(&tv, NULL);
-  server_log(SENDING, "%ld:%ld\t\tSending \"%s\" to %d",
-             tv.tv_sec, tv.tv_usec, to_send, fd->cli_num);
+  if (g_serv.debug)
+    {
+      gettimeofday(&tv, NULL);
+      server_log(SENDING, "%ld:%ld\t\tSending \"%s\" to %d",
+		 tv.tv_sec, tv.tv_usec, to_send, fd->cli_num);
+    }
   if ((len = strlen(to_send)))
     {
       if (ring_buffer_left_write(fd->wbuff) < len + 1)

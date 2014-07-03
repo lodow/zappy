@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Mon May 26 23:15:06 2014 Nicolas Bridoux
-** Last update Mon Jun  2 16:00:51 2014 Nicolas Bridoux
+** Last update Wed Jul  2 18:32:42 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -72,7 +72,7 @@ static int	get_direction(t_server *serv, t_client *me, t_client *him)
     return (0);
   if (!dx)
     {
-      if ((me->x + dy) % serv->game.height == him->y)
+      if ((me->y + dy) % serv->game.height == him->y)
 	return (get_cores_direction(1, him->orientation));
       else
 	return (get_cores_direction(5, him->orientation));
