@@ -61,7 +61,7 @@ public class Network {
         }
         while (tmp.compareTo("") != 0 && parts[0].compareTo("pnw") == 0) {
             // players
-            map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.valueOf(parts[4])));
+            map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.values()[Integer.parseInt(parts[4])]));
             if (input.ready())
                 tmp = input.readLine();
             else
@@ -129,7 +129,7 @@ public class Network {
     }
 
     private void pnw() {
-        map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.valueOf(parts[4])));
+        map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.values()[Integer.parseInt(parts[4])]));
     }
 
     private void ppo() {
