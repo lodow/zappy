@@ -83,8 +83,9 @@ void	GameEngine::run() {
       _window.clear();
       do_select(_elem, &_tv, _parser);
       _window.draw(sprite);
-      for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+      for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it) {
 	(*it)->draw(_window);
+      }
       sf::sleep(sf::milliseconds(REFRESH_RATE));
       _window.display();
     }
