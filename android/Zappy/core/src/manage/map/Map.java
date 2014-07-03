@@ -5,6 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
+
+import sun.rmi.runtime.Log;
 
 /**
  * Created by max on 24/06/14.
@@ -18,6 +21,16 @@ public class Map {
 
     Map(int x, int y) {
         map = new Square[x][y];
+        int i = 0;
+        while (i < map.length) {
+            int j = 0;
+            while (j < map[i].length)
+            {
+                map[i][j] = new Square();
+                j++;
+            }
+            i++;
+        }
         size = new Vector2(x, y);
     }
 
