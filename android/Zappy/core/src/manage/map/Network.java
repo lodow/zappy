@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -82,7 +83,7 @@ public class Network {
     }
 
     public boolean update() throws IOException {
-        if (parts[0].compareTo("") == 0)
+        if (parts[0].compareTo("") != 0)
             parse();
         String tmp;
         while (input.ready()) {
@@ -91,6 +92,14 @@ public class Network {
             parse();
         }
         parts[0] = "";
+        List<Player> players = map.getPlayers();
+        Iterator it = players.iterator();
+        while (it.hasNext()) {
+            Player x = (Player)it.next();
+            output.write("ppo " + x.get_id() + "\n");
+            output.write("plv " + x.get_id() + "\n");
+        }
+        output.flush();
         return true;
     }
 
