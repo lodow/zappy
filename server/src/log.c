@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Fri Jul  4 10:17:38 2014 Nicolas Bridoux
+** Last update Fri Jul  4 15:08:32 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -95,22 +95,4 @@ int	handle_start(t_server *server)
   printf("\n%s", PROMPT);
   fflush(stdout);
   return (EXIT_SUCCESS);
-}
-
-void		add_food(t_server *serv)
-{
-  size_t	x;
-  size_t	y;
-
-  y = 0;
-  while (y < serv->game.height)
-    {
-      x = 0;
-      while (x < serv->game.width)
-	{
-	  serv->map[y][x].food += rand() % MAX_ITEM_MAP;
-	  ++x;
-	}
-      ++y;
-    }
 }
