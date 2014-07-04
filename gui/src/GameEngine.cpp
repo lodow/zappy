@@ -33,6 +33,10 @@ std::string               get_command(t_selfd *fd)
 GameEngine::GameEngine(const int &x, const int &y)
 : _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSettings(32, 8, 3, 3, 0))
 {
+ 
+    glewExperimental = GL_TRUE;
+    glewInit();
+    
     _window.setFramerateLimit(FPS);
     
     _cube = new Cube;

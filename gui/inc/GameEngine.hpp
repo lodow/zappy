@@ -2,7 +2,7 @@
 #ifndef GAMEENGINE_HPP_
 # define GAMEENGINE_HPP_
 
-# include <GL/gl.h>
+# include <GL/glew.h>
 # include <glm/glm.hpp>
 # include <glm/gtx/transform.hpp>
 # include <SFML/Graphics.hpp>
@@ -12,7 +12,7 @@
 # include "utils.hpp"
 # include "Model.hpp"
 # include "Camera.hpp"
-#include "Cube.hpp"
+# include "Cube.hpp"
 
 extern "C"
 {

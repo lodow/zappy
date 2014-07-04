@@ -2,7 +2,7 @@
 #ifndef SHADER_HPP_
 # define SHADER_HPP_
 
-# include <SFML/OpenGL.hpp>
+# include <GL/glew.h>
 # include <glm/glm.hpp>
 # include <glm/gtc/type_ptr.hpp>
 # include <iostream>

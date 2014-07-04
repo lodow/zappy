@@ -1,3 +1,4 @@
+
 #include "Parser.hpp"
 
 Parser::Parser(Map *map, Cube *cube) : _map(map), _cube(cube)

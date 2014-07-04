@@ -198,7 +198,7 @@ void    Model::loadObj(std::string const& path, bool texture)
         if(texture) //We _load the texture
         {
             _texture = new sf::Texture;
-            _texture->loadFromFile("res/models/barney/ross_body_d.tga");
+            _texture->loadFromFile(final_texpath);
         }
         
         _load = 90; //90% done

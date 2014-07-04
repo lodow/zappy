@@ -1,9 +1,6 @@
 #ifndef _AOBJECT_H_
 # define _AOBJECT_H_
 
-# define GLM_FORCE_RADIANS
-
-# include <SFML/Graphics.hpp>
 # include <glm/glm.hpp>
 # include <glm/gtc/matrix_transform.hpp>
 # include "Shader.hpp"

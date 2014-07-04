@@ -5,7 +5,6 @@
 # include <iostream>
 # include <vector>
 # include <glm/glm.hpp>
-# include <GL/gl.h>
 # include "Shader.hpp"
 
 class Geometry {

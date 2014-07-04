@@ -2,6 +2,7 @@
 #ifndef MODEL_HPP_
 # define MODEL_HPP_
 
+# include <SFML/Graphics.hpp>
 # include <vector>
 # include <glm/glm.hpp>
 # include <iostream>
