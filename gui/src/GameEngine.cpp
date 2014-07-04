@@ -108,13 +108,13 @@ void	GameEngine::run() {
         shader->setUniform("projection", camera.getProjection());
         shader->setUniform("view", camera.getTransformation());
         
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             camera.translate(glm::vec3(0, 0, -0.1));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             camera.translate(glm::vec3(0, 0, 0.1));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             camera.translate(glm::vec3(-0.1, 0, 0));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             camera.translate(glm::vec3(0.1, 0, 0));
         
         do_select(_elem, &_tv, _parser);
