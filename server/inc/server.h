@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Fri Jul  4 15:33:09 2014 Nicolas Bridoux
+** Last update Fri Jul  4 19:14:12 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -44,7 +44,8 @@
 # define NOT_ALLOWED	1
 # define NOT_KNOWN	2
 # define USEC(x)	(1000000 * (x))
-# define DEMI_PERIMETER	(server->game.width + server->game.height)
+# define AREA		(server->game.width * server->game.height)
+# define DEMI_PERIMETER (server->game.width + server->game.height)
 
 # define ON		1
 # define OFF		2

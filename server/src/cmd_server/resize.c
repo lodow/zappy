@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Fri Jul  4 15:32:15 2014 Nicolas Bridoux
-** Last update Fri Jul  4 17:14:53 2014 Nicolas Bridoux
+** Last update Fri Jul  4 19:20:35 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -95,12 +95,12 @@ static int	gen_new_map(t_server *server, int new_x, int new_y)
   server->map = map;
   server->game.height = new_y;
   server->game.width = new_x;
-  gen_ressource(server, "linemate", DEMI_PERIMETER * 3);
-  gen_ressource(server, "deraumere", DEMI_PERIMETER * 3);
-  gen_ressource(server, "sibur", DEMI_PERIMETER * 3);
-  gen_ressource(server, "mendiane", DEMI_PERIMETER * 2);
-  gen_ressource(server, "phiras", DEMI_PERIMETER * 2);
-  gen_ressource(server, "thystame", DEMI_PERIMETER / 2);
+  gen_ressource(server, "linemate", AREA / 2 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "deraumere", AREA / 3 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "sibur", AREA / 4 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "mendiane", AREA / 6 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "phiras", AREA / 8 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "thystame", AREA / 10 + DEMI_PERIMETER / 2);
   replace_players_and_notify_gui(server);
   return (EXIT_SUCCESS);
 }
