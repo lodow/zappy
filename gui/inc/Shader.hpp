@@ -2,7 +2,16 @@
 #ifndef SHADER_HPP_
 # define SHADER_HPP_
 
-# include <GL/glew.h>
+# ifdef __APPLE__
+#  include <OpenGL/gl3.h>
+# else
+#   ifndef GL_GLEXT_PROTOTYPES
+#    define GL_GLEXT_PROTOTYPES
+#   endif
+#  include <GL/gl.h>
+#  include <GL/glext.h>
+# endif
+
 # include <glm/glm.hpp>
 # include <glm/gtc/type_ptr.hpp>
 # include <iostream>

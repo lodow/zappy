@@ -31,11 +31,9 @@ std::string               get_command(t_selfd *fd)
 }
 
 GameEngine::GameEngine(const int &x, const int &y)
-: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSettings(32, 8, 3, 3, 0))
+: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSettings(32, 8, 0, 3, 0))
 {
- 
-    glewExperimental = GL_TRUE;
-    glewInit();
+
     
     _window.setFramerateLimit(FPS);
     
@@ -43,14 +41,15 @@ GameEngine::GameEngine(const int &x, const int &y)
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
     
-//    for (int y = 0; y < 100; ++y) {
-//        for (int x = 0; x < 100; ++x) {
-//            _map.push_back(new Cube(*_cube));
-//            _map.back()->translate(glm::vec3(x, 0, y));
-//        }
-//    }
+    for (int y = 0; y < 100; ++y) {
+        for (int x = 0; x < 100; ++x) {
+            _map.push_back(new Cube(*_cube));
+            _map.back()->translate(glm::vec3(x, 0, y));
+        }
+    }
     
-//    run();
+    run();
+    return ;
     
     /* Init connexion */
     _client = create_connection("lodow.net", "4242", SOCK_STREAM, &connect_nb);
@@ -77,7 +76,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     
-    run();
+//    run();
 }
 
 GameEngine::~GameEngine()
@@ -103,6 +102,10 @@ void	GameEngine::run() {
             if (event.type == sf::Event::Closed ||
                 event.key.code == sf::Keyboard::Escape)
                 _window.close();
+            if (event.type == sf::Event::MouseWheelMoved)
+            {
+                std::cout << "delta: " << event.mouseWheel.delta;
+            }
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -120,8 +123,11 @@ void	GameEngine::run() {
             camera.translate(glm::vec3(-0.1, 0, 0));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             camera.translate(glm::vec3(0.1, 0, 0));
+        if (sf::Event::MouseWheelMoved)
+            
         
-        do_select(_elem, &_tv, _parser);
+        
+//        do_select(_elem, &_tv, _parser);
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
         {
