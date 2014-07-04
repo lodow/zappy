@@ -42,7 +42,7 @@ public class MapViewer implements Screen {
 
         this.camera = new OrthographicCamera(20, 20 * (Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
 
-        this.camera.position.set(5, 5, 10);
+        this.camera.position.set(10, 10, 20);
         this.camera.direction.set(-1, -1, -1);
         this.camera.near = 1;
         this.camera.far = 100;

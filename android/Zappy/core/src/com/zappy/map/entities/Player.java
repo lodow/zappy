@@ -32,22 +32,26 @@ public class Player extends Actor {
     }
 
     private Vector2 _pos;
+    private Vector2 _oldPos;
     private String _team;
     private int _id;
     private int _level;
     private eDirection _dir;
     private HashMap<eDirection, Animation> player_animation;
+    private HashMap<eDirection, Sprite> player_static;
     private float state_time = 0;
     private TextureRegion currentFrame;
     private SpriteBatch batch = new SpriteBatch();
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
+        _oldPos = _pos;
         _team = team;
         _id = id;
         _level = level;
         _dir = dir;
         player_animation = Assets.getAnimationPlayer();
+        player_static= Assets.getStaticPlayer();
     }
 
     @Override
@@ -55,7 +59,13 @@ public class Player extends Actor {
         Animation currentAnimation = player_animation.get(_dir);
 
         state_time += delta;
-        currentFrame = currentAnimation.getKeyFrame(state_time, true);
+
+        if (_oldPos != _pos) {
+            currentFrame = currentAnimation.getKeyFrame(state_time, true);
+        }
+        else {
+            currentFrame = player_static.get(_dir);
+        }
     }
 
     @Override
