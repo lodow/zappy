@@ -2,13 +2,14 @@
 #ifndef SHADER_HPP_
 # define SHADER_HPP_
 
-# include <SFML/OpenGL.hpp>
 # include <glm/glm.hpp>
 # include <glm/gtc/type_ptr.hpp>
 # include <iostream>
 # include <string>
 # include <fstream>
 # include <map>
+
+# include <GL/glew.h>
 
 #define BUFFER_OFFSET(a) ((char*)NULL + (a)) // VBO
 
@@ -23,12 +24,12 @@ public:
 
     void initialiser();
     void detruire();
-    
+
     void bind() const;
-    
+
     bool setUniform(std::string const& name, glm::vec3 const& vector) const;
     bool setUniform(std::string const& name, glm::mat4 const& matrix) const;
-    
+
     GLuint getProgramID() const;
     Shader& operator=(Shader const &shader);
 

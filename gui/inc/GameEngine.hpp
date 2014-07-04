@@ -4,16 +4,14 @@
 
 # include <glm/glm.hpp>
 # include <glm/gtx/transform.hpp>
-# include <SFML/Graphics.hpp>
-# include <SFML/Window.hpp>
-# include <SFML/OpenGL.hpp>
 # include <list>
 # include <string>
 # include "utils.hpp"
 # include "Model.hpp"
 # include "FontText.hpp"
 # include "Camera.hpp"
-#include "Cube.hpp"
+
+# include "Cube.hpp"
 
 extern "C"
 {
@@ -36,21 +34,21 @@ class GameEngine {
 private:
     Camera            _camera;
     Cube              *_cube;
-    
+
     sf::RenderWindow  _window;
     sf::Font          _font;
-    
+
     TextList          _texts;
     Map               _map;
     t_net             *_client;
     t_list            *_elem;
     struct timeval    _tv;
     Parser            *_parser;
-    
+
 public:
     GameEngine(const int&, const int&);
     ~GameEngine();
-    
+
     void	run();
 };
 

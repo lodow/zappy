@@ -5,14 +5,18 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Fri May  2 09:51:52 2014 fabien.linardon
+## Last update Fri Jul  4 14:29:20 2014 Jean Gravier
 ##
 
 SRC		=	main.cpp		\
-			FontText.cpp	\
 			GameEngine.cpp	\
-			Ground.cpp		\
 			Parser.cpp		\
+			AObject.cpp		\
+			Camera.cpp		\
+			Cube.cpp		\
+			Geometry.cpp		\
+			Model.cpp		\
+			Shader.cpp
 
 CC		=	g++
 FILETYPE	=	.cpp
@@ -30,7 +34,7 @@ CXXFLAGS	+=	-Wall -Wextra -W
 
 LDFLAGS		+=	-Wl,-O1
 LDFLAGS		+=	-lsfml-graphics -lsfml-window -lsfml-system
-LDFLAGS		+=	-L../libnetwork/ -lnet
+LDFLAGS		+=	-L../libnetwork/ -lnet -lGLEW
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
 
