@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:20:06 2014 Nicolas Bridoux
-** Last update Wed Jul  2 20:14:30 2014 Nicolas Bridoux
+** Last update Fri Jul  4 09:24:43 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -63,6 +63,7 @@ static void	init_serv(t_server *server)
   server->game.max_cli = 1;
   server->game.cli_num = 1;
   server->debug = 0;
+  server->cmd = NULL;
 }
 
 static void	add_team_names(t_team *t, t_server *server, int ac, char *av[])

@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Thu Jul  3 22:48:12 2014 Nicolas Bridoux
+## Last update Fri Jul  4 10:55:35 2014 Nicolas Bridoux
 ##
 
 SRC		=	main.c \
@@ -67,7 +67,12 @@ SRC		=	main.c \
 			cmd_gui/eht.c \
 			cmd_gui/edi.c \
 			cmd_gui/seg.c \
-			cmd_gui/smg.c
+			cmd_gui/smg.c \
+			cmd_server/servertime.c \
+			cmd_server/help.c \
+			cmd_server/kick.c \
+			cmd_server/add.c \
+			cmd_server/shutdown.c \
 
 CC		=	gcc
 FILETYPE	=	.c

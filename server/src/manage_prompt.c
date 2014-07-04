@@ -5,47 +5,47 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu Jul  3 22:02:03 2014 Nicolas Bridoux
-** Last update Thu Jul  3 23:08:53 2014 Nicolas Bridoux
+** Last update Fri Jul  4 09:56:37 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-static void	handle_special_cases(t_server *serv, char *buff, char **cmd)
+static void	handle_special_cases(t_server *serv, char *buff)
 {
   if (!memcmp(buff, "\x3\x0\x0\x0\x0", 5))
     kill(getpid(), SIGINT);
-  if (*cmd && strlen(*cmd) && !memcmp(buff, "\x7F\x0\x0\x0\x0", 5))
+  if (serv->cmd && strlen(serv->cmd) && !memcmp(buff, "\x7F\x0\x0\x0\x0", 5))
     {
-      (*cmd)[strlen(*cmd) - 1] = '\0';
+      serv->cmd[strlen(serv->cmd) - 1] = '\0';
       printf("\b ");
       fflush(stdout);
     }
   if (buff[0] == 13)
     {
-      exec_server_command(serv, *cmd);
-      free(*cmd);
-      *cmd = NULL;
+      printf("\n");
+      exec_server_command(serv);
+      free(serv->cmd);
+      serv->cmd = NULL;
       printf("%s", PROMPT);
     }
 }
 
 int		handle_prompt(t_selfd *fd, t_server *serv)
 {
-  static char	*cmd = NULL;
   static char	buff[10] = {0};
   int		r;
 
-  if (!cmd)
-    cmd = strdup("");
+  if (!serv->cmd)
+    serv->cmd = strdup("");
   if (ISREADABLE(fd))
     {
       if ((r = read(STDIN_FILENO, buff, sizeof(buff))) > 0)
 	buff[r] = '\0';
-      handle_special_cases(serv, buff, &cmd);
+      handle_special_cases(serv, buff);
       if (buff[0] >= 32 && buff[0] < 127)
-	cmd = concat(cmd, buff);
-      if (cmd)
-	printf("\r%s%s", PROMPT, cmd);
+	serv->cmd = concat(serv->cmd, buff);
+      if (serv->cmd)
+	printf("\r%s%s", PROMPT, serv->cmd);
       fflush(stdout);
       memset(buff, 0, sizeof(buff));
     }

@@ -5,16 +5,20 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu Jul  3 22:47:18 2014 Nicolas Bridoux
-** Last update Thu Jul  3 23:16:18 2014 Nicolas Bridoux
+** Last update Fri Jul  4 10:56:25 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-// - changer time server (servertime __time__)
-// - kick un player (kick __num_player__)
-// - ajouter de la food (addFood __num_food__)
-// - éteindre le serveur (shutdown)
-// - help
+static t_admin	g_cmds[] =
+  {
+    {"servertime", &servertime},
+    {"kick", &kick},
+    {"add", &add},
+    {"shutdown", &serv_shutdown},
+    {"help", &help},
+    {NULL, NULL}
+  };
 
 static void	epur_str(char *str)
 {
@@ -40,9 +44,23 @@ static void	epur_str(char *str)
       str[j] = str[j + 1];
 }
 
-void	exec_server_command(__attribute__((unused))t_server *serv, char *cmd)
+void	exec_server_command(t_server *serv)
 {
-  epur_str(cmd);
-  printf("J'ai tapé : {%s}\n", cmd);
-  // mettre la cmd dans la struct serv ?
+  char	**tab;
+  int	i;
+
+  epur_str(serv->cmd);
+  if (!(tab = my_str_to_wordtab(serv->cmd, ' ')))
+    return ;
+  i = -1;
+  while (g_cmds[++i].name)
+    if (tab[0] && !strcmp(tab[0], g_cmds[i].name))
+      {
+	g_cmds[i].ptr(serv, &tab[1]);
+	free_tab(tab);
+	return ;
+      }
+  free_tab(tab);
+  if (serv->cmd && strlen(serv->cmd))
+    printf("%s%s : unknown command\n%s", RED, serv->cmd, WHITE);
 }

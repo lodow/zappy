@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Thu Jul  3 23:09:10 2014 Nicolas Bridoux
+** Last update Fri Jul  4 11:05:32 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -36,7 +36,7 @@
 # define MAGENTA	"\033[0;35m"
 # define CYAN		"\033[0;36m"
 # define WHITE		"\033[0;0m"
-# define PROMPT		MAGENTA"Yolo"YELLOW"Swag"BLUE" $> "WHITE
+# define PROMPT		MAGENTA"Multi"YELLOW"Color"BLUE" $> "WHITE
 # define WARNING	1
 # define ERROR		2
 # define SENDING	3
@@ -60,6 +60,7 @@ typedef struct termios t_term;
 typedef struct	s_server
 {
   char		debug;
+  char		*cmd;
   int		quit;
   t_net		**listener;
   t_list	*watch;
@@ -83,6 +84,12 @@ typedef struct	s_instr
   t_selfd	*fd;
 }		t_instr;
 
+typedef struct	s_admin
+{
+  const char	*name;
+  void		(*ptr)(t_server *serv, char **args);
+}		t_admin;
+
 int	listen_on_port(t_server *serv, char *port, int socktype);
 void	serv_verbose(t_server *serv);
 void	server_setup_select(t_server *serv);
@@ -96,7 +103,7 @@ int	handle_client(t_selfd *fd, t_server *serv);
 ** server_commands.c
 */
 
-void	exec_server_command(t_server *serv, char *cmd);
+void	exec_server_command(t_server *serv);
 
 /*
 ** manage_prompt.c
@@ -271,5 +278,15 @@ void	ebo(t_server *serv, size_t num_egg);
 void	edi(t_server *serv, size_t num_egg);
 void	seg(t_server *serv, char *win);
 void	smg(t_server *serv, char *win);
+
+/*
+** functions for command line interpretation
+*/
+
+void	servertime(t_server *serv, char **args);
+void	kick(t_server *serv, char **args);
+void	add(t_server *serv, char **args);
+void	serv_shutdown(t_server *serv, char **args);
+void	help(t_server *serv, char **args);
 
 #endif /* !SERVER_H_INCLUDED */

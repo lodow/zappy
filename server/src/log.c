@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Thu Jul  3 23:34:02 2014 Nicolas Bridoux
+** Last update Fri Jul  4 10:17:38 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -91,7 +91,8 @@ int	handle_start(t_server *server)
       return (EXIT_FAILURE);
     }
   printf("%sdone%s\n\n", GREEN, WHITE);
-  printf("%s", PROMPT);
+  help(NULL, NULL);
+  printf("\n%s", PROMPT);
   fflush(stdout);
   return (EXIT_SUCCESS);
 }
