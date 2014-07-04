@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Fri Jul  4 11:05:32 2014 Nicolas Bridoux
+** Last update Fri Jul  4 15:33:09 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -287,6 +287,7 @@ void	servertime(t_server *serv, char **args);
 void	kick(t_server *serv, char **args);
 void	add(t_server *serv, char **args);
 void	serv_shutdown(t_server *serv, char **args);
+void	resize(t_server *serv, char **args);
 void	help(t_server *serv, char **args);
 
 #endif /* !SERVER_H_INCLUDED */

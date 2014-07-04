@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu Jul  3 22:47:18 2014 Nicolas Bridoux
-** Last update Fri Jul  4 10:56:25 2014 Nicolas Bridoux
+** Last update Fri Jul  4 15:32:02 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -15,6 +15,7 @@ static t_admin	g_cmds[] =
     {"servertime", &servertime},
     {"kick", &kick},
     {"add", &add},
+    {"resize", &resize},
     {"shutdown", &serv_shutdown},
     {"help", &help},
     {NULL, NULL}
