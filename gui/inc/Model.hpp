@@ -8,9 +8,9 @@
 # include <sstream>
 # include <fstream>
 # include "Geometry.hpp"
-# include "AObject.hpp"
+# include "IEntity.hpp"
 
-class Model: public AObject
+class Model: public IEntity
 {
     
 public:
@@ -27,11 +27,6 @@ private:
     
     Geometry    *_geometry;
     sf::Texture *_texture;
-    
-//    std::vector<glm::vec3> _vertices;
-//    std::vector<glm::vec3> _uvs;
-//    std::vector<glm::vec3> _normals;
-//    std::vector<unsigned int> _indices;
 };
 
 #endif

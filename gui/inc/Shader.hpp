@@ -10,8 +10,7 @@
 # include <fstream>
 # include <map>
 
-#define BUFFER_OFFSET(a) ((char*)NULL + (a)) //Pour les VBO
-
+#define BUFFER_OFFSET(a) ((char*)NULL + (a)) // VBO
 
 class Shader
 {

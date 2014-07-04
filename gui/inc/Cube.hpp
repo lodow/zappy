@@ -3,20 +3,21 @@
 
 # include <iostream>
 # include <SFML/Graphics.hpp>
-# include "AObject.hpp"
+# include "IEntity.hpp"
 # include "Geometry.hpp"
 
-class Cube: public AObject
+class Cube: public IEntity
 {
 public:
     Cube();
+    Cube(const Cube &);
     virtual ~Cube() {};
     
+    void    build();
     void    draw(Shader *shader);
     bool    loadTexture(const std::string &path);
 
 private:
-    Cube(const Cube& c);
     Cube   &operator=(const Cube& c);
     
     Geometry    *_geometry;

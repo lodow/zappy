@@ -1,6 +1,8 @@
+
 #include "FontText.hpp"
 
-FontText::FontText(const sf::Vector2i &pos, const std::string &msg, int size, sf::Color color) : _pos(pos)
+FontText::FontText(const glm::vec2 &pos, const std::string &msg, int size, sf::Color color)
+: _pos(pos)
 {
   _font.loadFromFile(FONT_PATH);
   _text.setFont(_font);
@@ -20,7 +22,7 @@ void FontText::draw(sf::RenderWindow &window) const
   window.draw(_text);
 }
 
-const sf::Vector2i &FontText::getPos() const
+const glm::vec2 &FontText::getPos() const
 {
-  return _pos;
+    return (_pos);
 }

@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Wed Jul  2 17:59:50 2014 Nicolas Bridoux
+## Last update Fri Jul  4 09:12:04 2014 fabien.linardon
 ##
 
 SRC		=	main.c \
@@ -82,7 +82,7 @@ CFLAGS		+=	-I$(INCDIR) -I../libnetwork/inc/
 CFLAGS		+=	-Wall -Wextra -Winit-self
 CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
 
-LDFLAGS		+=	-Wl,-O1
+#LDFLAGS		+=	-Wl,-O1
 LDFLAGS		+=	-L../libnetwork/ -lnet
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))

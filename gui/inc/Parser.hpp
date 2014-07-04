@@ -9,29 +9,29 @@
 # include <string>
 # include <iostream>
 # include <sstream>
-# include "IEntity.hpp"
-# include "Ground.hpp"
+# include "Cube.hpp"
 
 typedef std::list<IEntity *> Map;
 
 class Parser
 {
 private:
-  typedef void (Parser::*parse)(const std::string &cmd);
-  typedef std::map<std::string, parse> Parse;
-
+    typedef void (Parser::*parse)(const std::string &cmd);
+    typedef std::map<std::string, parse> Parse;
+    
 public:
-  Parser(Map *map);
-  virtual ~Parser();
-  void parseCmd(std::string &cmd);
-  void parseBct(const std::string &cmd);
-
+    Parser(Map *map, Cube *cube);
+    virtual ~Parser();
+    void parseCmd(std::string &cmd);
+    void parseBct(const std::string &cmd);
+    
 private:
-  int getNbFromString(const std::string &str) const;
-
+    int getNbFromString(const std::string &str) const;
+    
 private:
-  Map *_map;
-  Parse _parse;
+    Cube    *_cube;
+    Map     *_map;
+    Parse   _parse;
 };
 
 #endif /* PARSER_HPP_ */
