@@ -1,6 +1,8 @@
-package com.mygdx.game;
+package com.zappy;
 
 import com.badlogic.gdx.Game;
+import com.zappy.assets.Assets;
+import com.zappy.screen.MainMenuScreen;
 
 /**
  * Created by debas_e on 24/06/2014.

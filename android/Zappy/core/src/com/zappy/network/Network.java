@@ -1,7 +1,11 @@
-package manage.map;
+package com.zappy.network;
 
 
 import com.badlogic.gdx.math.Vector2;
+import com.zappy.map.Map;
+import com.zappy.map.entities.Egg;
+import com.zappy.map.entities.Player;
+import com.zappy.map.entities.Square;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -86,10 +90,12 @@ public class Network {
         if (parts[0].compareTo("") != 0)
             parse();
         String tmp;
-        while (input.ready()) {
+        int i = 0;
+        while (input.ready() && i < 1000) {
             tmp = input.readLine();
             parts = tmp.split(" ");
             parse();
+            i++;
         }
         parts[0] = "";
         List<Player> players = map.getPlayers();
@@ -143,7 +149,7 @@ public class Network {
         Player x =  map.getPlayer(Integer.parseInt(parts[1]));
         if (x != null) {
             x.set_dir(Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]);
-            x.set_pos(new Vector2(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])));
+            x.set_pos(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])));
         }
     }
 

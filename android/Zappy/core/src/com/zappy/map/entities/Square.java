@@ -1,14 +1,14 @@
-package manage.map;
+package com.zappy.map.entities;
 
-import com.badlogic.gdx.utils.ArrayMap;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by max on 27/06/14.
  */
 public class Square {
-    enum eType
+    public enum eType
     {
         Nourriture,
         Linemate,
@@ -19,8 +19,8 @@ public class Square {
         Thystame
     };
 
-    java.util.Map<eType, Integer> content = new HashMap<eType, Integer>();
-    Square() {
+    Map<eType, Integer> content = new HashMap<eType, Integer>();
+    public Square() {
         content.put(eType.Nourriture, 0);
         content.put(eType.Linemate, 0);
         content.put(eType.Deraumere, 0);

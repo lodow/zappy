@@ -1,13 +1,12 @@
-package com.mygdx.game;
+package com.zappy.assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.zappy.map.entities.Player;
 
 import java.util.HashMap;
-
-import manage.map.Player;
 
 /**
  * Created by debas_e on 27/06/2014.

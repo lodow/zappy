@@ -1,4 +1,4 @@
-package manage.map;
+package com.zappy.map.entities;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Egg {
 
-    enum eState {
+    public enum eState {
         Laid,
         Bloom
     };
@@ -16,7 +16,7 @@ public class Egg {
     private Vector2 _pos;
     private int _id;
 
-    Egg(Vector2 pos, int id) {
+    public Egg(Vector2 pos, int id) {
         _state = eState.Laid;
     }
 

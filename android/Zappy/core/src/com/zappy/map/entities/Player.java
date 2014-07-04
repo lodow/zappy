@@ -1,14 +1,15 @@
-package manage.map;
+package com.zappy.map.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.Assets;
+import com.zappy.assets.Assets;
 
 import java.util.HashMap;
 
@@ -38,6 +39,7 @@ public class Player extends Actor {
     private HashMap<eDirection, Animation> player_animation;
     private float state_time = 0;
     private TextureRegion currentFrame;
+    private SpriteBatch batch = new SpriteBatch();
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -66,11 +68,15 @@ public class Player extends Actor {
         matTmp.translate(_pos.x, 0, -_pos.y);
         matTmp.rotate(new Vector3(0, 1, 0), 45);
 
+//        Matrix4 old = batch.getTransformMatrix();
+
         batch.setTransformMatrix(matTmp);
 
         batch.begin();
         current.draw(batch);
         batch.end();
+
+//        batch.setTransformMatrix(old);
     }
 
     public void set_dir(eDirection _dir) {

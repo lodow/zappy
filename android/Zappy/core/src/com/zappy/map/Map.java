@@ -1,6 +1,9 @@
-package manage.map;
+package com.zappy.map;
 
 import com.badlogic.gdx.math.Vector2;
+import com.zappy.map.entities.Egg;
+import com.zappy.map.entities.Player;
+import com.zappy.map.entities.Square;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +19,7 @@ public class Map {
     List<Egg> eggs = new ArrayList<Egg>();
     List<Player> players = new ArrayList<Player>();
 
-    Map(int x, int y) {
+    public Map(int x, int y) {
         map = new Square[x][y];
         int i = 0;
         while (i < map.length) {
