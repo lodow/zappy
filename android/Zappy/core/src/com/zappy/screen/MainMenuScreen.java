@@ -7,17 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.zappy.Zappy;
 import com.zappy.network.Network;
+
 import java.io.IOException;
 
 /**
@@ -31,8 +30,6 @@ public class MainMenuScreen implements Screen {
     private Group background;
     private String ipString = "", portString = "";
 
-    private int IP_TEXT_FIELD_ID = 0;
-    private int PORT_TEXT_FIELD_ID = 1;
     private int CONNECT_BUTTON_ID = 2;
     private Zappy game;
 
@@ -171,29 +168,13 @@ public class MainMenuScreen implements Screen {
                 }
 
                 if (error || port < 0 || port > 65535) {
-                    Label label = new Label("Invalid Port !\nPlease give a valid one", skin);
-                    label.setWrap(true);
-                    label.setFontScale(.8f);
-                    label.setAlignment(Align.center);
-
-                    Dialog dialog = new Dialog("", skin, "dialog");
-
-                    dialog.padTop(50).padBottom(50);
-                    dialog.getContentTable().add(label).width(850).row();
-                    dialog.getButtonTable().padTop(50);
-
-                    TextButton retry = new TextButton("Retry", skin);
-                    dialog.button(retry);
-
-                    dialog.invalidateHierarchy();
-                    dialog.invalidate();
-                    dialog.layout();
-                    dialog.show(stage);
+                    ErrorPopUp err = new ErrorPopUp("", "Invalid Port !\nPlease give a valid one",
+                            new TextButton("Retry", skin), skin);
+                    err.show(stage);
                 }
                 else {
                     try {
                         Network network = new Network(ipString, port);
-
                         game.setScreen(new MapViewer(network, game, MainMenuScreen.this));
                     } catch (IOException e) {
                         Gdx.app.log("network", "error network" + ipString + " - " + port);
@@ -203,25 +184,9 @@ public class MainMenuScreen implements Screen {
                         error = true;
                     }
                     if (error) {
-                        Label label = new Label("Error establishing connection with\nIp : " + ipString + "\n" + "Port : " + port, skin);
-                        label.setWrap(true);
-                        label.setFontScale(.8f);
-                        label.setAlignment(Align.center);
-
-                        Dialog dialog = new Dialog("", skin, "dialog");
-
-                        dialog.padTop(50).padBottom(50);
-                        dialog.getContentTable().add(label).width(850).row();
-                        dialog.getButtonTable().padTop(50);
-
-                        TextButton retry = new TextButton("Retry", skin);
-                        dialog.button(retry);
-
-                        dialog.invalidateHierarchy();
-                        dialog.invalidate();
-                        dialog.layout();
-                        dialog.show(stage);
-
+                        ErrorPopUp err = new ErrorPopUp("", "Error establishing connection with\nIp : " + ipString + "\n" + "Port : " + port,
+                                new TextButton("Retry", skin), skin);
+                        err.show(stage);
                     }
                 }
             }
