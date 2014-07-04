@@ -34,7 +34,7 @@ CXXFLAGS	+=	-Wall -Wextra -W
 
 LDFLAGS		+=	-Wl,-O1
 LDFLAGS		+=	-lsfml-graphics -lsfml-window -lsfml-system
-LDFLAGS		+=	-L../libnetwork/ -lnet -lGLEW
+LDFLAGS		+=	-L../libnetwork/ -lnet -lGLEW -lGL
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
 

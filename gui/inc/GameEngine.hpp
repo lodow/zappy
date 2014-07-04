@@ -8,7 +8,6 @@
 # include <string>
 # include "utils.hpp"
 # include "Model.hpp"
-# include "FontText.hpp"
 # include "Camera.hpp"
 
 # include "Cube.hpp"

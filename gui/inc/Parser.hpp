@@ -26,8 +26,8 @@ private:
     int getNbFromString(const std::string &str) const;
 
 private:
-    Cube    *_cube;
     Map     *_map;
+    Cube    *_cube;
     Parse   _parse;
 };
 
