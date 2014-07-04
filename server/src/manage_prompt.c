@@ -5,13 +5,16 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Thu Jul  3 22:02:03 2014 Nicolas Bridoux
-** Last update Fri Jul  4 09:56:37 2014 Nicolas Bridoux
+** Last update Fri Jul  4 21:31:51 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
 static void	handle_special_cases(t_server *serv, char *buff)
 {
+  char		prompt;
+
+  prompt = 1;
   if (!memcmp(buff, "\x3\x0\x0\x0\x0", 5))
     kill(getpid(), SIGINT);
   if (serv->cmd && strlen(serv->cmd) && !memcmp(buff, "\x7F\x0\x0\x0\x0", 5))
@@ -24,9 +27,12 @@ static void	handle_special_cases(t_server *serv, char *buff)
     {
       printf("\n");
       exec_server_command(serv);
+      if (serv->cmd && !strcmp(serv->cmd, "shutdown"))
+	prompt = 0;
       free(serv->cmd);
       serv->cmd = NULL;
-      printf("%s", PROMPT);
+      if (prompt)
+	printf("%s", PROMPT);
     }
 }
 

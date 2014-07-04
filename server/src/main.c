@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Thu Jul  3 20:49:13 2014 Nicolas Bridoux
+** Last update Fri Jul  4 20:44:22 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -16,7 +16,6 @@ void	sig_handler(int sig)
 {
   if (sig == SIGQUIT || sig == SIGINT || sig == SIGTERM)
     g_serv.quit = 1;
-  raw_mode(OFF);
 }
 
 void	handle_server(t_server *serv)
@@ -54,5 +53,6 @@ int	main(int ac, char **av)
   quit_server(&g_serv);
   if (ret)
     server_log(WARNING, "Shutting down.. Now");
+  raw_mode(OFF);
   return (ret);
 }
