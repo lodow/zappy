@@ -50,7 +50,7 @@ GameEngine::GameEngine(const int &x, const int &y)
 //    return ;
     
     /* Init connexion */
-    _client = create_connection("lodow.net", "4242", SOCK_STREAM, &connect_nb);
+    _client = create_connection("::0", "4242", SOCK_STREAM, &connect_nb);
     if (!_client)
         return ;
     int status;
@@ -129,10 +129,7 @@ void	GameEngine::run() {
         do_select(_elem, &_tv, _parser);
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
-        {
-            (*it)->draw(shader);
-            //            std::cout << (*it)->getPos().x << std::endl;
-        }
+          (*it)->draw(shader);
         _window.display();
     }
     delete shader;
