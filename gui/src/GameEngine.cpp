@@ -39,15 +39,15 @@ GameEngine::GameEngine(const int &x, const int &y)
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
     
-    for (int y = 0; y < 100; ++y) {
-        for (int x = 0; x < 100; ++x) {
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 10; ++x) {
             _map.push_back(new Cube(*_cube));
             _map.back()->translate(glm::vec3(x, 0, y));
         }
     }
     
-//    run();
-//    return ;
+    run();
+    return ;
     
     /* Init connexion */
     _client = create_connection("::0", "4242", SOCK_STREAM, &connect_nb);
@@ -93,8 +93,10 @@ void	GameEngine::run() {
     Model model;
     
     model.loadObj("res/models/gems/blue_gem.obj", "res/models/gems/blue_gem.png");
-    camera.setPos(glm::vec3(0, 4, 2));
-    camera.setPointView(glm::vec3(0, 0, 0));
+    model.translate(glm::vec3(0, 0.5, 0));
+    model.scale(glm::vec3(0.2, 0.2, 0.2));
+    camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
+    camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
     shader->create();
     
     while (_window.isOpen()) {
@@ -110,14 +112,18 @@ void	GameEngine::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            camera.translate(glm::vec3(0, 0, -0.1));
+            camera.translate(glm::vec3(-0.1, 0, -0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            camera.translate(glm::vec3(0, 0, 0.1));
+            camera.translate(glm::vec3(0.1, 0, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            camera.translate(glm::vec3(-0.1, 0, 0));
+            camera.translate(glm::vec3(-0.1, 0, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            camera.translate(glm::vec3(0.1, 0, 0));
-        
+            camera.translate(glm::vec3(0.1, 0, -0.1));
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            camera.translate(glm::vec3(0, 0.1, 0));
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+            camera.translate(glm::vec3(0, -0.1, 0));
+
 //        camera.update(event.key.code);
         camera.lookAt();
         shader->bind();
@@ -126,7 +132,7 @@ void	GameEngine::run() {
         
         model.draw(shader);
         
-        do_select(_elem, &_tv, _parser);
+//        do_select(_elem, &_tv, _parser);
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
           (*it)->draw(shader);

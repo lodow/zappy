@@ -2,6 +2,14 @@
 #ifndef GEOMETRY_HPP_
 # define GEOMETRY_HPP_
 
+# ifdef __APPLE__
+#  define GEN_VERTEX_ARRAY glGenVertexArraysAPPLE
+#  define BIND_VERTEX_ARRAY glBindVertexArrayAPPLE
+# else
+#  define GEN_VERTEX_ARRAY glGenVertexArrays
+#  define BIND_VERTEX_ARRAY glBindVertexArray
+# endif
+
 # include <iostream>
 # include <vector>
 # include <glm/glm.hpp>

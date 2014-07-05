@@ -2,6 +2,6 @@
 
 int	main(UNUSED int ac, UNUSED char **av)
 {
-    GameEngine	lib(500, 500);
+    GameEngine	lib(1920, 1080);
     return 0;
 }

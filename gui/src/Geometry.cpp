@@ -10,7 +10,7 @@ Geometry::Geometry()
 Geometry::~Geometry()
 {
     glDeleteBuffers(1, &_vboID);
-    glDeleteVertexArrays(1, &_vaoID);
+    glDeleteVertexArraysAPPLE(1, &_vaoID);
 }
 
 Geometry    &Geometry::pushVertex(const glm::vec3 &vertex)
@@ -38,12 +38,12 @@ Geometry    &Geometry::pushNormal(const glm::vec3 &normal)
 
 void    Geometry::draw(Shader *shader, const glm::mat4 &transformation, GLenum mode)
 {
-    glBindVertexArray(_vaoID);
+    BIND_VERTEX_ARRAY(_vaoID);
     
     shader->setUniform("model", transformation);
     glDrawArrays(mode, 0, _vertices.size() / 3);
     
-    glBindVertexArray(0);
+    BIND_VERTEX_ARRAY(0);
 }
 
 void    Geometry::build(GLenum usage)
@@ -59,13 +59,9 @@ void    Geometry::build(GLenum usage)
 //    
 //    if(glIsBuffer(_vboID) == GL_TRUE)
 //        glDeleteBuffers(1, &_vboID);
-    std::cout << "vao: " << _vaoID << std::endl;
-    std::cout << "vbo: " << _vboID << std::endl;
     
     glGenBuffers(1, &_vboID);
-    std::cout << "Before Error: " << glGetError() << std::endl;
-    glGenVertexArrays(1, &_vaoID);
-    std::cout << "After Error: " << glGetError() << std::endl;
+    GEN_VERTEX_ARRAY(1, &_vaoID);
     
     glBindBuffer(GL_ARRAY_BUFFER, _vboID);
     
@@ -77,7 +73,7 @@ void    Geometry::build(GLenum usage)
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
-    glBindVertexArray(_vaoID);
+    BIND_VERTEX_ARRAY(_vaoID);
     
     glBindBuffer(GL_ARRAY_BUFFER, _vboID);
     
@@ -95,5 +91,5 @@ void    Geometry::build(GLenum usage)
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
-    glBindVertexArray(0);
+    BIND_VERTEX_ARRAY(0);
 }
