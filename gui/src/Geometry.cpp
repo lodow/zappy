@@ -10,7 +10,7 @@ Geometry::Geometry()
 Geometry::~Geometry()
 {
     glDeleteBuffers(1, &_vboID);
-    glDeleteVertexArraysAPPLE(1, &_vaoID);
+    DELETE_VERTEX_ARRAY(1, &_vaoID);
 }
 
 Geometry    &Geometry::pushVertex(const glm::vec3 &vertex)
