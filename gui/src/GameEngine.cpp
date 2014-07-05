@@ -92,7 +92,7 @@ void	GameEngine::run() {
     Camera camera;
     Model model;
     
-    model.loadObj("res/models/gems/blue_gem.obj", "res/models/gems/blue_gem.png");
+    model.loadObj("res/models/gem.obj", "res/models/gem.png");
     model.translate(glm::vec3(0, 0.5, 0));
     model.scale(glm::vec3(0.2, 0.2, 0.2));
     camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
