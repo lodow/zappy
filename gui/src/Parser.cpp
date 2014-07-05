@@ -36,9 +36,15 @@ void Parser::parseBct(const std::string &cmd)
 {
     glm::vec2 pos;
     std::string tmp = cmd;
-    
+    std::list<int> recourse;
+
     pos.x = getNbFromString(cmd);
     pos.y = getNbFromString(cmd.substr(cmd.find_first_of(' ') + 1));
+    tmp = cmd.substr(cmd.find_first_of(' ') + 1);
+    for (int i = 0; i != 7; ++i) {
+	tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+	recourse.push_back(getNbFromString(tmp));
+    }
     for (Map::const_iterator it = _map->begin(), end = _map->end();  it != end; ++it) {
         if ((*it)->getPos().x == pos.x && (*it)->getPos().y == pos.y)
             return ;
