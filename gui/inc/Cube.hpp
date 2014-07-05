@@ -10,11 +10,13 @@ class Cube: public IEntity
 public:
     Cube();
     Cube(const Cube &);
-    virtual ~Cube() {};
+    virtual ~Cube();
     
     void    build();
     void    draw(Shader *shader);
     bool    loadTexture(const std::string &path);
+    
+    void	destroyGeometry();
 
 private:
     Cube   &operator=(const Cube& c);

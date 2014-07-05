@@ -3,8 +3,8 @@
 
 Geometry::Geometry()
 {
-    glGenBuffers(1, &_vboID);
-    glGenVertexArrays(1, &_vaoID);
+//    _vboID = 20;
+//    _vaoID = 10;
 }
 
 Geometry::~Geometry()
@@ -53,6 +53,19 @@ void    Geometry::build(GLenum usage)
     verticesBytes = _vertices.size() * sizeof(float);
     UVBytes = _UVs.size() * sizeof(float);
     normalsBytes = _normals.size() * sizeof(float);
+    
+//    if(glIsVertexArray(_vaoID) == GL_TRUE)
+//        glDeleteVertexArrays(1, &_vaoID);
+//    
+//    if(glIsBuffer(_vboID) == GL_TRUE)
+//        glDeleteBuffers(1, &_vboID);
+    std::cout << "vao: " << _vaoID << std::endl;
+    std::cout << "vbo: " << _vboID << std::endl;
+    
+    glGenBuffers(1, &_vboID);
+    std::cout << "Before Error: " << glGetError() << std::endl;
+    glGenVertexArrays(1, &_vaoID);
+    std::cout << "After Error: " << glGetError() << std::endl;
     
     glBindBuffer(GL_ARRAY_BUFFER, _vboID);
     

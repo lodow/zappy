@@ -18,7 +18,7 @@ public:
     Model();
     virtual ~Model();
     
-    void    loadObj(std::string const& path, bool texture);
+    void    loadObj(std::string const& objPath, const std::string &texturePath);
     int     getLoadPercentage() const;
     
     void    draw(Shader *shader);

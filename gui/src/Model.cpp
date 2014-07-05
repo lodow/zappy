@@ -15,17 +15,15 @@ Model::~Model()
         delete _texture;
 }
 
-void    Model::loadObj(std::string const& path, bool texture)
+void    Model::loadObj(const std::string &objPath, const std::string &texturePath)
 {
     float x, y, z = 0;
     
     _geometry = new Geometry;
     
-    std::string final_texpath;
-    
     _load = 0; //0% done
     
-    std::cout << "loading OBJ file " << path << "...";
+    std::cout << "loading OBJ file: " << objPath << "...";
     
     std::vector<glm::vec3> out_vertices;
     std::vector<glm::vec2> out_uvs;
@@ -36,12 +34,12 @@ void    Model::loadObj(std::string const& path, bool texture)
     std::vector<unsigned int> normalIndices;
     
     
-    std::ifstream fichier(path.c_str(), std::ios::in);  // on ouvre le fichier en lecture
+    std::ifstream fichier(objPath.c_str(), std::ios::in);
     
     if(!fichier)
     {
-//        throw Erreur(std::string("Can't open file ")+std::string(path),-1);
-        std::cerr << std::string("Can't open file ") + std::string(path) << std::endl;
+//        throw Erreur(std::string("Can't open file ")+std::string(objPath),-1);
+        std::cerr << std::string("Can't open file ") + std::string(objPath) << std::endl;
     }
     else
     {
@@ -53,7 +51,6 @@ void    Model::loadObj(std::string const& path, bool texture)
         // read the first word of the line
         while(getline(fichier,line)) // EOF = End Of File. Quit the loop.
         {
-            //std::cout << ".";
             if (line.substr(0,2) == "v ")
             {
                 line = line.substr(2);
@@ -87,7 +84,7 @@ void    Model::loadObj(std::string const& path, bool texture)
                 line = line.substr(2);
                 
                 unsigned int vertexIndex[3]= {0}, uvIndex[3]= {0}, normalIndex[3] = {0};
-                unsigned int* indice[3] = {vertexIndex,uvIndex,normalIndex};
+                unsigned int* indice[3] = {vertexIndex, uvIndex, normalIndex};
                 
                 //Replace ' ' by '/'
                 line[(line.find(' '))] = '/';
@@ -114,10 +111,6 @@ void    Model::loadObj(std::string const& path, bool texture)
                 normalIndices.push_back(normalIndex[0]);
                 normalIndices.push_back(normalIndex[1]);
                 normalIndices.push_back(normalIndex[2]);
-            }
-            else
-            {
-                //Unknow header
             }
             
         }
@@ -194,19 +187,10 @@ void    Model::loadObj(std::string const& path, bool texture)
             
             _geometry->pushVertex(temp_vert).pushUv(temp_uvs).pushNormal(temp_norm);
         }
-        
-        if(texture) //We _load the texture
-        {
-            _texture = new sf::Texture;
-            _texture->loadFromFile(final_texpath);
-        }
+        _texture = new sf::Texture;
+        _texture->loadFromFile(texturePath);
         
         _load = 90; //90% done
-        
-//        _vertices = fin_vertices;
-//        _uvs = fin_uvs;
-//        _normals = fin_normals;
-//        _indices = fin_Indices;
         
         std::cout << std::endl;
         fichier.close();  // on ferme le fichier
@@ -219,9 +203,6 @@ void    Model::loadObj(std::string const& path, bool texture)
 
 void    Model::draw(Shader *shader)
 {
-    if (_texture != NULL)
-    {
-        sf::Texture::bind(_texture);
-    }
+    sf::Texture::bind(_texture);
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
 }

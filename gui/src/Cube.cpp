@@ -13,6 +13,11 @@ Cube::Cube(const Cube &cube)
     
 }
 
+Cube::~Cube()
+{
+    
+}
+
 void    Cube::build()
 {
     _geometry = new Geometry;
@@ -87,8 +92,13 @@ void    Cube::build()
     _geometry->pushVertex(vertice[0]).pushUv(uv[0]).pushNormal(normals[7]);
     _geometry->pushVertex(vertice[2]).pushUv(uv[2]).pushNormal(normals[7]);
     _geometry->pushVertex(vertice[3]).pushUv(uv[3]).pushNormal(normals[7]);
-    
-    _geometry->build(GL_STATIC_DRAW);
+
+    _geometry->build(GL_STATIC_DRAW);    
+}
+
+void	Cube::destroyGeometry()
+{
+    delete _geometry;
 }
 
 bool    Cube::loadTexture(const std::string &path)
