@@ -24,27 +24,27 @@ Shader::~Shader()
 
 void Shader::create()
 {
-//    Shaders creation
+    //    Shaders creation
     initialize(_vertexID, GL_VERTEX_SHADER, _vertexSource);
     initialize(_fragmentID, GL_FRAGMENT_SHADER, _fragmentSource);
     
-//    Program creation
+    //    Program creation
     _programID = glCreateProgram();
     
     glAttachShader(_programID, _vertexID);
     glAttachShader(_programID, _fragmentID);
     
-//    Program Linking
+    //    Program Linking
     bindAttribLocation();
     glLinkProgram(_programID);
     
-//    Check Linking state
+    //    Check Linking state
     GLint link(0);
     glGetProgramiv(_programID, GL_LINK_STATUS, &link);
     
     if(link != GL_TRUE)
     {
-//        Getting error message length
+        //        Getting error message length
         GLint length(0);
         char *error(NULL);
         
@@ -96,14 +96,14 @@ void Shader::initialize(GLuint &shader, GLenum type, const std::string &path)
     
     fileStream.close();
     
-//    Shader compilation
+    //    Shader compilation
     GLint shaderError(0), length(0);
     const GLchar* srcString = src.c_str();
     
     glShaderSource(shader, 1, &srcString, NULL);
     glCompileShader(shader);
     
-//    Compilation check
+    //    Compilation check
     glGetShaderiv(shader, GL_COMPILE_STATUS, &shaderError);
     
     if(shaderError != GL_TRUE)

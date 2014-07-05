@@ -5,6 +5,11 @@ Camera::Camera()
 : _pos(0.0, 0.0, 0.0), _pos_view(0.0, 0.0, 1.0), _dir(0.0, 1.0, 0.0)
 {
     _projection = glm::perspective(70.0f, 500.0f / 500.0f, 1.0f, 1000.0f);
+    
+    _translationKeyMap[sf::Keyboard::Up]    = glm::vec3(0, 0, -0.1);
+    _translationKeyMap[sf::Keyboard::Down]  = glm::vec3(0, 0, 0.1);
+    _translationKeyMap[sf::Keyboard::Left]  = glm::vec3(-0.1, 0, 0);
+    _translationKeyMap[sf::Keyboard::Right] = glm::vec3(0.1, 0, 0);
 }
 
 
@@ -22,6 +27,11 @@ void	Camera::translate(glm::vec3 vec)
 {
     _pos += vec;
     _pos_view += vec;
+}
+
+void	Camera::update(const sf::Keyboard::Key &key)
+{
+    translate(_translationKeyMap[key]);
 }
 
 const glm::mat4 &Camera::getTransformation() const

@@ -7,6 +7,8 @@
 # include <glm/glm.hpp>
 # include "Shader.hpp"
 
+# define BUFFER_OFFSET(a) ((char*)NULL + (a)) // VBO macro
+
 class Geometry {
 public:
     Geometry();
