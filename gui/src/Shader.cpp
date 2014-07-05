@@ -1,183 +1,165 @@
 
 #include "Shader.hpp"
 
-Shader::Shader(std::string vertexSource, std::string fragmentSource) : m_vertexSource(vertexSource), m_fragmentSource(fragmentSource), m_vertexID(0), m_fragmentID(0), m_programID(0), m_initialise(false)
+Shader::Shader(const std::string &vertexSource, const std::string &fragmentSource)
+: _vertexSource(vertexSource), _fragmentSource(fragmentSource), _vertexID(0), _fragmentID(0), _programID(0), _initialise(false)
 {
-
+    
 }
 
 
-Shader::Shader(Shader const &shader) : m_vertexSource(shader.m_vertexSource), m_fragmentSource(shader.m_fragmentSource), m_vertexID(0), m_fragmentID(0), m_programID(0), m_initialise(shader.m_initialise)
+Shader::Shader(Shader const &shader)
+: _vertexSource(shader._vertexSource), _fragmentSource(shader._fragmentSource), _vertexID(0), _fragmentID(0), _programID(0), _initialise(shader._initialise)
 {
-    // On initialise le shader si le shader source est lui aussi initialisé
-    if(m_initialise == true)
-        initialiser();
+    if(_initialise == true)
+        create();
 }
 
 
 Shader::~Shader()
 {
-    detruire();
+    destroy();
 }
 
 
-void Shader::initialiser()
+void Shader::create()
 {
-    // Création des shaders
-    initialiserTypeShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource);
-    initialiserTypeShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource);
-
-    // Création du program
-    m_programID = glCreateProgram();
-
-    glAttachShader(m_programID, m_vertexID);
-    glAttachShader(m_programID, m_fragmentID);
-
-    // Linkage du program
+//    Shaders creation
+    initialize(_vertexID, GL_VERTEX_SHADER, _vertexSource);
+    initialize(_fragmentID, GL_FRAGMENT_SHADER, _fragmentSource);
+    
+//    Program creation
+    _programID = glCreateProgram();
+    
+    glAttachShader(_programID, _vertexID);
+    glAttachShader(_programID, _fragmentID);
+    
+//    Program Linking
     bindAttribLocation();
-    glLinkProgram(m_programID);
-
-    // On vérifie que le link c'est bien passé
+    glLinkProgram(_programID);
+    
+//    Check Linking state
     GLint link(0);
-    glGetProgramiv(m_programID, GL_LINK_STATUS, &link);
-
+    glGetProgramiv(_programID, GL_LINK_STATUS, &link);
+    
     if(link != GL_TRUE)
     {
-        // Récupération de la taille de l'erreur
-        GLint tailleErreur(0);
-        char *erreur(NULL);
-
-        glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &tailleErreur);
-
-        // Allocation de l'erreur
-        erreur = new char[tailleErreur + 1];
-
+//        Getting error message length
+        GLint length(0);
+        char *error(NULL);
+        
+        glGetProgramiv(_programID, GL_INFO_LOG_LENGTH, &length);
+        
+        error = new char[length + 1];
+        
         // Copie de l'erreur dans la chaine de caractères
-        glGetProgramInfoLog(m_programID, tailleErreur, &tailleErreur, erreur);
-        erreur[tailleErreur] = '\0';
-
-        //Envoie de l'erreur
-//        throw Erreur(std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur), -1);
-        std::cerr << std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur) << std::endl;
-
-        delete[] erreur;
+        glGetProgramInfoLog(_programID, length, &length, error);
+        error[length] = '\0';
+        
+        //        throw Erreur(std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur), -1);
+        std::cerr << std::string("Shader file: ") + std::string(" failed to link: ") + std::string(error) << std::endl;
+        
+        delete[] error;
     }
-
+    
     bindUniformMap();
-
-    m_initialise = true;
+    
+    _initialise = true;
 }
 
 
-void Shader::initialiserTypeShader(GLuint &shader, GLenum type, std::string const &source)
+void Shader::initialize(GLuint &shader, GLenum type, const std::string &path)
 {
-    // Génération de l'objet OpenGL Shader
-    if(type == GL_VERTEX_SHADER)
+    if (type == GL_VERTEX_SHADER || type == GL_FRAGMENT_SHADER)
         shader = glCreateShader(type);
-
-    else if(type == GL_FRAGMENT_SHADER)
-        shader = glCreateShader(GL_FRAGMENT_SHADER);
-
     else
     {
         glDeleteShader(shader);
-//        throw Erreur(std::string("Shader file: ") + source + std::string(" have a wrong type "), -1);
-        std::cerr << std::string("Shader file: ") + source + std::string(" have a wrong type ") << std::endl;
+        //        throw Erreur(std::string("Shader file: ") + source + std::string(" have a wrong type "), -1);
+        std::cerr << std::string("Shader file: ") + path + std::string(" have a wrong type ") << std::endl;
     }
-
-    // Ouverture du fichier source
-    std::string codeSource, ligneCodeSource;
-    std::ifstream fichierSource(source.c_str());
-
-    // On test l'ouverture du fichier
-    if(!fichierSource)
+    
+    std::string src, srcLine;
+    std::ifstream fileStream(path.c_str());
+    
+    if(!fileStream)
     {
         glDeleteShader(shader);
-//        throw Erreur(std::string("Shader file: ") + source+std::string(" can't be open "), -1);
-        std::cerr << std::string("Shader file: ") + source+std::string(" can't be open ") << std::endl;
+        //        throw Erreur(std::string("Shader file: ") + source+std::string(" can't be open "), -1);
+        std::cerr << std::string("Shader file: ") + path+std::string(" can't be open ") << std::endl;
     }
-
-    // Si le fichier existe et qu'il est ouvert, alors on peut lire son contenu
-    while(getline(fichierSource, ligneCodeSource))
+    
+    while(getline(fileStream, srcLine))
     {
-        codeSource += ligneCodeSource + '\n';
+        src += srcLine + '\n';
     }
-
-    fichierSource.close();
-
-    // Compilation du shader
-    GLint erreurCompilation(0), tailleErreur(0);
-    const GLchar* chaineCodeSource = codeSource.c_str();
-
-    glShaderSource(shader, 1, &chaineCodeSource, NULL);
+    
+    fileStream.close();
+    
+//    Shader compilation
+    GLint shaderError(0), length(0);
+    const GLchar* srcString = src.c_str();
+    
+    glShaderSource(shader, 1, &srcString, NULL);
     glCompileShader(shader);
-
-    // Vérification de la compilation
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &erreurCompilation);
-
-    if(erreurCompilation != GL_TRUE)
+    
+//    Compilation check
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &shaderError);
+    
+    if(shaderError != GL_TRUE)
     {
-        // Récupération de la taille de l'erreur
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &tailleErreur);
-
-        // Allocation d'une chaine de caractères
-        char *erreur = new char[tailleErreur + 1];
-        erreur[tailleErreur] = '\0';
-
-        // Récupération de l'erreur
-        glGetShaderInfoLog(shader, tailleErreur, &tailleErreur, erreur);
-
-
-        //Envoie de l'erreur
-//        throw Erreur(std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur), -1);
-        std::cerr << std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur) << std::endl;
-
-        // On libère la mémoire
-        delete[] erreur;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+        
+        char *error = new char[length + 1];
+        error[length] = '\0';
+        
+        glGetShaderInfoLog(shader, length, &length, error);
+        
+        //        throw Erreur(std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur), -1);
+        std::cerr << std::string("Shader file: ") + path + std::string(" failed to compile: ") + std::string(error) << std::endl;
+        
+        delete[] error;
     }
 }
 
 
 void Shader::bindAttribLocation()
 {
-    // Verrouillage des entrées Shader
-
-    glBindAttribLocation(m_programID, 0, "vPosition");
-    glBindAttribLocation(m_programID, 1, "vColor");
-    glBindAttribLocation(m_programID, 2, "vNormal");
-    glBindAttribLocation(m_programID, 3, "vTexCoord");
-//    glBindAttribLocation(m_programID, 4, "vTangent");
+    glBindAttribLocation(_programID, 0, "vPosition");
+    glBindAttribLocation(_programID, 1, "vColor");
+    glBindAttribLocation(_programID, 2, "vNormal");
+    glBindAttribLocation(_programID, 3, "vTexCoord");
+    //    glBindAttribLocation(_programID, 4, "vTangent");
 }
 
 void Shader::bindUniformMap()
 {
-    //On recupere des valeurs utile
-    int nb_uniform;
-    int uniform_string_lenght;
-
-    glGetProgramiv(m_programID,GL_ACTIVE_UNIFORMS, &nb_uniform);
-    glGetProgramiv(m_programID,GL_ACTIVE_UNIFORM_MAX_LENGTH, &uniform_string_lenght);
-
-    char* temp_buffer = new char[uniform_string_lenght+1]; //on alloue un tableau de bonne taille
-
-
-    for(int i=0;i<nb_uniform;i++) //pour chaque uniform on le met son id et sa string dans la map
+    int uniformNb;
+    int uniformStringLength;
+    
+    glGetProgramiv(_programID, GL_ACTIVE_UNIFORMS, &uniformNb);
+    glGetProgramiv(_programID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &uniformStringLength);
+    
+    char* temp_buffer = new char[uniformStringLength + 1];
+    
+    
+    for(int i = 0; i < uniformNb; i++)
     {
-        unsigned int uniform_type;
-        int uniform_id;
-        int tempint;
-
-        glGetActiveUniform(m_programID,i,uniform_string_lenght,NULL,&tempint,&uniform_type,temp_buffer);
-        uniform_id = glGetUniformLocation(m_programID,temp_buffer);
-        m_uniformMap[std::string(temp_buffer)]=uniform_id;
+        unsigned int uniformType;
+        int uniformID;
+        int temp;
+        
+        glGetActiveUniform(_programID, i, uniformStringLength, NULL, &temp ,&uniformType, temp_buffer);
+        uniformID = glGetUniformLocation(_programID, temp_buffer);
+        _uniformMap[std::string(temp_buffer)] = uniformID;
     }
-
+    
     delete[] temp_buffer;
 }
 
 bool Shader::setUniform(const std::string &name, const glm::vec3 &vector) const
 {
-    int location = glGetUniformLocation(m_programID, name.c_str());
+    int location = glGetUniformLocation(_programID, name.c_str());
     if (location == -1)
     {
         std::cerr << "Error Shader::setUniform vec3" << std::endl;
@@ -189,7 +171,7 @@ bool Shader::setUniform(const std::string &name, const glm::vec3 &vector) const
 
 bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
 {
-    int location = glGetUniformLocation(m_programID, name.c_str());
+    int location = glGetUniformLocation(_programID, name.c_str());
     if (location == -1)
     {
         std::cerr << "Error Shader::setUniform mat4" << std::endl;
@@ -202,61 +184,44 @@ bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
 
 void Shader::bind() const
 {
-    glUseProgram(m_programID);
+    glUseProgram(_programID);
 }
 
-int Shader::operator[](std::string uni_string)
+int Shader::operator[](const std::string &uni_string)
 {
-    return m_uniformMap[uni_string];
+    return _uniformMap[uni_string];
 }
 
 
-void Shader::detruire()
+void Shader::destroy()
 {
-    // Destruction des objets OpenGL
-
-    glDeleteShader(m_vertexID);
-    glDeleteShader(m_fragmentID);
-    glDeleteProgram(m_programID);
-
-
-    // RAZ des valeurs
-
-    m_vertexID = 0;
-    m_fragmentID = 0;
-    m_programID = 0;
-    m_initialise = false;
+    glDeleteShader(_vertexID);
+    glDeleteShader(_fragmentID);
+    glDeleteProgram(_programID);
+    
+    _vertexID = 0;
+    _fragmentID = 0;
+    _programID = 0;
+    _initialise = false;
 }
 
 
 Shader& Shader::operator=(Shader const &shader)
 {
-    // Si le shader à copier n'est pas lui-même
-
-    if(this != &shader)
+    if (this != &shader)
     {
-        // Copie des sources
-
-        m_vertexSource = shader.m_vertexSource;
-        m_fragmentSource = shader.m_fragmentSource;
-        m_initialise = shader.m_initialise;
-
-
-        // Destruction du shader actuel
-
-        detruire();
-
-
-        // Initialisation du nouveau shader
-
-        initialiser();
+        _vertexSource = shader._vertexSource;
+        _fragmentSource = shader._fragmentSource;
+        _initialise = shader._initialise;
+        
+        destroy();
+        create();
     }
-
     return *this;
 }
 
 
 GLuint Shader::getProgramID() const
 {
-    return m_programID;
+    return _programID;
 }

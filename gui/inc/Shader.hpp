@@ -19,19 +19,17 @@
 # include <fstream>
 # include <map>
 
-#define BUFFER_OFFSET(a) ((char*)NULL + (a)) // VBO
-
 class Shader
 {
-
+    
 public:
-
-    Shader(std::string vertexSource, std::string fragmentSource);
-    Shader(Shader const &shader);
+    
+    Shader(const std::string &vertexSource, const std::string &fragmentSource);
+    Shader(const Shader &shader);
     ~Shader();
-
-    void initialiser();
-    void detruire();
+    
+    void create();
+    void destroy();
     
     void bind() const;
     
@@ -40,25 +38,25 @@ public:
     
     GLuint getProgramID() const;
     Shader& operator=(Shader const &shader);
-
-    int operator[](std::string uni_string); //Return the location of the associated uniform
-
+    
+    int operator[](const std::string &uni_string); //Return the location of the associated uniform
+    
 private:
-
-    void initialiserTypeShader(GLuint &shader, GLenum type, std::string const &source);
+    
+    void initialize(GLuint &shader, GLenum type, std::string const &source);
     void bindAttribLocation();
     void bindUniformMap();
-
-    std::map<std::string,GLuint> m_uniformMap;
-
-    std::string m_vertexSource;
-    std::string m_fragmentSource;
-
-    GLuint m_vertexID;
-    GLuint m_fragmentID;
-    GLuint m_programID;
-
-    bool m_initialise;
+    
+    std::map<std::string,GLuint> _uniformMap;
+    
+    std::string _vertexSource;
+    std::string _fragmentSource;
+    
+    GLuint _vertexID;
+    GLuint _fragmentID;
+    GLuint _programID;
+    
+    bool _initialise;
 };
 
 
