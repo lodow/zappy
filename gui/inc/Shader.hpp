@@ -36,6 +36,7 @@ public:
     void bind() const;
     
     bool setUniform(std::string const& name, glm::vec3 const& vector) const;
+    bool setUniform(std::string const& name, glm::vec4 const& vector) const;
     bool setUniform(std::string const& name, glm::mat4 const& matrix) const;
     
     GLuint getProgramID() const;

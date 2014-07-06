@@ -7,6 +7,12 @@ Model::Model()
     _texture = NULL;
 }
 
+Model::Model(const Model &model)
+: _geometry(model._geometry), _texture(model._texture)
+{
+    
+}
+
 Model::~Model()
 {
     if (_geometry != NULL)

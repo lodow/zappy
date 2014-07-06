@@ -16,6 +16,7 @@ class Model: public IEntity
     
 public:
     Model();
+    Model(const Model &model);
     virtual ~Model();
     
     void    loadObj(std::string const& objPath, const std::string &texturePath);

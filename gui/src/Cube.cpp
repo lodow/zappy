@@ -115,5 +115,6 @@ void    Cube::draw(Shader *shader)
 {
     if (_texture != NULL)
         sf::Texture::bind(_texture);
+    shader->setUniform("fColor", glm::vec4(1, 1, 1, 0.3));
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
 }

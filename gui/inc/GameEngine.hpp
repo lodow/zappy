@@ -22,6 +22,7 @@
 # include "Model.hpp"
 # include "Camera.hpp"
 # include "Cube.hpp"
+# include "Gem.hpp"
 
 extern "C"
 {

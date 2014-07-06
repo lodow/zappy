@@ -88,13 +88,10 @@ void	GameEngine::run() {
     
     glEnable(GL_DEPTH_TEST);
     
-    Shader *shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
-    Camera camera;
-    Model model;
+    Shader 	*shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
+    Camera 	camera;
+    Gem		gem;
     
-    model.loadObj("res/models/gem.obj", "res/models/gem.png");
-    model.translate(glm::vec3(0, 0.5, 0));
-    model.scale(glm::vec3(0.2, 0.2, 0.2));
     camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
     shader->create();
@@ -106,7 +103,7 @@ void	GameEngine::run() {
                 event.key.code == sf::Keyboard::Escape)
                 _window.close();
             if (event.type == sf::Event::MouseWheelMoved)
-                camera.translate(glm::vec3(0, event.mouseWheel.delta / 3 , 0));
+                camera.translate(glm::vec3(0, event.mouseWheel.delta / 10.0f , 0));
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -130,7 +127,7 @@ void	GameEngine::run() {
         shader->setUniform("projection", camera.getProjection());
         shader->setUniform("view", camera.getTransformation());
         
-        model.draw(shader);
+        gem.draw(shader);
         
 //        do_select(_elem, &_tv, _parser);
         

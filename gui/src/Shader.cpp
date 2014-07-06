@@ -169,6 +169,18 @@ bool Shader::setUniform(const std::string &name, const glm::vec3 &vector) const
     return (true);
 }
 
+bool Shader::setUniform(const std::string &name, const glm::vec4 &vector) const
+{
+    int location = glGetUniformLocation(_programID, name.c_str());
+    if (location == -1)
+    {
+        std::cerr << "Error Shader::setUniform vec3" << std::endl;
+        return (false);
+    }
+    glUniform4fv(location, 1, glm::value_ptr(vector));
+    return (true);
+}
+
 bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
 {
     int location = glGetUniformLocation(_programID, name.c_str());
@@ -181,6 +193,8 @@ bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
     
     return (true);
 }
+
+
 
 void Shader::bind() const
 {
