@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Fri Jul  4 20:44:22 2014 Nicolas Bridoux
+** Last update Sun Jul  6 09:54:19 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -41,6 +41,7 @@ int	main(int ac, char **av)
   signal(SIGINT, &sig_handler);
   signal(SIGQUIT, &sig_handler);
   signal(SIGTERM, &sig_handler);
+  raw_mode(ON);
   if (!parse_command_line(&g_serv, ac, av) && (ret = 1))
     {
       if (!handle_start(&g_serv))
