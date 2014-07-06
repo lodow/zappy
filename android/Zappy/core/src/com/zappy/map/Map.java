@@ -13,11 +13,10 @@ import java.util.List;
  * Created by max on 24/06/14.
  */
 public class Map {
-    Vector2 size;
-
+    private Vector2 size;
     private Square[][] map;
-    List<Egg> eggs = new ArrayList<Egg>();
-    List<Player> players = new ArrayList<Player>();
+    private List<Egg> eggs = new ArrayList<Egg>();
+    private List<Player> players = new ArrayList<Player>();
 
     public Map(int x, int y) {
         map = new Square[x][y];
@@ -26,7 +25,7 @@ public class Map {
             int j = 0;
             while (j < map[i].length)
             {
-                map[i][j] = new Square();
+                map[i][j] = new Square(new Vector2(j, i));
                 j++;
             }
             i++;
@@ -56,7 +55,7 @@ public class Map {
             if (x.get_id() == id)
                 return x;
         }
-        throw new NullPointerException();
+        return null;
     }
 
     public Boolean deletePlayer(Integer id) {
@@ -103,5 +102,9 @@ public class Map {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public Square[][] getSquare() {
+        return map;
     }
 }

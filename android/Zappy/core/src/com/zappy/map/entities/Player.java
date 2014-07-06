@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.zappy.assets.Assets;
 
 import java.util.HashMap;
@@ -31,6 +33,7 @@ public class Player extends Actor {
         }
     }
 
+    private boolean selected = false;
     private Vector2 _pos;
     private Vector2 _oldPos;
     private String _team;
@@ -52,6 +55,17 @@ public class Player extends Actor {
         _dir = dir;
         player_animation = Assets.getAnimationPlayer();
         player_static= Assets.getStaticPlayer();
+
+        this.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("down");
+                return true;
+            }
+
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("up");
+            }
+        });
     }
 
     @Override
@@ -89,6 +103,13 @@ public class Player extends Actor {
 //        batch.setTransformMatrix(old);
     }
 
+    public void setSelected(boolean s) {
+        selected = s;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
     public void set_dir(eDirection _dir) {
         this._dir = _dir;
     }

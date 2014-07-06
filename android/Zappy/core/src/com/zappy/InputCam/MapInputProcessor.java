@@ -54,13 +54,13 @@ public class MapInputProcessor implements InputProcessor {
             this.camera.position.add(delta.x, delta.y, delta.z);
         }
         last.set(x, y, 0);
-        return false;
+        return true;
     }
 
     @Override
     public boolean touchUp(int x, int y, int pointer, int button) {
         last.set(-1, -1, -1);
-        return false;
+        return true;
     }
 
     @Override
