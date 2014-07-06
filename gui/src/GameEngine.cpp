@@ -15,17 +15,28 @@ int             read_from_server(t_selfd *fd)
     return (r);
 }
 
-std::string               get_command(t_selfd *fd)
+std::string get_command(t_selfd *fd)
 {
-    char                  *cmd;
-    size_t                size;
-    char                  buff[512];
-    
+    char *cmd;
+    size_t size;
+    char buff[512];
+    static std::string tmp("");
+    std::string ret;
+
     size = read_buffer(fd->rbuff, buff, sizeof(buff));
     if (size && ((cmd = static_cast<char *>(memchr(buff, '\n', size))))) {
         rollback_read_buffer(fd->rbuff, size - (cmd - buff + 1));
         buff[(cmd - buff)] = '\0';
+        if (tmp != "") {
+            ret = tmp + std::string(buff);
+            tmp = std::string("");
+            return ret;
+        }
         return (std::string(buff));
+    }
+    else if (size) {
+	buff[size] = 0;
+	tmp = std::string(buff);
     }
     return (std::string(""));
 }
@@ -39,18 +50,8 @@ GameEngine::GameEngine(const int &x, const int &y)
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
     
-    for (int y = 0; y < 10; ++y) {
-        for (int x = 0; x < 10; ++x) {
-            _map.push_back(new Cube(*_cube));
-            _map.back()->translate(glm::vec3(x, 0, y));
-        }
-    }
-    
-    run();
-    return ;
-    
     /* Init connexion */
-    _client = create_connection("::0", "4242", SOCK_STREAM, &connect_nb);
+    _client = create_connection("::1", "4242", SOCK_STREAM, &connect_nb);
     if (!_client)
         return ;
     int status;
@@ -68,13 +69,13 @@ GameEngine::GameEngine(const int &x, const int &y)
     add_to_list(&_elem, static_cast<void *>(create_fd(_client->socket, NULL, (int (*)())(&handle_server))));
     
     _tv.tv_sec = 0;
-    _tv.tv_usec = 100000;
+    _tv.tv_usec = 1000;
     
     _parser = new Parser(&_map, _cube);
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     
-//    run();
+    run();
 }
 
 GameEngine::~GameEngine()
@@ -90,11 +91,7 @@ void	GameEngine::run() {
     
     Shader *shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
     Camera camera;
-    Model model;
-    
-    model.loadObj("res/models/gem.obj", "res/models/gem.png");
-    model.translate(glm::vec3(0, 0.5, 0));
-    model.scale(glm::vec3(0.2, 0.2, 0.2));
+
     camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
     shader->create();
@@ -130,9 +127,8 @@ void	GameEngine::run() {
         shader->setUniform("projection", camera.getProjection());
         shader->setUniform("view", camera.getTransformation());
         
-        model.draw(shader);
         
-//        do_select(_elem, &_tv, _parser);
+       do_select(_elem, &_tv, _parser);
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
           (*it)->draw(shader);
