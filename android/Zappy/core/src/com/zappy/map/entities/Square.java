@@ -10,6 +10,7 @@ import com.zappy.assets.Assets;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -27,22 +28,45 @@ public class Square extends Actor {
         Thystame
     };
 
-    private Vector2 pos;
+    private Sprite food;
     private Map<eType, Matrix4> transform = new HashMap<eType, Matrix4>();
     private Map<eType, Integer> content = new HashMap<eType, Integer>();
     private Map<eType, Sprite> sprite_ressource;
     public Square(Vector2 pos) {
-        this.pos = pos;
         this.sprite_ressource = Assets.getSpriteRessource();
 
         for (int i = 0; i < 7; i++) {
             transform.put(eType.values()[i], new Matrix4());
         }
 
-        Sprite tmpSprite; Matrix4 tmpMat;
-        tmpSprite = sprite_ressource.get(eType.Deraumere); tmpSprite.setSize(.5f, .35f);
-        tmpMat = transform.get(eType.Deraumere); tmpMat.translate(pos.x + 0.13f, 0, -pos.y + 0.13f); tmpMat.rotate(new Vector3(0, 1, 0), 45);
+        Random rand = new Random();
+        int random = rand.nextInt(Assets.food.size());
+        food = new Sprite(Assets.food.get(random));
 
+        sprite_ressource.put(eType.Nourriture, food);
+
+        Sprite tmpSprite; Matrix4 tmpMat;
+
+        tmpSprite = sprite_ressource.get(eType.Deraumere); tmpSprite.setSize(.25f, .25f);
+        tmpMat = transform.get(eType.Deraumere); tmpMat.translate(pos.x + 0.2f, 0, -pos.y); tmpMat.rotate(new Vector3(0, 1, 0), 45);
+
+        tmpSprite = sprite_ressource.get(eType.Linemate); tmpSprite.setSize(.25f, .25f);
+        tmpMat = transform.get(eType.Linemate); tmpMat.translate(pos.x + 0.2f, 0, -pos.y - 0.35f); tmpMat.rotate(new Vector3(0, 1, 0), 45);
+
+        tmpSprite = sprite_ressource.get(eType.Mendiane); tmpSprite.setSize(.25f, .25f);
+        tmpMat = transform.get(eType.Mendiane); tmpMat.translate(pos.x + 0.2f, 0, -pos.y - 0.7f); tmpMat.rotate(new Vector3(0, 1, 0), 45);
+
+        tmpSprite = sprite_ressource.get(eType.Phiras); tmpSprite.setSize(.25f, .25f);
+        tmpMat = transform.get(eType.Phiras); tmpMat.translate(pos.x + 0.5f, 0, -pos.y); tmpMat.rotate(new Vector3(0, 1, 0), 45);
+
+        tmpSprite = sprite_ressource.get(eType.Sibur); tmpSprite.setSize(.25f, .25f);
+        tmpMat = transform.get(eType.Sibur); tmpMat.translate(pos.x + 0.5f, 0, -pos.y - 0.7f); tmpMat.rotate(new Vector3(0, 1, 0), 45);
+
+        tmpSprite = sprite_ressource.get(eType.Thystame); tmpSprite.setSize(.25f, .25f);
+        tmpMat = transform.get(eType.Thystame); tmpMat.translate(pos.x + 0.8f, 0, -pos.y); tmpMat.rotate(new Vector3(0, 1, 0), 45);
+
+        tmpSprite = sprite_ressource.get(eType.Nourriture); tmpSprite.setSize(.25f, .25f);
+        tmpMat = transform.get(eType.Nourriture); tmpMat.translate(pos.x + 0.8f, 0, -pos.y - 0.35f); tmpMat.rotate(new Vector3(0, 1, 0), 45);
 
         content.put(eType.Nourriture, 0);
         content.put(eType.Linemate, 0);
@@ -60,8 +84,7 @@ public class Square extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-
-/*        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             eType type = eType.values()[i];
             int number = content.get(type);
             if (number > 0) {
@@ -70,17 +93,6 @@ public class Square extends Actor {
                 batch.setTransformMatrix(tmp);
                 sprite.draw(batch);
             }
-        }*/
-        int number = content.get(eType.Deraumere);
-        for (int i = 0; i < 7; i++) {
-            eType type = eType.values()[i];
-            System.out.println(content.get(type));
-        }
-        if (number > 0) {
-            Sprite sprite = sprite_ressource.get(eType.Deraumere);
-            Matrix4 tmp = transform.get(eType.Deraumere);
-            batch.setTransformMatrix(tmp);
-            sprite.draw(batch);
         }
     }
 

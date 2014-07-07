@@ -91,7 +91,7 @@ public class Network {
             parse();
         String tmp;
         int i = 0;
-        while (input.ready() && i < 1000) {
+        while (input.ready() && i < 500) {
             tmp = input.readLine();
             parts = tmp.split(" ");
             parse();
