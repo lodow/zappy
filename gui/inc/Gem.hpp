@@ -22,7 +22,9 @@ public:
     Gem(const Gem &gem, GemType type);
     ~Gem();
     
-    void draw(Shader *shader);
+    void	destroyGeometry();
+    
+    void	draw(Shader *shader);
     
 private:
     Model		*_model;

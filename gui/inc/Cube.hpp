@@ -27,7 +27,6 @@ private:
     Geometry    *_geometry;
     sf::Texture *_texture;
     std::list<int> _recourse;
-    Model _model;
 };
 
 #endif /* _CUBE_H_ */

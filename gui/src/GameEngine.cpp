@@ -47,14 +47,17 @@ GameEngine::GameEngine(const int &x, const int &y)
     _window.setFramerateLimit(FPS);
     
     glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.5, 0.8, 1, 1);
     
-#ifdef __APPLE__
-    
+    _gem = new Gem(LINEMATE);
     _cube = new Cube;
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
+    
+#ifdef __APPLE__
     
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 10; ++x) {
@@ -62,8 +65,6 @@ GameEngine::GameEngine(const int &x, const int &y)
             _map.back()->translate(glm::vec3(x, 0, y));
         }
     }
-    
-    _gem = new Gem(THYSTAME);
     
     for (int i = 0; i < 6; ++i) {
         _map.push_back(new Gem(*_gem, static_cast<GemType>(i)));
@@ -106,14 +107,15 @@ GameEngine::GameEngine(const int &x, const int &y)
 
 GameEngine::~GameEngine()
 {
-    delete _parser;
     _cube->destroyGeometry();
+    _gem->destroyGeometry();
+    
+    delete _parser;
     delete _cube;
+    delete _gem;
 }
 
 void	GameEngine::run() {
-    
-    glEnable(GL_DEPTH_TEST);
     
     Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     Camera 	camera;

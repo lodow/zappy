@@ -8,7 +8,7 @@ Cube::Cube()
     _geometry = NULL;
 }
 Cube::Cube(const Cube &cube)
-: IEntity(), _geometry(cube._geometry), _texture(cube._texture), _recourse(cube._recourse), _model(cube._model)
+: IEntity(), _geometry(cube._geometry), _texture(cube._texture), _recourse(cube._recourse)
 {
     
 }
@@ -107,7 +107,7 @@ bool    Cube::loadTexture(const std::string &path)
         _texture = new sf::Texture;
     _texture->loadFromFile(path);
     _texture->setSmooth(true);
-//    _texture->setRepeated(true);
+    _texture->setRepeated(true);
 //    _model.loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
 //    _model.scale(glm::vec3(0.2, 0.2, 0.2));
 //    _model.translate(glm::vec3(0, 0.5, 0));

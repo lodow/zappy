@@ -50,7 +50,7 @@ Gem::Gem(const Gem &gem, GemType type)
 
 Gem::~Gem()
 {
-    
+    delete _model;
 }
 
 void	Gem::draw(Shader *shader)
@@ -60,6 +60,11 @@ void	Gem::draw(Shader *shader)
 //    std::cout << "x: " << tempPos.x << " y: " << tempPos.y << " z: " << tempPos.z << std::endl;
     
 //    shader->setUniform("light", glm::vec4(tempPos.x, tempPos.y + 0.5f, tempPos.z, 1.0f));
-    shader->setUniform("gColor", _colorType[_type]);
+//    shader->setUniform("gColor", _colorType[_type]);
     _model->draw(shader);
+}
+
+void	Gem::destroyGeometry()
+{
+    _model->destroyGeometry();
 }

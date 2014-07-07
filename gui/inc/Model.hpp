@@ -24,6 +24,8 @@ public:
     
     void    draw(Shader *shader);
     
+    void	destroyGeometry();
+    
 private:
     int         _load;
     

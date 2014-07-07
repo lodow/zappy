@@ -14,9 +14,7 @@ Model::Model(const Model &model)
 }
 
 Model::~Model()
-{
-    if (_geometry != NULL)
-        delete _geometry;
+{ 
     if (_texture != NULL)
         delete _texture;
 }
@@ -212,4 +210,9 @@ void    Model::draw(Shader *shader)
 {
     sf::Texture::bind(_texture);
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
+}
+
+void	Model::destroyGeometry()
+{
+    delete _geometry;
 }
