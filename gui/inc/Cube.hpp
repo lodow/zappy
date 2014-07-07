@@ -2,6 +2,8 @@
 # define _CUBE_H_
 
 # include <SFML/Graphics.hpp>
+# include <list>
+# include "Model.hpp"
 # include "IEntity.hpp"
 # include "Geometry.hpp"
 
@@ -16,13 +18,16 @@ public:
     void    draw(Shader *shader);
     bool    loadTexture(const std::string &path);
     
-    void	destroyGeometry();
+    void    destroyGeometry();
+    void    setRecourse(const std::list<int> &recourse);
 
 private:
     Cube   &operator=(const Cube& c);
     
     Geometry    *_geometry;
     sf::Texture *_texture;
+    std::list<int> _recourse;
+    Model _model;
 };
 
 #endif /* _CUBE_H_ */

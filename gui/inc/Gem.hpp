@@ -5,23 +5,30 @@
 # include <map>
 # include "Model.hpp"
 
-enum GEM_TYPE {
-    
+enum GemType {
+    LINEMATE = 0,
+    DERAUMERE,
+    SIBUR,
+    MENDIANE,
+    PHIRAS,
+    THYSTAME
 };
 
-class Gem {
+class Gem: public IEntity
+{
 
 public:
-    Gem();
-    Gem(const Gem &gem);
+    Gem(GemType type);
+    Gem(const Gem &gem, GemType type);
     ~Gem();
     
     void draw(Shader *shader);
     
 private:
-    Model	*_model;
-    std::map<COLOR, glm::vec4> _colorMap;
-    std::map<GEM_TYPE, >
+    Model		*_model;
+    GemType 	_type;
+    glm::vec3	_position;
+    std::map<GemType, glm::vec4> _colorType;
 };
 
 #endif

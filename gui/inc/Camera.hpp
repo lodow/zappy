@@ -23,6 +23,7 @@ public:
     const   glm::mat4 &getTransformation() const;
     const   glm::mat4 &getProjection() const;
     const   glm::vec3 &getPosView() const;
+    const   glm::vec3 &getPos() const;
     
 private:
     glm::mat4	_transformation;

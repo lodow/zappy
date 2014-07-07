@@ -45,6 +45,7 @@ class GameEngine {
 private:
     Camera            _camera;
     Cube              *_cube;
+    Gem				  *_gem;
     
     sf::RenderWindow  _window;
     sf::Font          _font;

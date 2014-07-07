@@ -30,6 +30,7 @@ void    Model::loadObj(const std::string &objPath, const std::string &texturePat
     _load = 0; //0% done
     
     std::cout << "loading OBJ file: " << objPath << "...";
+    std::cout << "loading texture file: " << texturePath << "...";
     
     std::vector<glm::vec3> out_vertices;
     std::vector<glm::vec2> out_uvs;
