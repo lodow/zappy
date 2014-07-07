@@ -26,6 +26,8 @@ public:
     
     void	draw(Shader *shader);
     
+    virtual void setRecourse(const std::list<int> &recourse);
+    
 private:
     Model		*_model;
     GemType 	_type;

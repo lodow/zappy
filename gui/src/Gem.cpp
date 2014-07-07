@@ -1,4 +1,5 @@
 
+#include "GameEngine.cpp"
 #include "Gem.hpp"
 
 uint64_t cpu_cycle(){
@@ -67,4 +68,8 @@ void	Gem::draw(Shader *shader)
 void	Gem::destroyGeometry()
 {
     _model->destroyGeometry();
+}
+void Gem::setRecourse(UNUSED const std::list<int> &recourse)
+{
+
 }

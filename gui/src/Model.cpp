@@ -1,14 +1,13 @@
-
 #include "Model.hpp"
 
-Model::Model()
+Model::Model() : AObject()
 {
     _geometry = NULL;
     _texture = NULL;
 }
 
 Model::Model(const Model &model)
-: _geometry(model._geometry), _texture(model._texture)
+: AObject(),_geometry(model._geometry), _texture(model._texture)
 {
     
 }

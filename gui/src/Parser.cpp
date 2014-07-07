@@ -1,7 +1,7 @@
 
 #include "Parser.hpp"
 
-Parser::Parser(Map *map, Cube *cube) : _map(map), _cube(cube)
+Parser::Parser(Map *map, Cube *cube, Gem *gem) : _map(map), _cube(cube), _gem(gem)
 {
     _parse["bct"] = &Parser::parseBct;
     
@@ -47,10 +47,12 @@ void Parser::parseBct(const std::string &cmd)
     }
     for (Map::const_iterator it = _map->begin(), end = _map->end();  it != end; ++it) {
         if ((*it)->getPos().x == pos.x && (*it)->getPos().y == pos.y) {
+            (*it)->setRecourse(recourse);
             return ;
         }
     }
-    _cube->setRecourse(recourse);
-    _map->push_back(new Cube(*_cube));
-    _map->back()->translate(glm::vec3(pos.x, 0, pos.y));
+    //_cube->setRecourse(recourse);
+    _map->push_back(new Ground(pos, *_cube, *_gem));
+    _map->back()->setRecourse(recourse);
+
 }

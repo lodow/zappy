@@ -2,15 +2,22 @@
 #include "Cube.hpp"
 
 Cube::Cube()
-: IEntity()
+: AObject()
 {
     _texture = NULL;
     _geometry = NULL;
 }
 Cube::Cube(const Cube &cube)
-: IEntity(), _geometry(cube._geometry), _texture(cube._texture), _recourse(cube._recourse)
+: AObject(), _geometry(cube._geometry), _texture(cube._texture)
 {
     
+}
+
+Cube   &Cube::operator=(const Cube& c)
+{
+    _geometry = c._geometry;
+    _texture = c._texture;
+    return *this;
 }
 
 Cube::~Cube()
@@ -92,8 +99,8 @@ void    Cube::build()
     _geometry->pushVertex(vertice[0]).pushUv(uv[0]).pushNormal(normals[7]);
     _geometry->pushVertex(vertice[2]).pushUv(uv[2]).pushNormal(normals[7]);
     _geometry->pushVertex(vertice[3]).pushUv(uv[3]).pushNormal(normals[7]);
-
-    _geometry->build(GL_STATIC_DRAW);    
+    
+    _geometry->build(GL_STATIC_DRAW);
 }
 
 void	Cube::destroyGeometry()
@@ -107,10 +114,14 @@ bool    Cube::loadTexture(const std::string &path)
         _texture = new sf::Texture;
     _texture->loadFromFile(path);
     _texture->setSmooth(true);
+    <<<<<<< HEAD
     _texture->setRepeated(true);
-//    _model.loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
-//    _model.scale(glm::vec3(0.2, 0.2, 0.2));
-//    _model.translate(glm::vec3(0, 0.5, 0));
+    //    _model.loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
+    //    _model.scale(glm::vec3(0.2, 0.2, 0.2));
+    //    _model.translate(glm::vec3(0, 0.5, 0));
+    =======
+    //    _texture->setRepeated(true);
+    >>>>>>> 827737684f0b969f37571961ea52ed059eb43a94
     return (true);
 }
 
@@ -120,18 +131,4 @@ void    Cube::draw(Shader *shader)
         sf::Texture::bind(_texture);
     shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
-
-//    int nb = 0;
-//    for (std::list<int>::const_iterator it = _recourse.begin(), end = _recourse.end(); it != end; ++it)
-//      if (*it) {
-//	  _model.translate(glm::vec3(-_model.getPos().x - 0.25 + nb * 0.25, 0, -_model.getPos().z - 0.25));
-//	  _model.translate(glm::vec3(_position.x, 0, _position.z));
-//	  _model.draw(shader);
-//	  ++nb;
-//      }
-}
-
-void    Cube::setRecourse(const std::list<int> &recourse)
-{
-    _recourse = recourse;
 }

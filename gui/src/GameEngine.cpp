@@ -56,13 +56,13 @@ GameEngine::GameEngine(const int &x, const int &y)
     _cube = new Cube;
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
+    _gem = new Gem(THYSTAME);
     
 #ifdef __APPLE__
     
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 10; ++x) {
-            _map.push_back(new Cube(*_cube));
-            _map.back()->translate(glm::vec3(x, 0, y));
+            _map.push_back(new Ground(glm::vec2(x, y) ,*_cube, *_gem));
         }
     }
     
@@ -74,7 +74,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     return ;
     
 #else
-    
+
     /* Init connexion */
     _client = create_connection("::1", "4242", SOCK_STREAM, &connect_nb);
     if (!_client)
@@ -96,9 +96,13 @@ GameEngine::GameEngine(const int &x, const int &y)
     _tv.tv_sec = 0;
     _tv.tv_usec = 1000;
     
-    _parser = new Parser(&_map, _cube);
+    _parser = new Parser(&_map, _cube, _gem);
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
+    do_select(_elem, &_tv, _parser);
+    for (int i = 0; i < 6; ++i) {
+            _map.push_back(new Gem(*_gem, static_cast<GemType>(i)));
+        }
     
     run();
     
