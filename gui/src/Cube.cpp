@@ -115,9 +115,6 @@ bool    Cube::loadTexture(const std::string &path)
     _texture->loadFromFile(path);
     _texture->setSmooth(true);
 //    _texture->setRepeated(true);
-//    _model.loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
-//    _model.scale(glm::vec3(0.2, 0.2, 0.2));
-//    _model.translate(glm::vec3(0, 0.5, 0));
     return (true);
 }
 
@@ -127,13 +124,4 @@ void    Cube::draw(Shader *shader)
         sf::Texture::bind(_texture);
     shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
-
-//    int nb = 0;
-//    for (std::list<int>::const_iterator it = _recourse.begin(), end = _recourse.end(); it != end; ++it)
-//      if (*it) {
-//	  _model.translate(glm::vec3(-_model.getPos().x - 0.25 + nb * 0.25, 0, -_model.getPos().z - 0.25));
-//	  _model.translate(glm::vec3(_position.x, 0, _position.z));
-//	  _model.draw(shader);
-//	  ++nb;
-//      }
 }
