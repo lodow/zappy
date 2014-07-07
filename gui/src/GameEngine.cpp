@@ -67,7 +67,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     }
     
     for (int i = 0; i < 6; ++i) {
-        _map.push_back(new Gem(*_gem, static_cast<GemType>(i)));
+        _map.push_back(new Gem(*_gem, static_cast<GemType>(i), glm::vec2(0, 0)));
     }
     
     run();
@@ -100,9 +100,6 @@ GameEngine::GameEngine(const int &x, const int &y)
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     do_select(_elem, &_tv, _parser);
-    for (int i = 0; i < 6; ++i) {
-            _map.push_back(new Gem(*_gem, static_cast<GemType>(i)));
-        }
     
     run();
     

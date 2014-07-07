@@ -46,7 +46,7 @@ void Parser::parseBct(const std::string &cmd)
 	recourse.push_back(getNbFromString(tmp));
     }
     for (Map::const_iterator it = _map->begin(), end = _map->end();  it != end; ++it) {
-        if ((*it)->getPos().x == pos.x && (*it)->getPos().y == pos.y) {
+        if ((*it)->getPosition().x == pos.x && (*it)->getPosition().y == pos.y) {
             (*it)->setRecourse(recourse);
             return ;
         }

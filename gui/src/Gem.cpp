@@ -21,32 +21,18 @@ Gem::Gem(GemType type)
     _model = new Model;
     _model->loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
     
-//    _position.x = ((cpu_cycle() % 6) / 10.0f) - 0.25f;
-//    _position.y = 0.5f;
-//    _position.z = ((cpu_cycle() % 6) / 10.0f) - 0.25f;
-    
-    _position.x = ((cpu_cycle() % 6));
-    _position.y = 0.5f;
-    _position.z = ((cpu_cycle() % 6));
-    
-    _model->translate(_position);
 }
 
-Gem::Gem(const Gem &gem, GemType type)
+Gem::Gem(const Gem &gem, GemType type, const glm::vec2 &position)
 {
     _model = new Model(*gem._model);
     _type = type;
     _colorType = gem._colorType;
-    
-    //    _position.x = ((cpu_cycle() % 6) / 10.0f) - 0.25f;
-    //    _position.y = 0.5f;
-    //    _position.z = ((cpu_cycle() % 6) / 10.0f) - 0.25f;
-    
-    _position.x = ((cpu_cycle() % 6));
-    _position.y = 0.5f;
-    _position.z = ((cpu_cycle() % 6));
-    
-    _model->translate(_position);
+    _position = position;
+    _position.x += ((cpu_cycle() % 6) / 10.0f) - 0.25f;
+    _position.y += ((cpu_cycle() % 6) / 10.0f) - 0.25f;
+
+    _model->translate(glm::vec3(_position.x, 0.5f, _position.y));
 }
 
 Gem::~Gem()
@@ -56,7 +42,7 @@ Gem::~Gem()
 
 void	Gem::draw(Shader *shader)
 {
-    glm::vec3 tempPos = _model->getPos();
+    //glm::vec3 tempPos = _model->getPos();
     
 //    std::cout << "x: " << tempPos.x << " y: " << tempPos.y << " z: " << tempPos.z << std::endl;
     
@@ -72,4 +58,12 @@ void	Gem::destroyGeometry()
 void Gem::setRecourse(UNUSED const std::list<int> &recourse)
 {
 
+}
+
+const glm::vec2 &Gem::getPosition() const {
+  return _position;
+}
+
+void Gem::setPosition(const glm::vec2 &pos) {
+  _position = pos;
 }
