@@ -31,6 +31,8 @@ public class Square extends Actor {
     private Map<eType, Matrix4> transform = new HashMap<eType, Matrix4>();
     private Map<eType, Integer> content = new HashMap<eType, Integer>();
     private Map<eType, Sprite> sprite_ressource = new HashMap<eType, Sprite>();
+    private boolean incantation = false;
+
     public Square(Vector2 pos) {
 
         TextureRegion ressource = Assets.ressource;
@@ -105,5 +107,9 @@ public class Square extends Actor {
 
     public Set getItems() {
         return content.entrySet();
+    }
+
+    public void setIncentation(boolean bool) {
+        incantation = bool;
     }
 }
