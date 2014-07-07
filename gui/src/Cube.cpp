@@ -2,15 +2,22 @@
 #include "Cube.hpp"
 
 Cube::Cube()
-: IEntity()
+: AObject()
 {
     _texture = NULL;
     _geometry = NULL;
 }
 Cube::Cube(const Cube &cube)
-: IEntity(), _geometry(cube._geometry), _texture(cube._texture), _recourse(cube._recourse), _model(cube._model)
+: AObject(), _geometry(cube._geometry), _texture(cube._texture)
 {
     
+}
+
+Cube   &Cube::operator=(const Cube& c)
+{
+  _geometry = c._geometry;
+  _texture = c._texture;
+  return *this;
 }
 
 Cube::~Cube()
@@ -129,9 +136,4 @@ void    Cube::draw(Shader *shader)
 //	  _model.draw(shader);
 //	  ++nb;
 //      }
-}
-
-void    Cube::setRecourse(const std::list<int> &recourse)
-{
-    _recourse = recourse;
 }

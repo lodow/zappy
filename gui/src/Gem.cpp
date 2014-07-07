@@ -63,3 +63,8 @@ void	Gem::draw(Shader *shader)
     shader->setUniform("gColor", _colorType[_type]);
     _model->draw(shader);
 }
+
+void Gem::setRecourse(__attribute((unused)) const std::list<int> &recourse)
+{
+
+}

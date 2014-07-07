@@ -23,6 +23,7 @@
 # include "Camera.hpp"
 # include "Cube.hpp"
 # include "Gem.hpp"
+# include "Ground.hpp"
 
 extern "C"
 {

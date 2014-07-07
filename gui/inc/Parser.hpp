@@ -8,7 +8,7 @@
 # include <string>
 # include <iostream>
 # include <sstream>
-# include "Cube.hpp"
+# include "Ground.hpp"
 
 typedef std::list<IEntity *> Map;
 

@@ -11,7 +11,7 @@
 # include "Geometry.hpp"
 # include "IEntity.hpp"
 
-class Model: public IEntity
+class Model: public AObject
 {
     
 public:

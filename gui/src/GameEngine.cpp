@@ -49,17 +49,18 @@ GameEngine::GameEngine(const int &x, const int &y)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.5, 0.8, 1, 1);
-    
-#ifdef __APPLE__
-    
+
     _cube = new Cube;
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
+
+    
+#ifdef __APPLE__
+    
     
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 10; ++x) {
-            _map.push_back(new Cube(*_cube));
-            _map.back()->translate(glm::vec3(x, 0, y));
+            _map.push_back(new Ground(glm::vec2(x, y) ,*_cube));
         }
     }
     
@@ -73,7 +74,8 @@ GameEngine::GameEngine(const int &x, const int &y)
     return ;
     
 #else
-    
+
+
     /* Init connexion */
     _client = create_connection("::1", "4242", SOCK_STREAM, &connect_nb);
     if (!_client)

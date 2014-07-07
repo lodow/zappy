@@ -5,18 +5,20 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Fri Jul  4 15:49:29 2014 fabien.linardon
+## Last update Mon Jul  7 11:44:58 2014 fabien.linardon
 ##
 
-SRC		=	main.cpp	\
-			GameEngine.cpp	\
-			Parser.cpp	\
-			Model.cpp	\
-			Shader.cpp	\
-			Cube.cpp	\
-			Camera.cpp	\
-			AObject.cpp	\
-			Geometry.cpp	\
+SRC		=	main.cpp \
+			GameEngine.cpp \
+			Parser.cpp \
+			Model.cpp \
+			Shader.cpp \
+			Cube.cpp \
+			Camera.cpp \
+			AObject.cpp \
+			Geometry.cpp \
+			Gem.cpp \
+			Ground.cpp \
 
 CC		=	g++
 FILETYPE	=	.cpp
