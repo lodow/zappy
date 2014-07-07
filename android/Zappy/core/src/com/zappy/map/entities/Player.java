@@ -1,7 +1,6 @@
 package com.zappy.map.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,7 +43,8 @@ public class Player extends Actor {
     private HashMap<eDirection, Sprite> player_static;
     private float state_time = 0;
     private TextureRegion currentFrame;
-    private SpriteBatch batch = new SpriteBatch();
+    private Matrix4 matrix4 = new Matrix4(), defaultMat = new Matrix4();
+    private Vector3 rotation = new Vector3(0, 1, 0);
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -82,25 +82,18 @@ public class Player extends Actor {
         }
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
+    public void draw(SpriteBatch batch, float parentAlpha) {
         Sprite current = new Sprite(currentFrame);
-        Matrix4 matTmp = new Matrix4();
 
+        matrix4.set(defaultMat);
         current.setSize(1f, 1f);
 
-        matTmp.translate(_pos.x, 0, -_pos.y);
-        matTmp.rotate(new Vector3(0, 1, 0), 45);
+        matrix4.translate(_pos.x, 0, -_pos.y);
+        matrix4.rotate(rotation, 45);
 
-//        Matrix4 old = batch.getTransformMatrix();
+        batch.setTransformMatrix(matrix4);
 
-        batch.setTransformMatrix(matTmp);
-
-        batch.begin();
         current.draw(batch);
-        batch.end();
-
-//        batch.setTransformMatrix(old);
     }
 
     public void setSelected(boolean s) {

@@ -3,10 +3,14 @@ package com.zappy.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
@@ -14,7 +18,15 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zappy.InputCam.MapGestureHandler;
 import com.zappy.InputCam.MapInputProcessor;
 import com.zappy.Zappy;
@@ -42,14 +54,18 @@ public class MapViewer implements Screen {
     private final Vector3 intersection = new Vector3();
     private Sprite lastSelectedTile = null;
     private Skin skin;
-
+    private BitmapFont font = new BitmapFont();
+    private Stage stage;
+    private Table table;
     public MapViewer(Network network, Zappy game, MainMenuScreen menu_screen, Skin skin) {
         this.game = game;
         this.menu_screen = menu_screen;
         this.network = network;
         this.sizeMap = network.getMap().getSize();
         this.skin = skin;
-
+        this.font.setColor(Color.RED);
+        this.font.scale(2);
+        this.stage = new Stage();
         this.camera = new OrthographicCamera(20, 20 * (Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
 
         this.camera.position.set(10, 10, 20);
@@ -57,6 +73,29 @@ public class MapViewer implements Screen {
         this.camera.near = 1;
         this.camera.far = 100;
 
+        table = new Table();
+        table.debug();
+        Drawable patch = new TextureRegionDrawable(new TextureRegion(Assets.all, 175, 0, 50, 50));
+
+        Image cross = new Image(new Texture(Gdx.files.internal("mainMenu/remove_cross.png")));
+        cross.addListener(new ClickListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if(lastSelectedTile != null)
+                    lastSelectedTile.setColor(1, 1, 1, 1);
+                lastSelectedTile = null;
+                return true;
+            }
+        });
+
+        Label info = new Label("Information : ", skin, "default-font", Color.WHITE);
+        info.setFontScale(0.3f);
+        table.setSize(Gdx.graphics.getWidth() / 3, Gdx.graphics.getHeight() / 3);
+        table.setBackground(patch);
+
+        table.add(info).expand().top().left();
+        table.add(cross).expand().top().right();
+        table.setPosition(Gdx.graphics.getWidth() - table.getWidth(), 0);
+        stage.addActor(table);
         groundSprite = new Sprite[(int) sizeMap.y][(int) sizeMap.x];
         for (int z = 0; z < sizeMap.y; z++) {
             for (int x = 0; x < sizeMap.x; x++) {
@@ -84,12 +123,13 @@ public class MapViewer implements Screen {
 
         inputMultiplexer.addProcessor(new GestureDetector(gestureHandler));
         inputMultiplexer.addProcessor(inputProcessor);
-
+        inputMultiplexer.addProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
 
         try {
             network.update();
@@ -100,14 +140,13 @@ public class MapViewer implements Screen {
         }
 
         Map map = network.getMap();
-        List<Player> currentPlayer = map.getPlayers();
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-
         // draw ground
         batch.setTransformMatrix(groundMatrix);
+        batch.disableBlending();
 
         batch.begin();
         for (int z = 0; z < sizeMap.y; z++) {
@@ -116,17 +155,17 @@ public class MapViewer implements Screen {
             }
         }
 
+        batch.enableBlending();
+
         // draw ressource
         Square[][] square = map.getSquare();
         for (int i = 0; i < square.length; i++) {
-            Square[] tmp = square[i];
-            for (int j = 0; j < tmp.length; j++) {
-                tmp[j].draw(batch, delta);
+            for (int j = 0; j < square[i].length; j++) {
+                square[i][j].draw(batch, delta);
             }
         }
-        batch.end();
 
-        currentPlayer = map.getPlayers();
+        List<Player> currentPlayer = map.getPlayers();
 
         boolean touched =  checkTileTouched(), selected = false, dead = true;
         for (Player p : currentPlayer) {
@@ -158,7 +197,21 @@ public class MapViewer implements Screen {
         if (dead && lastSelectedTile != null) {
             lastSelectedTile.setColor(1, 1, 1, 1);
         }
-        // draw all element of the map ...
+
+        batch.end();
+
+        batch.setTransformMatrix(new Matrix4());
+        batch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
+        batch.begin();
+        font.draw(batch, "FPS : " + Gdx.graphics.getFramesPerSecond(), 0, Gdx.graphics.getHeight());
+        batch.end();
+
+        if (!dead && lastSelectedTile != null) {
+            stage.act(delta);
+            stage.draw();
+            Table.drawDebug(stage);
+        }
     }
 
     private boolean checkTileTouched() {
@@ -199,5 +252,7 @@ public class MapViewer implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
+        skin.dispose();
     }
 }
