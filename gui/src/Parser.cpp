@@ -1,7 +1,7 @@
 
 #include "Parser.hpp"
 
-Parser::Parser(Map *map, Cube *cube) : _map(map), _cube(cube)
+Parser::Parser(Map *map, Cube *cube, Gem *gem) : _map(map), _cube(cube), _gem(gem)
 {
     _parse["bct"] = &Parser::parseBct;
     
@@ -52,7 +52,7 @@ void Parser::parseBct(const std::string &cmd)
         }
     }
     //_cube->setRecourse(recourse);
-    _map->push_back(new Ground(pos, *_cube));
+    _map->push_back(new Ground(pos, *_cube, *_gem));
     _map->back()->setRecourse(recourse);
 
 }

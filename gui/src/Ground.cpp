@@ -1,6 +1,6 @@
 #include <Ground.hpp>
 
-Ground::Ground(const glm::vec2 &pos, const Cube &cube) : IEntity()
+Ground::Ground(const glm::vec2 &pos, const Cube &cube, const Gem &gem) : IEntity(), _gem(gem)
 {
   _cube = cube;
   setPosition(glm::vec3(pos.x, 0, pos.y));

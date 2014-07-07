@@ -19,7 +19,7 @@ private:
     typedef std::map<std::string, parse> Parse;
     
 public:
-    Parser(Map *map, Cube *cube);
+    Parser(Map *map, Cube *cube, Gem *gem);
     virtual ~Parser();
     void parseCmd(std::string &cmd);
     void parseBct(const std::string &cmd);
@@ -30,6 +30,7 @@ private:
 private:
     Map     *_map;
     Cube    *_cube;
+    Gem     *_gem;
     Parse   _parse;
 };
 
