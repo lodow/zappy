@@ -114,14 +114,8 @@ bool    Cube::loadTexture(const std::string &path)
         _texture = new sf::Texture;
     _texture->loadFromFile(path);
     _texture->setSmooth(true);
-    <<<<<<< HEAD
     _texture->setRepeated(true);
-    //    _model.loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
-    //    _model.scale(glm::vec3(0.2, 0.2, 0.2));
-    //    _model.translate(glm::vec3(0, 0.5, 0));
-    =======
-    //    _texture->setRepeated(true);
-    >>>>>>> 827737684f0b969f37571961ea52ed059eb43a94
+
     return (true);
 }
 

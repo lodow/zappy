@@ -1,7 +1,9 @@
-#ifndef ULTILS_HPP_
-# define ULTILS_HPP_
+#ifndef UTILS_HPP_
+# define UTILS_HPP_
 
 # include <string>
 # include <iostream>
 
-#endif /* !ULTILS_HPP_ */
+# define UNUSED	__attribute__ ((__unused__))
+
+#endif

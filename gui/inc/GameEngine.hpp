@@ -33,7 +33,6 @@ extern "C"
 #include "liste.h"
 }
 
-# define UNUSED         __attribute__ ((__unused__))
 # define WINDOW_NAME	"ZAPPY"
 # define FPS            60
 
