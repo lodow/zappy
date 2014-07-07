@@ -11,8 +11,6 @@ import com.zappy.assets.Assets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by max on 27/06/14.
@@ -31,9 +29,8 @@ public class Square extends Actor {
 
     private Vector2 pos;
     private Map<eType, Matrix4> transform = new HashMap<eType, Matrix4>();
-    private ConcurrentMap<eType, Integer> content = new ConcurrentHashMap<eType, Integer>();
+    private Map<eType, Integer> content = new HashMap<eType, Integer>();
     private Map<eType, Sprite> sprite_ressource;
-    private Boolean incentation = false;
     public Square(Vector2 pos) {
         this.pos = pos;
         this.sprite_ressource = Assets.getSpriteRessource();
@@ -46,6 +43,7 @@ public class Square extends Actor {
         tmpSprite = sprite_ressource.get(eType.Deraumere); tmpSprite.setSize(.5f, .35f);
         tmpMat = transform.get(eType.Deraumere); tmpMat.translate(pos.x + 0.13f, 0, -pos.y + 0.13f); tmpMat.rotate(new Vector3(0, 1, 0), 45);
 
+
         content.put(eType.Nourriture, 0);
         content.put(eType.Linemate, 0);
         content.put(eType.Deraumere, 1);
@@ -55,17 +53,8 @@ public class Square extends Actor {
         content.put(eType.Thystame, 0);
     }
 
-    public Boolean getIncentation() {
-        return incentation;
-    }
-
-    public void setIncentation(Boolean state) {
-        incentation = state;
-    }
-
     public Boolean setItem(eType type, Integer number) {
-        System.out.println("Add : " + pos.toString() + " " + type.toString() + " " + number);
-        content.putIfAbsent(type, number);
+        content.put(type, number);
         return true;
     }
 
@@ -85,7 +74,7 @@ public class Square extends Actor {
         int number = content.get(eType.Deraumere);
         for (int i = 0; i < 7; i++) {
             eType type = eType.values()[i];
-            System.out.println(pos.toString() + " " + type.toString() + " " + content.get(type));
+            System.out.println(content.get(type));
         }
         if (number > 0) {
             Sprite sprite = sprite_ressource.get(eType.Deraumere);
