@@ -173,11 +173,11 @@ public class Network {
     }
 
     private void pic() {
-        // debut incentation
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), true);
     }
 
     private void pie() {
-        // fin incentation
+        map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), false);
     }
 
     private void pfk() {
@@ -218,7 +218,7 @@ public class Network {
     }
 
     private void seg() {
-        // fin l'equipe x a gagner
+        map.setEndOfGame(parts[1]);
     }
 
     private void smg() {
