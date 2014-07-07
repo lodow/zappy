@@ -50,6 +50,8 @@ GameEngine::GameEngine(const int &x, const int &y)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.5, 0.8, 1, 1);
     
+#ifdef __APPLE__
+    
     _cube = new Cube;
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
@@ -69,6 +71,8 @@ GameEngine::GameEngine(const int &x, const int &y)
     
     run();
     return ;
+    
+#else
     
     /* Init connexion */
     _client = create_connection("::1", "4242", SOCK_STREAM, &connect_nb);
@@ -96,6 +100,8 @@ GameEngine::GameEngine(const int &x, const int &y)
     write(_client->socket, "GRAPHIC\n", 8);
     
     run();
+    
+#endif
 }
 
 GameEngine::~GameEngine()
@@ -155,8 +161,11 @@ void	GameEngine::run() {
         shader->setUniform("projection", camera.getProjection());
         shader->setUniform("view", camera.getTransformation());
         
-//       do_select(_elem, &_tv, _parser);
+# ifndef __APPLE__
         
+        do_select(_elem, &_tv, _parser);
+        
+#endif
         shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
         model.draw(shader);
         
