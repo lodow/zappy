@@ -4,7 +4,6 @@ Ground::Ground(const glm::vec2 &pos, const Cube &cube, const Gem &gem) : _gem(ge
 {
   _cube = cube;
   _cube.translate(glm::vec3(_position.x, 0, _position.y));
-  _gem.setPosition(_position);
   for (int i = 0; i < 6; ++i) {
       _gemList.push_back(new Gem(_gem, static_cast<GemType>(i), _position));
   }
