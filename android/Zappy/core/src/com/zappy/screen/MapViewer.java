@@ -1,16 +1,15 @@
 package com.zappy.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
@@ -18,15 +17,8 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zappy.InputCam.MapGestureHandler;
 import com.zappy.InputCam.MapInputProcessor;
 import com.zappy.Zappy;
@@ -43,7 +35,6 @@ public class MapViewer implements Screen {
 
     private Zappy game;
     private Network network;
-    private MainMenuScreen menu_screen;
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private Sprite groundSprite[][];
@@ -55,17 +46,20 @@ public class MapViewer implements Screen {
     private Sprite lastSelectedTile = null;
     private Skin skin;
     private BitmapFont font = new BitmapFont();
-    private Stage stage;
-    private Table table;
-    public MapViewer(Network network, Zappy game, MainMenuScreen menu_screen, Skin skin) {
+    private PopUpInformation info;
+    private Player playerSelected = null;
+    private boolean back = false;
+    private ReturnDialog returnDialog;
+    private Stage returnStage = new Stage();
+
+    public MapViewer(Network network, Zappy game, Skin skin) {
         this.game = game;
-        this.menu_screen = menu_screen;
         this.network = network;
         this.sizeMap = network.getMap().getSize();
         this.skin = skin;
         this.font.setColor(Color.RED);
         this.font.scale(2);
-        this.stage = new Stage();
+        this.info = new PopUpInformation(skin);
         this.camera = new OrthographicCamera(20, 20 * (Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
 
         this.camera.position.set(10, 10, 20);
@@ -73,29 +67,6 @@ public class MapViewer implements Screen {
         this.camera.near = 1;
         this.camera.far = 100;
 
-        table = new Table();
-        table.debug();
-        Drawable patch = new TextureRegionDrawable(new TextureRegion(Assets.all, 175, 0, 50, 50));
-
-        Image cross = new Image(new Texture(Gdx.files.internal("mainMenu/remove_cross.png")));
-        cross.addListener(new ClickListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if(lastSelectedTile != null)
-                    lastSelectedTile.setColor(1, 1, 1, 1);
-                lastSelectedTile = null;
-                return true;
-            }
-        });
-
-        Label info = new Label("Information : ", skin, "default-font", Color.WHITE);
-        info.setFontScale(0.3f);
-        table.setSize(Gdx.graphics.getWidth() / 3, Gdx.graphics.getHeight() / 3);
-        table.setBackground(patch);
-
-        table.add(info).expand().top().left();
-        table.add(cross).expand().top().right();
-        table.setPosition(Gdx.graphics.getWidth() - table.getWidth(), 0);
-        stage.addActor(table);
         groundSprite = new Sprite[(int) sizeMap.y][(int) sizeMap.x];
         for (int z = 0; z < sizeMap.y; z++) {
             for (int x = 0; x < sizeMap.x; x++) {
@@ -109,7 +80,9 @@ public class MapViewer implements Screen {
 
         groundMatrix.setToRotation(new Vector3(1, 0, 0), -90);
 
+        returnDialog = new ReturnDialog("", skin);
         initaliseInputProcessors();
+
     }
 
     public void initaliseInputProcessors() {
@@ -123,13 +96,22 @@ public class MapViewer implements Screen {
 
         inputMultiplexer.addProcessor(new GestureDetector(gestureHandler));
         inputMultiplexer.addProcessor(inputProcessor);
-        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(info);
+        inputMultiplexer.addProcessor(returnStage);
+
+        Gdx.input.setCatchBackKey(true);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(1, 1, 1, 1);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK) && !back) {
+            back = true;
+            returnDialog.setShowing(true);
+            returnDialog.show(returnStage);
+        }
 
         try {
             network.update();
@@ -178,11 +160,13 @@ public class MapViewer implements Screen {
                 p.setSelected(false);
             }
             if (p.isSelected()) {
+                info.setShowing(true);
+                playerSelected = p;
                 if(lastSelectedTile != null)
                     lastSelectedTile.setColor(1, 1, 1, 1);
                 Sprite sprite = groundSprite[(int)playerPos.x][(int)playerPos.y];
                 sprite.setColor(1, 0, 0, 1);
-                System.out.println("pos : x " + playerPos.x + " -  y : " + playerPos.y);
+               // System.out.println("pos : x " + playerPos.x + " -  y : " + playerPos.y);
                 lastSelectedTile = sprite;
             }
             if (lastSelectedTile != null) {
@@ -196,6 +180,7 @@ public class MapViewer implements Screen {
 
         if (dead && lastSelectedTile != null) {
             lastSelectedTile.setColor(1, 1, 1, 1);
+            info.setShowing(false);
         }
 
         batch.end();
@@ -207,10 +192,29 @@ public class MapViewer implements Screen {
         font.draw(batch, "FPS : " + Gdx.graphics.getFramesPerSecond(), 0, Gdx.graphics.getHeight());
         batch.end();
 
-        if (!dead && lastSelectedTile != null) {
-            stage.act(delta);
-            stage.draw();
-            Table.drawDebug(stage);
+        if (info.isShowing() == false) {
+            if (lastSelectedTile != null)
+                lastSelectedTile.setColor(1, 1, 1, 1);
+            lastSelectedTile = null;
+        } else if (!dead && lastSelectedTile != null) {
+            info.update(playerSelected);
+            info.act(delta);
+            info.draw();
+        }
+
+        if (back == true) {
+            if (returnDialog.isShowing()) {
+                returnStage.act(delta);
+                returnStage.draw();
+            } else {
+                back = false;
+                boolean result = returnDialog.getResult();
+                if (result) {
+                    game.setScreen(new MainMenuScreen(game));
+                } else {
+                    returnDialog.resetButton();
+                }
+            }
         }
     }
 
@@ -252,7 +256,8 @@ public class MapViewer implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
+        info.dispose();
         skin.dispose();
+        returnStage.dispose();
     }
 }

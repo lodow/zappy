@@ -31,6 +31,7 @@ public class Square extends Actor {
     private Map<eType, Matrix4> transform = new HashMap<eType, Matrix4>();
     private Map<eType, Integer> content = new HashMap<eType, Integer>();
     private Map<eType, Sprite> sprite_ressource = new HashMap<eType, Sprite>();
+    private Sprite egg;
     private boolean incantation = false;
 
     public Square(Vector2 pos) {
@@ -42,6 +43,8 @@ public class Square extends Actor {
         this.sprite_ressource.put(Square.eType.Phiras, (new Sprite(ressource, 102, 24, 124 - 102, 43 - 24)));
         this.sprite_ressource.put(Square.eType.Sibur, (new Sprite(ressource, 52, 49, 73 - 52, 66 - 49)));
         this.sprite_ressource.put(Square.eType.Thystame, (new Sprite(ressource, 78, 49, 98 - 78, 66 - 49)));
+
+        egg = new Sprite(ressource, 0, 250, 13, 560);
 
         for (int i = 0; i < 7; i++) {
             transform.put(eType.values()[i], new Matrix4());

@@ -175,7 +175,7 @@ public class MainMenuScreen implements Screen {
                 else {
                     try {
                         Network network = new Network(ipString, port);
-                        game.setScreen(new MapViewer(network, game, MainMenuScreen.this, skin));
+                        game.setScreen(new MapViewer(network, game, skin));
                     } catch (IOException e) {
                         Gdx.app.log("network", "error network" + ipString + " - " + port);
                         error = true;

@@ -102,6 +102,9 @@ public class Player extends Actor {
     public void setSelected(boolean s) {
         selected = s;
     }
+    public Map<Square.eType, Integer> getContent () {
+        return content;
+    }
 
     public boolean isSelected() {
         return selected;
