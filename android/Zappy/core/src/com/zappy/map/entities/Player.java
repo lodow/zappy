@@ -1,7 +1,6 @@
 package com.zappy.map.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,8 +8,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.zappy.assets.Assets;
 
 import java.util.HashMap;
@@ -62,22 +59,11 @@ public class Player extends Actor {
 
         content.put(Square.eType.Nourriture, 0);
         content.put(Square.eType.Linemate, 0);
-        content.put(Square.eType.Deraumere, 1);
+        content.put(Square.eType.Deraumere, 0);
         content.put(Square.eType.Sibur, 0);
         content.put(Square.eType.Mendiane, 0);
         content.put(Square.eType.Phiras, 0);
         content.put(Square.eType.Thystame, 0);
-
-        this.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("down");
-                return true;
-            }
-
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("up");
-            }
-        });
     }
 
     @Override
@@ -106,8 +92,6 @@ public class Player extends Actor {
         batch.setTransformMatrix(matrix4);
 
         current.draw(batch);
-
-//        batch.setTransformMatrix(old);
     }
 
     public Boolean setItem(Square.eType type, Integer number) {
