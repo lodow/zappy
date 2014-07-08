@@ -19,6 +19,8 @@ SRC		=	main.cpp \
 			Geometry.cpp \
 			Gem.cpp \
 			Ground.cpp \
+			Player.cpp \
+			Map.cpp \
 
 CC		=	g++
 FILETYPE	=	.cpp

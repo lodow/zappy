@@ -120,10 +120,9 @@ void	GameEngine::run() {
     
     Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     Camera 	camera;
-    Model model;
+    Player player(glm::vec2(0, 0));
+    _map.push_back(new Player(player));
     
-    model.loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
-    model.translate(glm::vec3(0, 0.5, 0));
     camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
     shader->create();
@@ -170,9 +169,10 @@ void	GameEngine::run() {
         
 #endif
         shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
-        model.draw(shader);
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+          (*it)->draw(shader);
+        for (Map::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
           (*it)->draw(shader);
         _window.display();
     }
