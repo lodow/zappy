@@ -36,7 +36,6 @@ extern "C"
 # define WINDOW_NAME	"ZAPPY"
 # define FPS            60
 
-typedef std::list<sf::Text> TextList;
 typedef std::list<IEntity *> Map;
 
 # include "Parser.hpp"
@@ -48,9 +47,7 @@ private:
     Gem				  *_gem;
     
     sf::RenderWindow  _window;
-    sf::Font          _font;
     
-    TextList          _texts;
     Map               _map;
     t_net             *_client;
     t_list            *_elem;

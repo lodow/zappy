@@ -1,4 +1,5 @@
 
+#include "Pan.hpp"
 #include "GameEngine.hpp"
 
 int             read_from_server(t_selfd *fd)
@@ -46,17 +47,19 @@ GameEngine::GameEngine(const int &x, const int &y)
 {
     _window.setFramerateLimit(FPS);
     
-    glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glBlendEquation(GL_FUNC_ADD);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glBlendFunc(GL_ZERO, GL_SRC_COLOR);
     glClearColor(0.5, 0.8, 1, 1);
     
     _gem = new Gem(LINEMATE);
     _cube = new Cube;
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
-    _gem = new Gem(THYSTAME);
     
 #ifdef __APPLE__
     
@@ -64,10 +67,6 @@ GameEngine::GameEngine(const int &x, const int &y)
         for (int x = 0; x < 10; ++x) {
             _map.push_back(new Ground(glm::vec2(x, y) ,*_cube, *_gem));
         }
-    }
-    
-    for (int i = 0; i < 6; ++i) {
-        _map.push_back(new Gem(*_gem, static_cast<GemType>(i), glm::vec2(0, 0)));
     }
     
     run();
@@ -121,6 +120,8 @@ void	GameEngine::run() {
     Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     Camera 	camera;
     Model model;
+    Pan pan(glm::vec2(10, 10));
+    pan.build();
     
     model.loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
     model.translate(glm::vec3(0, 0.5, 0));
@@ -137,7 +138,7 @@ void	GameEngine::run() {
                 camera.translate(glm::vec3(event.mouseWheel.delta / 50.0f));
         }
         
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             camera.translate(glm::vec3(-0.1, 0, -0.1));
@@ -170,7 +171,9 @@ void	GameEngine::run() {
         
 #endif
         shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
+        pan.draw(shader);
         model.draw(shader);
+        
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
           (*it)->draw(shader);
