@@ -16,10 +16,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: default-round-down, up: default-round, font: default-font, fontColor: white },
 	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: red }
-    refuseButton : { down: Drawable, up: Drawable, font: BitmapFont, fontColor: Color },
-    acceptButton: { down: Drawable, up: Drawable, font: BitmapFont, fontColor: Color }
 },
-
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: default-rect, hScroll: default-scroll, vScrollKnob: default-round-large }
 },
@@ -61,11 +58,6 @@ com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 	default: { background: default-pane, knob: default-round-large }
 },
-
-com.gdx.extension.ui.ChoiceDialog$ChoiceDialogStyle: {
-    default: { refuseButtonStyle: refuseButton, acceptButtonStyle: acceptButton, messageStyle: LabelStyle }
-}
-
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
 }
