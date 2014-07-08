@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.zappy.assets.Assets;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by max on 26/06/14.
@@ -45,6 +46,7 @@ public class Player extends Actor {
     private float state_time = 0;
     private TextureRegion currentFrame;
     private SpriteBatch batch = new SpriteBatch();
+    private Map<Square.eType, Integer> content = new HashMap<Square.eType, Integer>();
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -55,6 +57,14 @@ public class Player extends Actor {
         _dir = dir;
         player_animation = Assets.getAnimationPlayer();
         player_static= Assets.getStaticPlayer();
+
+        content.put(Square.eType.Nourriture, 0);
+        content.put(Square.eType.Linemate, 0);
+        content.put(Square.eType.Deraumere, 1);
+        content.put(Square.eType.Sibur, 0);
+        content.put(Square.eType.Mendiane, 0);
+        content.put(Square.eType.Phiras, 0);
+        content.put(Square.eType.Thystame, 0);
 
         this.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -101,6 +111,11 @@ public class Player extends Actor {
         batch.end();
 
 //        batch.setTransformMatrix(old);
+    }
+
+    public Boolean setItem(Square.eType type, Integer number) {
+        content.put(type, number);
+        return true;
     }
 
     public void setSelected(boolean s) {

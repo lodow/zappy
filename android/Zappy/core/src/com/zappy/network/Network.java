@@ -80,6 +80,15 @@ public class Network {
                 tmp = "";
             parts = tmp.split(" ");
         }
+        List<Player> players = map.getPlayers();
+        Iterator it = players.iterator();
+        while (it.hasNext()) {
+            Player x = (Player)it.next();
+            output.write("ppo " + x.get_id() + "\n");
+            output.write("plv " + x.get_id() + "\n");
+            output.write("pin " + x.get_id() + "\n");
+        }
+        output.flush();
     }
 
     public Map getMap() {
@@ -98,14 +107,6 @@ public class Network {
             i++;
         }
         parts[0] = "";
-        List<Player> players = map.getPlayers();
-        Iterator it = players.iterator();
-        while (it.hasNext()) {
-            Player x = (Player)it.next();
-            output.write("ppo " + x.get_id() + "\n");
-            output.write("plv " + x.get_id() + "\n");
-        }
-        output.flush();
         return true;
     }
 
@@ -161,7 +162,17 @@ public class Network {
     }
 
     private void pin() {
-        // inventaire d'un joueur
+
+        Player x =  map.getPlayer(Integer.parseInt(parts[1]));
+        if (x != null) {
+            x.setItem(Square.eType.Nourriture, Integer.parseInt(parts[4]));
+            x.setItem(Square.eType.Linemate, Integer.parseInt(parts[5]));
+            x.setItem(Square.eType.Deraumere, Integer.parseInt(parts[6]));
+            x.setItem(Square.eType.Sibur, Integer.parseInt(parts[7]));
+            x.setItem(Square.eType.Mendiane, Integer.parseInt(parts[8]));
+            x.setItem(Square.eType.Phiras, Integer.parseInt(parts[9]));
+            x.setItem(Square.eType.Thystame, Integer.parseInt(parts[10]));
+        }
     }
 
     private void pex() {
