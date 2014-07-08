@@ -24,6 +24,8 @@ public class Assets {
     private static HashMap<Player.eDirection, Sprite> player_static = new HashMap<Player.eDirection, Sprite>();
     private static HashMap<Square.eType, Sprite> sprite_ressource = new HashMap<Square.eType, Sprite>();
     public static List<TextureRegion> food = new ArrayList<TextureRegion>();
+    public static TextureRegion ressource;
+    public static Texture all;
     private static int FRAME_COLS = 8;
     private static int FRAME_ROWS = 5;
     private static float speed = 0.15f;
@@ -43,16 +45,11 @@ public class Assets {
         player_static.put(Player.eDirection.Est, new Sprite(anim_tab[0][2]));
         player_static.put(Player.eDirection.Sud, new Sprite(anim_tab[0][3]));
 
-        Texture ressource = new Texture(Gdx.files.internal("data/ressource_zappy.png"));
-        sprite_ressource.put(Square.eType.Deraumere, (new Sprite(ressource, 0, 24, 22, 43 - 24)));
-        sprite_ressource.put(Square.eType.Linemate, (new Sprite(ressource, 52, 0, 73 - 52, 18)));
-        sprite_ressource.put(Square.eType.Mendiane, (new Sprite(ressource, 26, 0, 47 - 26, 19)));
-        sprite_ressource.put(Square.eType.Phiras, (new Sprite(ressource, 102, 24, 124 - 102, 43 - 24)));
-        sprite_ressource.put(Square.eType.Sibur, (new Sprite(ressource, 52, 49, 73 - 52, 66 - 49)));
-        sprite_ressource.put(Square.eType.Thystame, (new Sprite(ressource, 78, 49, 98 - 78, 66 - 49)));
+        all = new Texture(Gdx.files.internal("data/all_sprite.png"));
+        ressource = new TextureRegion(all, 0, 0, 150, 68);
 
-        ressource = new Texture(Gdx.files.internal("data/food_zappy.png"));
-        TextureRegion foodTmp[][] = TextureRegion.split(ressource, ressource.getWidth() / 7, ressource.getHeight() / 2);
+        TextureRegion foodRegion = new TextureRegion(all, 2, 72, 101 - 2, 101 - 72);
+        TextureRegion foodTmp[][] = foodRegion.split(foodRegion.getRegionWidth() / 7, foodRegion.getRegionHeight() / 2);
         for (int i = 0; i < foodTmp.length; i++) {
             for (int j = 0; j < foodTmp[i].length; j++) {
                 food.add(foodTmp[i][j]);
