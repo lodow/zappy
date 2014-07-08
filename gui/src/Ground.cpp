@@ -17,12 +17,17 @@ Ground::~Ground()
 void    Ground::draw(Shader *shader)
 {
   _cube.draw(shader);
+
+  std::list<int>::const_iterator rec = _recourse.begin();
+  ++rec;
   for (GemList::const_iterator it = _gemList.begin(), end = _gemList.end(); it != end; ++it) {
-      (*it)->draw(shader);
+      if (*rec)
+	(*it)->draw(shader);
+      ++rec;
   }
 }
 
-void Ground::setRecourse(__attribute((unused)) const std::list<int> &recourse)
+void Ground::setRecourse(const std::list<int> &recourse)
 {
   _recourse = recourse;
 }
