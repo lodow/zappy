@@ -21,9 +21,11 @@
 # include "utils.hpp"
 # include "Model.hpp"
 # include "Camera.hpp"
+# include "IEntity.hpp"
 # include "Cube.hpp"
 # include "Gem.hpp"
 # include "Ground.hpp"
+# include "Map.hpp"
 
 extern "C"
 {
@@ -36,7 +38,7 @@ extern "C"
 # define WINDOW_NAME	"ZAPPY"
 # define FPS            60
 
-typedef std::list<IEntity *> Map;
+//typedef std::list<IEntity *> Map;
 
 # include "Parser.hpp"
 

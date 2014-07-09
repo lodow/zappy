@@ -9,8 +9,7 @@
 # include <iostream>
 # include <sstream>
 # include "Ground.hpp"
-
-typedef std::list<IEntity *> Map;
+# include "Map.hpp"
 
 class Parser
 {

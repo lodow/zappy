@@ -7,6 +7,7 @@ Cube::Cube()
     _texture = NULL;
     _geometry = NULL;
 }
+
 Cube::Cube(const Cube &cube)
 : AObject(), _geometry(cube._geometry), _texture(cube._texture)
 {
@@ -123,6 +124,5 @@ void    Cube::draw(Shader *shader)
 {
     if (_texture != NULL)
         sf::Texture::bind(_texture);
-    shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
 }

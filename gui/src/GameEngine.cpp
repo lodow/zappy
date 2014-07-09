@@ -1,4 +1,5 @@
 
+#include "SkyBox.hpp"
 #include "Pan.hpp"
 #include "GameEngine.hpp"
 
@@ -47,32 +48,30 @@ GameEngine::GameEngine(const int &x, const int &y)
 {
     _window.setFramerateLimit(FPS);
     
-    glEnable(GL_CULL_FACE);
+//    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
+//    glBlendFunc(GL_ONE, GL_ONE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//    glBlendEquation(GL_FUNC_ADD);
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//    glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-    glClearColor(0.5, 0.8, 1, 1);
+//    glClearColor(0.5, 0.8, 1, 1);
     
     _gem = new Gem(LINEMATE);
     _cube = new Cube;
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
     
-#ifdef __APPLE__
+//#ifdef __APPLE__
     
-    for (int y = 0; y < 10; ++y) {
-        for (int x = 0; x < 10; ++x) {
-            _map.push_back(new Ground(glm::vec2(x, y) ,*_cube, *_gem));
-        }
-    }
+//    for (int y = 0; y < 10; ++y) {
+//        for (int x = 0; x < 10; ++x) {
+//            _map.push_back(new Ground(glm::vec2(x, y) ,*_cube, *_gem));
+//        }
+//    }
+//    
+//    run();
+//    return ;
     
-    run();
-    return ;
-    
-#else
+//#else
 
     /* Init connexion */
     _client = create_connection("::1", "4242", SOCK_STREAM, &connect_nb);
@@ -102,7 +101,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     
     run();
     
-#endif
+//#endif
 }
 
 GameEngine::~GameEngine()
@@ -119,15 +118,23 @@ void	GameEngine::run() {
     
     Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     Camera 	camera;
-    Model model;
-    Pan pan(glm::vec2(10, 10));
-    pan.build();
+    SkyBox 	skybox;
+    Pan 	pan(glm::vec2(10, 10));
+    Player 	player(glm::vec2(0, 0));
+    Model 	model;
     
-    model.loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
-    model.translate(glm::vec3(0, 0.5, 0));
+    shader->create();
     camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
-    shader->create();
+    
+    pan.build();
+    pan.scale(glm::vec3(10, 10, 1));
+    
+    _map.push_back(new Player(player));
+    
+    model.loadObj("res/models/food/bucket.obj", "res/models/food/bucket.png");
+    model.translate(glm::vec3(2, 0.5, 2));
+    
     while (_window.isOpen()) {
         sf::Event event;
         while (_window.pollEvent(event)) {
@@ -135,10 +142,10 @@ void	GameEngine::run() {
                 event.key.code == sf::Keyboard::Escape)
                 _window.close();
             if (event.type == sf::Event::MouseWheelMoved)
-                camera.translate(glm::vec3(event.mouseWheel.delta / 50.0f));
+                camera.translate(glm::vec3(-event.mouseWheel.delta / 50.0f));
         }
         
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             camera.translate(glm::vec3(-0.1, 0, -0.1));
@@ -152,31 +159,33 @@ void	GameEngine::run() {
             camera.translate(glm::vec3(0.1, 0.1, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
             camera.translate(glm::vec3(-0.1, -0.1, -0.1));
-        
-        
 
-//        camera.update(event.key.code);
         camera.lookAt();
+        
         shader->bind();
-//        shader->setUniform("light", glm::vec4(2, 1, 2, 1.0));
-        shader->setUniform("light", glm::vec4(0.3, 0.3, 0.3, 0));
-        shader->setUniform("ambientLight", glm::vec4(0.005, 0.005, 0.005, 1));
+        shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
         shader->setUniform("camPos", camera.getPos());
         shader->setUniform("projection", camera.getProjection());
         shader->setUniform("view", camera.getTransformation());
-        
-# ifndef __APPLE__
+        shader->setUniform("light", glm::vec4(0));
+        skybox.draw(shader, camera.getPos());
+//        camera.update(event.key.code);
+        shader->setUniform("light", glm::vec4(0.1, 0.6, -0.1, 0));
+        shader->setUniform("ambientLight", glm::vec4(0.2, 0.2, 0.2, 1));
+//# ifndef __APPLE__
         
         do_select(_elem, &_tv, _parser);
         
-#endif
-        shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
+//#endif
         pan.draw(shader);
-        model.draw(shader);
-        
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
           (*it)->draw(shader);
+        for (Map::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
+          (*it)->draw(shader);
+        shader->setUniform("ambientLight", glm::vec4(0.5, 0.5, 0.5, 1));
+        model.rotate(glm::vec3(0, 1, 0), 2);
+//        model.draw(shader);
         _window.display();
     }
     delete shader;

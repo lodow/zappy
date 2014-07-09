@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Mon Jul  7 11:44:58 2014 fabien.linardon
+## Last update Tue Jul  8 13:56:48 2014 Jean Gravier
 ##
 
 SRC		=	main.cpp \
@@ -19,6 +19,9 @@ SRC		=	main.cpp \
 			Geometry.cpp \
 			Gem.cpp \
 			Ground.cpp \
+			Player.cpp \
+			Map.cpp \
+			Pan.cpp \
 
 CC		=	g++
 FILETYPE	=	.cpp

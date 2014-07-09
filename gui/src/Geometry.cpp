@@ -3,8 +3,7 @@
 
 Geometry::Geometry()
 {
-//    _vboID = 20;
-//    _vaoID = 10;
+
 }
 
 Geometry::~Geometry()
