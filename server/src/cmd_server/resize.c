@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Fri Jul  4 15:32:15 2014 Nicolas Bridoux
-** Last update Fri Jul  4 19:20:35 2014 Nicolas Bridoux
+** Last update Wed Jul  9 17:25:15 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -33,25 +33,10 @@ static void	notify_gui(t_server *serv)
     }
 }
 
-static void	replace_players_and_notify_gui(t_server *serv)
+static void	replace_eggs_and_notify_gui(t_server *serv)
 {
   t_list	*tmp;
-  t_selfd	*fd;
-  t_client	*client;
 
-  tmp = serv->watch;
-  while (tmp)
-    {
-      fd = (t_selfd *)tmp->data;
-      if (fd->callback == (void *)&handle_client && fd->data)
-	if ((client = (t_client *)fd->data) && client->type_cli == IA)
-	  {
-	    client->x %= serv->game.width;
-	    client->y %= serv->game.height;
-	    gen_food(serv);
-	  }
-      tmp = tmp->next;
-    }
   tmp = serv->game.eggs;
   while (tmp)
     {
@@ -63,14 +48,32 @@ static void	replace_players_and_notify_gui(t_server *serv)
   notify_gui(serv);
 }
 
-static void	free_old_map(t_map **map, int height)
+static void	replace_players_and_notify_gui(t_server *server)
 {
-  int		y;
+  t_list	*tmp;
+  t_selfd	*fd;
+  t_client	*client;
 
-  y = 0;
-  while (y < height)
-    free(map[y++]);
-  free(map);
+  tmp = server->watch;
+  while (tmp)
+    {
+      fd = (t_selfd *)tmp->data;
+      if (fd->callback == (void *)&handle_client && fd->data)
+	if ((client = (t_client *)fd->data) && client->type_cli == IA)
+	  {
+	    client->x %= server->game.width;
+	    client->y %= server->game.height;
+	    gen_food(server);
+	  }
+      tmp = tmp->next;
+    }
+  gen_ressource(server, "linemate", AREA / 2 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "deraumere", AREA / 3 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "sibur", AREA / 4 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "mendiane", AREA / 6 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "phiras", AREA / 8 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "thystame", AREA / 10 + DEMI_PERIMETER / 2);
+  replace_eggs_and_notify_gui(server);
 }
 
 static int	gen_new_map(t_server *server, int new_x, int new_y)
@@ -91,16 +94,13 @@ static int	gen_new_map(t_server *server, int new_x, int new_y)
 	memset(&(map[y][x++]), 0, sizeof(t_map));
       ++y;
     }
-  free_old_map(server->map, server->game.height);
+  y = 0;
+  while (y < (int)server->game.height)
+    free(server->map[y++]);
+  free(server->map);
   server->map = map;
   server->game.height = new_y;
   server->game.width = new_x;
-  gen_ressource(server, "linemate", AREA / 2 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "deraumere", AREA / 3 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "sibur", AREA / 4 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "mendiane", AREA / 6 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "phiras", AREA / 8 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "thystame", AREA / 10 + DEMI_PERIMETER / 2);
   replace_players_and_notify_gui(server);
   return (EXIT_SUCCESS);
 }
