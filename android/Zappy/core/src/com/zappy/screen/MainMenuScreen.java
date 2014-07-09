@@ -45,7 +45,7 @@ public class MainMenuScreen implements Screen {
         HEIGHT = Gdx.graphics.getHeight();
 
         stage = new Stage();
-        skin = new Skin(Gdx.files.internal("mainMenu/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("data/mainMenu/uiskin.json"));
 
         Table table = new Table();
         table.setFillParent(true);
@@ -63,9 +63,9 @@ public class MainMenuScreen implements Screen {
 
         background = new Group();
         background.setBounds(0, 0, WIDTH, HEIGHT);
-        background.addActor(new Image(new Texture(Gdx.files.internal("mainMenu/zappy_main.png"))));
+        background.addActor(new Image(new Texture(Gdx.files.internal("data/mainMenu/zappy_main.png"))));
 
-        Texture cross = new Texture(Gdx.files.internal("mainMenu/remove_cross.png"));
+        Texture cross = new Texture(Gdx.files.internal("data/mainMenu/remove_cross.png"));
 
         Image cross_ip = new Image(cross);
         cross_ip.addListener(new ClickListener() {

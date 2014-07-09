@@ -31,8 +31,8 @@ public class Assets {
     private static float speed = 0.15f;
 
     public static void Load() {
-        player_sheet = new Texture(Gdx.files.internal("data/animation_sheet.png"));
-        ground = new Texture(Gdx.files.internal("data/ground.jpg"));
+        player_sheet = new Texture(Gdx.files.internal("data/sprites/animation_sheet.png"));
+        ground = new Texture(Gdx.files.internal("data/sprites/ground.jpg"));
 
         anim_tab = TextureRegion.split(player_sheet, player_sheet.getWidth() / FRAME_COLS, player_sheet.getHeight() / FRAME_ROWS);
         player_animation.put(Player.eDirection.Nord, new Animation(speed, anim_tab[1]));
@@ -45,7 +45,7 @@ public class Assets {
         player_static.put(Player.eDirection.Est, new Sprite(anim_tab[0][2]));
         player_static.put(Player.eDirection.Sud, new Sprite(anim_tab[0][3]));
 
-        all = new Texture(Gdx.files.internal("data/all_sprite.png"));
+        all = new Texture(Gdx.files.internal("data/sprites/all_sprite.png"));
         ressource = new TextureRegion(all, 0, 0, 150, 68);
 
         TextureRegion foodRegion = new TextureRegion(all, 2, 72, 101 - 2, 101 - 72);

@@ -56,7 +56,7 @@ public class PopUpInformation extends Stage {
 
         Drawable patch = new TextureRegionDrawable(new TextureRegion(Assets.all, 175, 0, 50, 50));
 
-        Image cross = new Image(new Texture(Gdx.files.internal("mainMenu/remove_cross.png")));
+        Image cross = new Image(new Texture(Gdx.files.internal("data/mainMenu/remove_cross.png")));
         cross.addListener(new CrossClick());
         this.addActor(table);
 
