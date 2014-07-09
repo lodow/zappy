@@ -125,7 +125,7 @@ public class Network {
     }
 
     private void msz() {
-        // taille de la carte
+        map = new Map(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
     }
 
     private void bct() {
@@ -143,7 +143,15 @@ public class Network {
     }
 
     private void pnw() {
-        map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]));
+        Player x = new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]);
+        map.addPlayer(x);
+        try {
+            output.write("plv " + x.get_id() + "\n");
+            output.write("pin " + x.get_id() + "\n");
+            output.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void ppo() {

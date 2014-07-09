@@ -49,7 +49,8 @@ public class Map {
     }
 
     public Boolean setMap(int x, int y, Square.eType type, int number) {
-        map[x][y].setItem(type, number);
+        if (x < size.x && x >= 0 && y < size.y && y >= 0)
+            map[x][y].setItem(type, number);
         return true;
     }
 
@@ -124,6 +125,7 @@ public class Map {
     }
 
     public void setMap(int x, int y, boolean b) {
-        map[x][y].setIncentation(b);
+        if (x < size.x && x >= 0 && y < size.y && y >= 0)
+            map[x][y].setIncentation(b);
     }
 }
