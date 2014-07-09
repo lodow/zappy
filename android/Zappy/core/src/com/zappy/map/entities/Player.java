@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.zappy.assets.Assets;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * Created by max on 26/06/14.
@@ -32,6 +34,7 @@ public class Player extends Actor {
     }
 
     private boolean selected = false;
+    private Vector2 _realPos = new Vector2(0, 0);
     private Vector2 _pos;
     private Vector2 _oldPos;
     private String _team;
@@ -47,6 +50,7 @@ public class Player extends Actor {
     private Matrix4 matrix4 = new Matrix4(), defaultMat = new Matrix4();
     private Vector3 rotation = new Vector3(0, 1, 0);
     private Vector2 randPos = new Vector2();
+    private Queue<SmoothMove> smoothMoves = new LinkedList<SmoothMove>();
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -74,21 +78,54 @@ public class Player extends Actor {
     public void act(float delta) {
         Animation currentAnimation = player_animation.get(_dir);
 
-        state_time += delta;
-
-        if (_oldPos != _pos) {
+        if (smoothMoves.size() > 0) {
             currentFrame = currentAnimation.getKeyFrame(state_time, true);
+            state_time += delta;
         }
         else {
             currentFrame = player_static.get(_dir);
+            state_time = 0;
         }
     }
 
-    public void draw(SpriteBatch batch, float parentAlpha) {
+    public void draw(SpriteBatch batch, Vector2 sizeMap) {
         Sprite current = new Sprite(currentFrame);
 
         matrix4.set(defaultMat);
         current.setSize(1f, 1f);
+
+        if (smoothMoves.size() > 0) {
+            SmoothMove tmp = smoothMoves.peek();
+            float delta = 1.0f / tmp.totalIteration;
+
+            if (tmp.currentIteration > 0) {
+                switch (tmp.dir) {
+                    case Nord :
+                        if (_pos.y - delta < 0)
+                            _pos.y = sizeMap.y - 1 + delta * tmp.currentIteration;
+                        _pos.y -= delta;
+                        break;
+                    case Sud :
+                        if (_pos.y + delta > sizeMap.y - 1)
+                            _pos.y =  - delta * tmp.currentIteration;
+                        _pos.y += delta;
+                        break;
+                    case Est :
+                        if (_pos.x + delta > sizeMap.x - 1)
+                            _pos.x = - delta * tmp.currentIteration;
+                        _pos.x += delta;
+                        break;
+                    case Ouest :
+                        if (_pos.x - delta < 0)
+                            _pos.x = sizeMap.x  - 1 + delta * tmp.currentIteration;
+                        _pos.x -= delta;
+                        break;
+                }
+                tmp.currentIteration--;
+            } else {
+                smoothMoves.poll();
+            }
+        }
 
         matrix4.translate(_pos.x + 0.2f + randPos.x, 0, -_pos.y + randPos.y);
         matrix4.rotate(rotation, 45);
@@ -122,7 +159,24 @@ public class Player extends Actor {
     }
 
     public void set_pos(Vector2 _pos) {
-        this._pos = _pos;
+
+        if (this._realPos.x != _pos.x || this._realPos.y != _pos.y) {
+            this._realPos.x = _pos.x;
+            this._realPos.y = _pos.y;
+            this.smoothMoves.add(new SmoothMove(this._dir, 32));
+        }
+    }
+
+    private class SmoothMove {
+        public eDirection dir;
+        public int currentIteration = 0;
+        public int totalIteration = 0;
+
+        SmoothMove(eDirection dir, int iterate) {
+            this.dir = dir;
+            this.currentIteration = iterate;
+            this.totalIteration = iterate;
+        }
     }
 
     public int get_id() {

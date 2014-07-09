@@ -28,7 +28,7 @@ public class Assets {
     public static Texture all;
     private static int FRAME_COLS = 8;
     private static int FRAME_ROWS = 5;
-    private static float speed = 0.15f;
+    private static float speed = 0.06f;
 
     public static void Load() {
         player_sheet = new Texture(Gdx.files.internal("data/sprites/animation_sheet.png"));

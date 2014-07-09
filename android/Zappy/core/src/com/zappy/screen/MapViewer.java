@@ -63,7 +63,7 @@ public class MapViewer implements Screen {
         this.info = new PopUpInformation(skin);
         this.camera = new OrthographicCamera(20, 20 * (Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
 
-        this.camera.position.set(10, 10, 20);
+        this.camera.position.set(sizeMap.x / 2 + 5, 10, sizeMap.y / 2 - 5);
         this.camera.direction.set(-1, -1, -1);
         this.camera.near = 1;
         this.camera.far = 100;
@@ -160,7 +160,7 @@ public class MapViewer implements Screen {
         for (Player p : currentPlayer) {
             Vector2 playerPos = p.get_pos();
 
-            if (touched && intersection.x == playerPos.x && intersection.z == -playerPos.y && !selected) {
+            if (touched && intersection.x == (int)playerPos.x && intersection.z == (int)-playerPos.y && !selected) {
                 p.setSelected(true);
                 selected = true;
             } else if (touched) {
@@ -173,16 +173,16 @@ public class MapViewer implements Screen {
                     lastSelectedTile.setColor(1, 1, 1, 1);
                 Sprite sprite = groundSprite[(int)playerPos.y][(int)playerPos.x];
                 sprite.setColor(1, 0, 0, 1);
-               // System.out.println("pos : x " + playerPos.x + " -  y : " + playerPos.y);
+                System.out.println("pos : x " + playerPos.x + " -  y : " + playerPos.y);
                 lastSelectedTile = sprite;
             }
             if (lastSelectedTile != null) {
-                if (lastSelectedTile.getX() == playerPos.x && lastSelectedTile.getY() == playerPos.y) {
+                if (lastSelectedTile.getX() == (int)playerPos.x && lastSelectedTile.getY() == (int)playerPos.y) {
                     dead = false;
                 }
             }
             p.act(delta);
-            p.draw(batch, delta);
+            p.draw(batch, sizeMap);
         }
 
         if (dead && lastSelectedTile != null) {
