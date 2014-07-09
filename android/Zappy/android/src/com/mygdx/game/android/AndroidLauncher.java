@@ -5,11 +5,7 @@ import android.os.StrictMode;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.mygdx.game.Zappy;
-
-import java.io.IOException;
-
-import manage.map.Network;
+import com.zappy.Zappy;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
