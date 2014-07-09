@@ -115,6 +115,10 @@ public class Map {
         return players;
     }
 
+    public List<Egg> getEggs() {
+        return eggs;
+    }
+
     public Square[][] getSquare() {
         return map;
     }

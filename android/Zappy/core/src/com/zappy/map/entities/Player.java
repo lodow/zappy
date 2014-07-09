@@ -46,6 +46,7 @@ public class Player extends Actor {
     private Map<Square.eType, Integer> content = new HashMap<Square.eType, Integer>();
     private Matrix4 matrix4 = new Matrix4(), defaultMat = new Matrix4();
     private Vector3 rotation = new Vector3(0, 1, 0);
+    private Vector2 randPos = new Vector2();
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -56,6 +57,9 @@ public class Player extends Actor {
         _dir = dir;
         player_animation = Assets.getAnimationPlayer();
         player_static= Assets.getStaticPlayer();
+
+        randPos.x = (float)(randPos.x + Math.random() - 0.5) / 1.8f;
+        randPos.y = (float)(randPos.y + Math.random() - 0.5) / 1.8f;
 
         content.put(Square.eType.Nourriture, 0);
         content.put(Square.eType.Linemate, 0);
@@ -86,7 +90,7 @@ public class Player extends Actor {
         matrix4.set(defaultMat);
         current.setSize(1f, 1f);
 
-        matrix4.translate(_pos.x, 0, -_pos.y);
+        matrix4.translate(_pos.x + 0.2f + randPos.x, 0, -_pos.y + randPos.y);
         matrix4.rotate(rotation, 45);
 
         batch.setTransformMatrix(matrix4);

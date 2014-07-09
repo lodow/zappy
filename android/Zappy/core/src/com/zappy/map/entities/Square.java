@@ -44,7 +44,6 @@ public class Square extends Actor {
         this.sprite_ressource.put(Square.eType.Sibur, (new Sprite(ressource, 52, 49, 73 - 52, 66 - 49)));
         this.sprite_ressource.put(Square.eType.Thystame, (new Sprite(ressource, 78, 49, 98 - 78, 66 - 49)));
 
-        egg = new Sprite(ressource, 0, 250, 13, 560);
 
         for (int i = 0; i < 7; i++) {
             transform.put(eType.values()[i], new Matrix4());
@@ -58,26 +57,28 @@ public class Square extends Actor {
 
         Sprite tmpSprite; Matrix4 tmpMat;
 
-        tmpSprite = sprite_ressource.get(eType.Deraumere); tmpSprite.setSize(0.25f, 0.25f);
-        tmpSprite.rotate(45); tmpSprite.setPosition(pos.x - 9.8f, pos.y + 5.0f);
+        tmpSprite = sprite_ressource.get(eType.Deraumere); tmpSprite.setSize(0.25f, 0.35f);
+        tmpSprite.rotate(45); tmpSprite.setPosition(pos.y - 9.8f, pos.x + 5.0f);
 
-        tmpSprite = sprite_ressource.get(eType.Linemate); tmpSprite.setSize(.25f, .25f);
-        tmpSprite.rotate(45); tmpSprite.setPosition(pos.x - 9.3f, pos.y + 5.15f);
+        tmpSprite = sprite_ressource.get(eType.Linemate); tmpSprite.setSize(.25f, .35f);
+        tmpSprite.rotate(45); tmpSprite.setPosition(pos.y - 9.3f, pos.x + 5.15f);
 
-        tmpSprite = sprite_ressource.get(eType.Mendiane); tmpSprite.setSize(.25f, .25f);
-        tmpSprite.rotate(45); tmpSprite.setPosition(pos.x - 9.65f, pos.y + 5.3f);
+        tmpSprite = sprite_ressource.get(eType.Mendiane); tmpSprite.setSize(.25f, .35f);
+        tmpSprite.rotate(45); tmpSprite.setPosition(pos.y - 9.65f, pos.x + 5.3f);
 
-        tmpSprite = sprite_ressource.get(eType.Phiras); tmpSprite.setSize(.25f, .25f);
-        tmpSprite.rotate(45); tmpSprite.setPosition(pos.x - 9.45f, pos.y + 5.0f);
+        tmpSprite = sprite_ressource.get(eType.Phiras); tmpSprite.setSize(.25f, .35f);
+        tmpSprite.rotate(45); tmpSprite.setPosition(pos.y - 9.45f, pos.x + 5.0f);
 
-        tmpSprite = sprite_ressource.get(eType.Sibur); tmpSprite.setSize(.25f, .25f);
-        tmpSprite.rotate(45); tmpSprite.setPosition(pos.x - 8.65f, pos.y + 5.6f);
+        tmpSprite = sprite_ressource.get(eType.Sibur); tmpSprite.setSize(.25f, .35f);
+        tmpSprite.rotate(45); tmpSprite.setPosition(pos.y - 8.65f, pos.x + 5.6f);
 
-        tmpSprite = sprite_ressource.get(eType.Thystame); tmpSprite.setSize(.25f, .25f);
-        tmpSprite.rotate(45); tmpSprite.setPosition(pos.x - 8.15f, pos.y + 4.6f);
+        tmpSprite = sprite_ressource.get(eType.Thystame); tmpSprite.setSize(.25f, .35f);
+        tmpSprite.rotate(45); tmpSprite.setPosition(pos.y - 8.15f, pos.x + 4.6f);
 
-        tmpSprite = sprite_ressource.get(eType.Nourriture); tmpSprite.setSize(.25f, .25f);
-        tmpSprite.rotate(45); tmpSprite.setPosition(pos.x + 0.8f - 7.0f, pos.y + 0.25f + 3.0f);
+        tmpSprite = sprite_ressource.get(eType.Nourriture); tmpSprite.setSize(.25f, .35f);
+        tmpSprite.rotate(45); tmpSprite.setPosition(pos.y + 0.8f - 7.0f, pos.x + 0.25f + 3.0f);
+
+        //egg.setSize(0.45f, 0.7f); egg.rotate(45); egg.setPosition(pos.x - 5.2f, pos.y + 3.2f);
 
         content.put(eType.Nourriture, 0);
         content.put(eType.Linemate, 0);

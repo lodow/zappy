@@ -24,6 +24,7 @@ import com.zappy.InputCam.MapInputProcessor;
 import com.zappy.Zappy;
 import com.zappy.assets.Assets;
 import com.zappy.map.Map;
+import com.zappy.map.entities.Egg;
 import com.zappy.map.entities.Player;
 import com.zappy.map.entities.Square;
 import com.zappy.network.Network;
@@ -70,9 +71,9 @@ public class MapViewer implements Screen {
         groundSprite = new Sprite[(int) sizeMap.y][(int) sizeMap.x];
         for (int z = 0; z < sizeMap.y; z++) {
             for (int x = 0; x < sizeMap.x; x++) {
-                groundSprite[x][z] = new Sprite(Assets.ground);
-                groundSprite[x][z].setPosition(x, z);
-                groundSprite[x][z].setSize(1, 1);
+                groundSprite[z][x] = new Sprite(Assets.ground);
+                groundSprite[z][x].setPosition(x, z);
+                groundSprite[z][x].setSize(1, 1);
             }
         }
 
@@ -133,7 +134,7 @@ public class MapViewer implements Screen {
         batch.begin();
         for (int z = 0; z < sizeMap.y; z++) {
             for (int x = 0; x < sizeMap.x; x++) {
-                groundSprite[x][z].draw(batch);
+                groundSprite[z][x].draw(batch);
             }
         }
 
@@ -147,9 +148,15 @@ public class MapViewer implements Screen {
             }
         }
 
-        List<Player> currentPlayer = map.getPlayers();
+        //draw eggs
+        List<Egg> egg = map.getEggs();
+        for (int i = 0; i < egg.size(); i++) {
+            egg.get(i).draw(batch);
+        }
 
+        List<Player> currentPlayer = map.getPlayers();
         boolean touched =  checkTileTouched(), selected = false, dead = true;
+
         for (Player p : currentPlayer) {
             Vector2 playerPos = p.get_pos();
 
@@ -164,7 +171,7 @@ public class MapViewer implements Screen {
                 playerSelected = p;
                 if(lastSelectedTile != null)
                     lastSelectedTile.setColor(1, 1, 1, 1);
-                Sprite sprite = groundSprite[(int)playerPos.x][(int)playerPos.y];
+                Sprite sprite = groundSprite[(int)playerPos.y][(int)playerPos.x];
                 sprite.setColor(1, 0, 0, 1);
                // System.out.println("pos : x " + playerPos.x + " -  y : " + playerPos.y);
                 lastSelectedTile = sprite;

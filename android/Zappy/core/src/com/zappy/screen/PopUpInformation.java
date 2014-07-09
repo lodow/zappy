@@ -120,9 +120,9 @@ public class PopUpInformation extends Stage {
 
         for (Map.Entry<Square.eType, Label> entry : labelInfo.entrySet())
         {
-            int number = content.get(entry.getKey());
+            Integer number = content.get(entry.getKey());
             Label tmp = entry.getValue();
-            tmp.setText(entry.getKey() + " : " + number);
+            tmp.setText(entry.getKey() + " : " + number.toString());
         }
         level.setText("level : " + player.get_level());
     }
