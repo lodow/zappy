@@ -27,13 +27,15 @@ void	handle_server(t_server *serv)
       do_select(serv->watch, (get_timeout(serv, &tv) ? &tv : NULL), serv);
       exec_instruction(serv);
     }
+  server_log(WARNING, "Shutting down.. Now");
 }
 
 int	main(int ac, char **av)
 {
   int	ret;
 
-  ret = 0;
+  ret = 1;
+  srand(time(NULL));
   g_serv.listener = NULL;
   g_serv.watch = NULL;
   g_serv.quit = 0;
@@ -42,18 +44,14 @@ int	main(int ac, char **av)
   signal(SIGQUIT, &sig_handler);
   signal(SIGTERM, &sig_handler);
   raw_mode(ON);
-  if (!parse_command_line(&g_serv, ac, av) && (ret = 1))
+  if (!parse_command_line(&g_serv, ac, av) && !handle_start(&g_serv))
     {
-      if (!handle_start(&g_serv))
-        {
-          server_setup_select(&g_serv);
-          handle_server(&g_serv);
-        }
+      ret = 0;
+      server_setup_select(&g_serv);
+      handle_server(&g_serv);
     }
   free_ptr_tab((void**)g_serv.listener, (void (*)(void*))&close_connection);
   quit_server(&g_serv);
-  if (ret)
-    server_log(WARNING, "Shutting down.. Now");
   raw_mode(OFF);
   return (ret);
 }

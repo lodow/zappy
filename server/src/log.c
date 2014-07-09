@@ -1,9 +1,9 @@
 /*
 ** log.c for log.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
 ** Last update Fri Jul  4 19:20:23 2014 Nicolas Bridoux
 */
@@ -51,7 +51,6 @@ static void	display_start(t_server *server)
 	     WHITE, GREEN, ((t_team *)tmp->data)->max_cli, WHITE);
       tmp = tmp->next;
     }
-  srand(time(NULL));
   printf("Generating world...");
   fflush(stdout);
 }
