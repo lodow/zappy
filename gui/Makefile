@@ -14,6 +14,7 @@ SRC		=	main.cpp \
 			Model.cpp \
 			Shader.cpp \
 			Cube.cpp \
+            Cube6Face.cpp \
 			Camera.cpp \
 			AObject.cpp \
 			Geometry.cpp \
@@ -22,6 +23,7 @@ SRC		=	main.cpp \
 			Player.cpp \
 			Map.cpp \
 			Pan.cpp \
+            SkyBox.cpp
 
 CC		=	g++
 FILETYPE	=	.cpp

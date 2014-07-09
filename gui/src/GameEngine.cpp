@@ -121,9 +121,9 @@ void	GameEngine::run() {
     SkyBox 	skybox;
     Pan 	pan(glm::vec2(10, 10));
     Player 	player(glm::vec2(0, 0));
-    Model 	model;
     
     shader->create();
+    
     camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
     
@@ -131,9 +131,6 @@ void	GameEngine::run() {
     pan.scale(glm::vec3(10, 10, 1));
     
     _map.push_back(new Player(player));
-    
-    model.loadObj("res/models/food/bucket.obj", "res/models/food/bucket.png");
-    model.translate(glm::vec3(2, 0.5, 2));
     
     while (_window.isOpen()) {
         sf::Event event;
@@ -183,9 +180,9 @@ void	GameEngine::run() {
           (*it)->draw(shader);
         for (Map::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
           (*it)->draw(shader);
+        
         shader->setUniform("ambientLight", glm::vec4(0.5, 0.5, 0.5, 1));
-        model.rotate(glm::vec3(0, 1, 0), 2);
-//        model.draw(shader);
+        
         _window.display();
     }
     delete shader;

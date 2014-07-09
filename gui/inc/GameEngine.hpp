@@ -38,8 +38,6 @@ extern "C"
 # define WINDOW_NAME	"ZAPPY"
 # define FPS            60
 
-//typedef std::list<IEntity *> Map;
-
 # include "Parser.hpp"
 
 class GameEngine {
