@@ -15,12 +15,11 @@ void		log_connection(t_net *sock, char *message)
   t_net		*tmp;
   char		*ip;
 
-  if ((tmp = peer(sock)))
+  if (sock && (tmp = sock->peer))
     {
       if ((ip = get_ip_addr(tmp)))
         server_log(WARNING, "%s %s:%d", message, ip, port_number(tmp));
       free(ip);
-      close_connection(tmp);
     }
 }
 
@@ -65,6 +64,7 @@ int			handle_newconnection(t_selfd *fd, t_server *serv)
       close_connection(nsock);
       return (EXIT_FAILURE);
     }
+  nsock->peer = peer(nsock);
   client->sock = nsock;
   log_connection(nsock, "New connection from:");
   return (init_new_client(serv, tmpfd, client));
