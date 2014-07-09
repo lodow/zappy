@@ -125,7 +125,7 @@ public class Network {
     }
 
     private void msz() {
-        // taille de la carte
+        map = new Map(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
     }
 
     private void bct() {
