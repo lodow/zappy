@@ -1,6 +1,6 @@
 #include <Ground.hpp>
 
-Ground::Ground(const glm::vec2 &pos, const Gem &gem) : _gem(gem), _position(pos)
+Ground::Ground(const glm::vec2 &pos, const Gem &gem, const Food &food) : _gem(gem), _food(food, pos), _position(pos)
 {
     for (int i = 0; i < 6; ++i) {
         _gemList.push_back(new Gem(_gem, static_cast<GemType>(i), _position));
@@ -15,6 +15,10 @@ Ground::~Ground()
 void    Ground::draw(Shader *shader)
 {
     std::list<int>::const_iterator rec = _recourse.begin();
+
+    if (*rec) {
+      _food.draw(shader);
+    }
     ++rec;
     for (GemList::const_iterator it = _gemList.begin(), end = _gemList.end(); it != end; ++it) {
         if (*rec)

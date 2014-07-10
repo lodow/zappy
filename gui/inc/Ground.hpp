@@ -5,13 +5,14 @@
 # include "IEntity.hpp"
 # include "Cube.hpp"
 # include "Gem.hpp"
+# include "Food.hpp"
 
 typedef std::list<Gem *> GemList;
 
 class Ground : public IEntity
 {
 public:
-    Ground(const glm::vec2 &pos, const Gem &gem);
+    Ground(const glm::vec2 &pos, const Gem &gem, const Food &food);
     virtual ~Ground();
     
     void draw(Shader *shader);
@@ -24,6 +25,7 @@ public:
     
 private:
     Gem _gem;
+    Food _food;
     std::list<int> _recourse;
     GemList _gemList;
     glm::vec2 _position;

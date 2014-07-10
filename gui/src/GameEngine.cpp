@@ -114,7 +114,7 @@ void	GameEngine::run() {
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
     clock.restart();
     pan.build();
-    pan.scale(glm::vec3(10, 10, 1));
+    pan.scale(glm::vec3(_map.getSize().x + 1, _map.getSize().y + 1, 1));
 
     while (_window.isOpen())
     {

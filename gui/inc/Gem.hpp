@@ -26,10 +26,8 @@ public:
     
     void destroyGeometry();
     void draw(Shader *shader);
-    
     void setRecourse(const std::list<int> &recourse);
     void setPosition(const glm::vec2 &pos);
-    
     const glm::vec2 &getPosition() const;
     const glm::vec4 &getColor();
     

@@ -1,7 +1,7 @@
 
 #include "Parser.hpp"
 
-Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _player(player)
+Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _player(player), _food(new Food)
 {
   _parse["msz"] = &Parser::parseMsz;
   _parse["bct"] = &Parser::parseBct;
@@ -63,7 +63,7 @@ void Parser::parseBct(const std::string &cmd)
             return ;
         }
     }
-    _map->push_back(new Ground(pos, *_gem));
+    _map->push_back(new Ground(pos, *_gem, *_food));
     _map->back()->setRecourse(recourse);
 
 }
@@ -73,7 +73,6 @@ void Parser::parsePnw(const std::string &cmd)
   glm::vec2 pos;
   size_t nb;
   std::string tmp = cmd;
-  size_t orientation;
   size_t lvl;
 
   nb = getNbFromString(cmd);
@@ -82,7 +81,6 @@ void Parser::parsePnw(const std::string &cmd)
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   pos.y = getNbFromString(tmp);
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
-  orientation = getNbFromString(tmp) - 1;
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   lvl = getNbFromString(tmp);
   _map->push_back(new Player(*_player, pos, nb, lvl));
