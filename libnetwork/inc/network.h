@@ -30,6 +30,7 @@ typedef struct			s_net
   socklen_t			addrlen;
   int				socket;
   int				socktype;
+  struct s_net			*peer;
 }				t_net;
 
 t_net		*create_connection(const char *host, const char *port,

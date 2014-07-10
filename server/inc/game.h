@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Wed Apr 30 17:49:57 2014 Nicolas Bridoux
-** Last update Sat May 31 20:07:55 2014 Nicolas Bridoux
+** Last update Fri Jul  4 16:36:17 2014 Nicolas Bridoux
 */
 
 #ifndef GAME_H_
@@ -65,7 +65,7 @@ typedef struct	s_client
   char		flag;
   t_map		inv;
   char		*tmpcmd;
-  size_t		tmpcmdsize;
+  size_t	tmpcmdsize;
   t_list	*cmds;
 }		t_client;
 

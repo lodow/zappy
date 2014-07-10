@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 02:49:33 2014 Nicolas Bridoux
-** Last update Thu May 29 23:41:01 2014 Nicolas Bridoux
+** Last update Thu Jul  3 19:01:59 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -46,7 +46,7 @@ static void	expulse_client(t_server *serv, t_client *me,
 }
 
 void		expulse(t_server *serv, t_selfd *fd,
-		__attribute__((unused))char **args)
+			__attribute__((unused))char **args)
 {
   t_list	*tmp;
   t_selfd	*fd_cli;

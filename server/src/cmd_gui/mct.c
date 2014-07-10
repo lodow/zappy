@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 28 16:00:44 2014 Nicolas Bridoux
-** Last update Sat Jun  7 15:18:41 2014 Nicolas Bridoux
+** Last update Fri Jul  4 17:25:06 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -37,10 +37,10 @@ void		mct(t_server *serv, t_selfd *fd,
   size_t	y;
 
   x = 0;
-  while (x < serv->game.height)
+  while (x < serv->game.width)
     {
       y = 0;
-      while (y < serv->game.width)
+      while (y < serv->game.height)
 	{
 	  do_bct(&serv->map[y][x], x, y, fd);
 	  ++y;
@@ -55,10 +55,10 @@ void		mct_event(t_server *serv)
   size_t	y;
 
   x = 0;
-  while (x < serv->game.height)
+  while (x < serv->game.width)
     {
       y = 0;
-      while (y < serv->game.width)
+      while (y < serv->game.height)
 	{
 	  do_bct_event(serv, &serv->map[y][x], x, y);
 	  ++y;
