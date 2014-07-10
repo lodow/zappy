@@ -7,7 +7,7 @@
 class Player : public IEntity
 {
 public:
-  Player(const glm::vec2 &position, size_t nb, size_t lvl, size_t orientation);
+  Player();
   Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl);
   virtual ~Player();
   void update(const sf::Clock &clock);
@@ -33,6 +33,7 @@ private:
   PosList _posList;
   Way _way;
   std::list<size_t> _orientation;
+  size_t _i;
 };
 
 #endif /* PLAYER_HPP_ */

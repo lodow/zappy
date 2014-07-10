@@ -1,12 +1,13 @@
 
 #include "Parser.hpp"
 
-Parser::Parser(Map *map, Cube *cube, Gem *gem) : _map(map), _cube(cube), _gem(gem)
+Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _player(player)
 {
-    _parse["bct"] = &Parser::parseBct;
-    _parse["pnw"] = &Parser::parsePnw;
-    _parse["ppo"] = &Parser::parsePpo;
-    _parse["pdi"] = &Parser::parsePdi;
+  _parse["msz"] = &Parser::parseMsz;
+  _parse["bct"] = &Parser::parseBct;
+  _parse["pnw"] = &Parser::parsePnw;
+  _parse["ppo"] = &Parser::parsePpo;
+  _parse["pdi"] = &Parser::parsePdi;
 }
 
 Parser::~Parser()
@@ -32,6 +33,15 @@ int Parser::getNbFromString(const std::string &str) const
     ss >> nb;
     ss.clear();
     return nb;
+}
+
+void Parser::parseMsz(const std::string &cmd)
+{
+  glm::vec2 pos;
+
+  pos.x = getNbFromString(cmd);
+  pos.y = getNbFromString(cmd.substr(cmd.find_first_of(' ') + 1));
+  _map->setSize(pos);
 }
 
 void Parser::parseBct(const std::string &cmd)
@@ -75,13 +85,7 @@ void Parser::parsePnw(const std::string &cmd)
   orientation = getNbFromString(tmp) - 1;
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   lvl = getNbFromString(tmp);
-
-  if (!_map->playerSize()) {
-      _map->push_back(new Player(pos, nb, lvl, orientation));
-  }
-  else {
-      _map->push_back(new Player(*_map->playerBack(), pos, nb, lvl));
-  }
+  _map->push_back(new Player(*_player, pos, nb, lvl));
 }
 
 void Parser::parsePpo(const std::string &cmd)

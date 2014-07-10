@@ -1,15 +1,8 @@
 #include "Player.hpp"
 
-Player::Player(const glm::vec2 &position, size_t nb, size_t lvl, size_t orientation)
-: _nb(nb), _position(position), _clarkKent(new Model), _lvl(lvl)
+Player::Player() : _clarkKent(new Model)
 {
   _clarkKent->loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
-  _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
-  _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * orientation + 180);
-  _way.push_back(glm::vec3(0, 0, -1));
-  _way.push_back(glm::vec3(1, 0, 0));
-  _way.push_back(glm::vec3(0, 0, 1));
-  _way.push_back(glm::vec3(-1, 0, 0));
 }
 
 Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl)
@@ -21,6 +14,7 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
   _way.push_back(glm::vec3(1, 0, 0));
   _way.push_back(glm::vec3(0, 0, 1));
   _way.push_back(glm::vec3(-1, 0, 0));
+  _i = 0;
 }
 
 Player::~Player()
@@ -35,20 +29,18 @@ void Player::setOrientation(size_t orientation)
 
 void Player::update(__attribute__((unused)) const sf::Clock &clock)
 {
-  static int i = 0;
-
   if (!_posList.empty()) {
       Way::const_iterator it = _way.begin();
       for (size_t j = 0; j != _orientation.front() && j != 4; ++j) {
 	  ++it;
       }
-      if (!i) {
+      if (!_i) {
 	  _clarkKent->setRotation(glm::vec3(0, 0, 0));
 	  _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * _orientation.front() + 180);
       }
       _clarkKent->translate(glm::vec3((*it).x * 0.05f, 0, (*it).z * 0.05f));
-      ++i;
-      if (i == 20) {
+      ++_i;
+      if (_i == 20) {
 	  if (std::abs(_position.x - _posList.front().x) > 1 + FLT_EPSILON) {
 	      float un = (_posList.front().x - _position.x) / std::abs(_posList.front().x - _position.x);
 	      _clarkKent->translate(glm::vec3(_posList.front().x - _position.x + un, 0, 0));
@@ -60,7 +52,7 @@ void Player::update(__attribute__((unused)) const sf::Clock &clock)
 	  _position = _posList.front();
 	  _posList.pop_front();
 	  _orientation.pop_front();
-	  i = 0;
+	  _i = 0;
       }
   }
 }

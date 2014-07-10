@@ -56,6 +56,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     
     _gem = new Gem(LINEMATE);
     _cube = new Cube;
+    _player = new Player;
     _cube->build();
     _cube->loadTexture("res/textures/grass.png");
     
@@ -80,7 +81,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     _tv.tv_sec = 0;
     _tv.tv_usec = 1000;
     
-    _parser = new Parser(&_map, _cube, _gem);
+    _parser = new Parser(&_map, _gem, _player);
     
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
@@ -105,7 +106,7 @@ void	GameEngine::run() {
     Camera 	camera;
     sf::Clock clock;
     SkyBox 	skybox;
-    Pan 	pan(glm::vec2(10, 10));
+    Pan 	pan(_map.getSize());
     
     shader->create();
     

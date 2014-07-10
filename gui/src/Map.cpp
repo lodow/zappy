@@ -82,3 +82,13 @@ Player *Map::playerBack()
 {
   return _players.back();
 }
+
+const glm::vec2 &Map::getSize() const
+{
+  return _size;
+}
+
+void Map::setSize(const glm::vec2 &size)
+{
+  _size = size;
+}

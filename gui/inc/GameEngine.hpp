@@ -53,6 +53,7 @@ private:
     t_list            *_elem;
     struct timeval    _tv;
     Parser            *_parser;
+    Player *_player;
     
 public:
     GameEngine(const int&, const int&);
