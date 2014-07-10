@@ -1,19 +1,23 @@
 /*
 ** log.c for log.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Thu May  1 16:35:58 2014 Nicolas Bridoux
-** Last update Wed Jul  2 18:02:55 2014 Nicolas Bridoux
+** Last update Fri Jul  4 19:20:23 2014 Nicolas Bridoux
 */
 
 #include "server.h"
+
+extern t_server g_serv;
 
 void		server_log(char warn_level, const char *fmt, ...)
 {
   va_list	ap;
 
+  if (!g_serv.debug)
+    return ;
   va_start(ap, fmt);
   if (warn_level == WARNING)
     printf("%s*** ", YELLOW);
@@ -47,7 +51,6 @@ static void	display_start(t_server *server)
 	     WHITE, GREEN, ((t_team *)tmp->data)->max_cli, WHITE);
       tmp = tmp->next;
     }
-  srand(time(NULL));
   printf("Generating world...");
   fflush(stdout);
 }
@@ -69,12 +72,12 @@ static int	gen_world(t_server *server)
 	memset(&(server->map[y][x++]), 0, sizeof(t_map));
       ++y;
     }
-  gen_ressource(server, "linemate", DEMI_PERIMETER * 3);
-  gen_ressource(server, "deraumere", DEMI_PERIMETER * 3);
-  gen_ressource(server, "sibur", DEMI_PERIMETER * 3);
-  gen_ressource(server, "mendiane", DEMI_PERIMETER * 2);
-  gen_ressource(server, "phiras", DEMI_PERIMETER * 2);
-  gen_ressource(server, "thystame", DEMI_PERIMETER / 2);
+  gen_ressource(server, "linemate", AREA / 2 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "deraumere", AREA / 3 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "sibur", AREA / 4 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "mendiane", AREA / 6 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "phiras", AREA / 8 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "thystame", AREA / 10 + DEMI_PERIMETER / 2);
   return (EXIT_SUCCESS);
 }
 
@@ -87,23 +90,8 @@ int	handle_start(t_server *server)
       return (EXIT_FAILURE);
     }
   printf("%sdone%s\n\n", GREEN, WHITE);
+  help(NULL, NULL);
+  printf("\n%s", PROMPT);
+  fflush(stdout);
   return (EXIT_SUCCESS);
-}
-
-void		add_food(t_server *serv)
-{
-  size_t	x;
-  size_t	y;
-
-  y = 0;
-  while (y < serv->game.height)
-    {
-      x = 0;
-      while (x < serv->game.width)
-	{
-	  serv->map[y][x].food += rand() % MAX_ITEM_MAP;
-	  ++x;
-	}
-      ++y;
-    }
 }

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Wed Jun 25 18:12:28 2014 Nicolas Bridoux
+** Last update Fri Jul  4 11:04:08 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -64,6 +64,7 @@ void		quit_server(t_server *serv)
 	      free(((t_client *)tmpfd->data)->teamname);
 	      free(((t_client *)tmpfd->data)->sock);
 	      rm_list(((t_client *)tmpfd->data)->cmds, &free);
+	      free(tmpfd->data);
 	    }
 	  destroy_ring_buffer(tmpfd->rbuff);
 	  destroy_ring_buffer(tmpfd->wbuff);
@@ -71,6 +72,7 @@ void		quit_server(t_server *serv)
         }
       tmp = tmp->next;
     }
+  free(serv->cmd);
   rm_list(serv->watch, NULL);
   rm_list(serv->game.teams, &free);
   return (free_eggs_and_map(serv));

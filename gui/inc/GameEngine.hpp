@@ -38,23 +38,21 @@ extern "C"
 # define WINDOW_NAME	"ZAPPY"
 # define FPS            60
 
-typedef std::list<sf::Text> TextList;
-
 # include "Parser.hpp"
 
 class GameEngine {
 private:
-    Camera _camera;
-    Cube *_cube;
-    Gem *_gem;
-    sf::RenderWindow _window;
-    sf::Font _font;
-    TextList _texts;
-    Map _map;
-    t_net *_client;
-    t_list *_elem;
-    struct timeval _tv;
-    Parser *_parser;
+    Camera            _camera;
+    Cube              *_cube;
+    Gem				  *_gem;
+    
+    sf::RenderWindow  _window;
+    
+    Map               _map;
+    t_net             *_client;
+    t_list            *_elem;
+    struct timeval    _tv;
+    Parser            *_parser;
     
 public:
     GameEngine(const int&, const int&);

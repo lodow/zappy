@@ -157,39 +157,27 @@ void Shader::bindUniformMap()
     delete[] temp_buffer;
 }
 
-bool Shader::setUniform(const std::string &name, const glm::vec3 &vector) const
+bool Shader::setUniform(const std::string &name, GLint value)
 {
-    int location = glGetUniformLocation(_programID, name.c_str());
-    if (location == -1)
-    {
-        std::cerr << "Error Shader::setUniform vec3" << std::endl;
-        return (false);
-    }
-    glUniform3fv(location, 1, glm::value_ptr(vector));
+    glUniform1i(_uniformMap[name], value);
     return (true);
 }
 
-bool Shader::setUniform(const std::string &name, const glm::vec4 &vector) const
+bool Shader::setUniform(const std::string &name, const glm::vec3 &vector)
 {
-    int location = glGetUniformLocation(_programID, name.c_str());
-    if (location == -1)
-    {
-        std::cerr << "Error Shader::setUniform vec3" << std::endl;
-        return (false);
-    }
-    glUniform4fv(location, 1, glm::value_ptr(vector));
+    glUniform3fv(_uniformMap[name], 1, glm::value_ptr(vector));
     return (true);
 }
 
-bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
+bool Shader::setUniform(const std::string &name, const glm::vec4 &vector)
 {
-    int location = glGetUniformLocation(_programID, name.c_str());
-    if (location == -1)
-    {
-        std::cerr << "Error Shader::setUniform mat4" << std::endl;
-        return (false);
-    }
-    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    glUniform4fv(_uniformMap[name], 1, glm::value_ptr(vector));
+    return (true);
+}
+
+bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix)
+{
+    glUniformMatrix4fv(_uniformMap[name], 1, GL_FALSE, glm::value_ptr(matrix));
     
     return (true);
 }

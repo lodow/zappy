@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu May 22 18:30:00 2014 Nicolas Bridoux
-** Last update Tue Jul  1 17:32:47 2014 fabien.linardon
+** Last update Thu Jul  3 22:03:09 2014 Nicolas Bridoux
 */
 
 #include "server.h"

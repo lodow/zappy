@@ -13,7 +13,7 @@ struct t_light
     float spotCutoff, spotExponent;
     vec3 spotDirection;
     
-    float shado;
+    float shadow;
 };
 
 uniform mat4 projection;
@@ -25,7 +25,6 @@ uniform vec4 light;
 uniform vec4 gColor;
 
 uniform sampler2D fTexture0;
-uniform sampler2D fTexture1;
 
 varying vec4 fColor;
 varying vec4 fPosition;
@@ -37,13 +36,9 @@ float smoothstep(float edge0, float edge1, float x);
 
 void main(void)
 {
-    vec4 colorMap = texture2D(fTexture1, fUv) * gColor;
-    vec4 color = texture2D(fTexture0, fUv) * fColor;
+    vec4 color = texture2D(fTexture0, fUv) * gColor;
     vec4 position = fPosition;
     vec4 normal = normalize(fNormal);
-    
-    if (colorMap.xyz != vec3(0.0, 0.0, 0.0))
-        color = colorMap;
     
     vec4 lighting = ambientLight;
     
@@ -90,7 +85,7 @@ vec4 CalcLight(t_light currlight, vec3 normal, vec3 position)
     {
         vec3 positionToLightSource = vec3(currlight.position - vec4(position, 0.0));
         float distance = length(positionToLightSource);
-
+        
         lightDirection = normalize(positionToLightSource);
         attenuation = smoothstep(currlight.attenuation.y, currlight.attenuation.x, distance);
         

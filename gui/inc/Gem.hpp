@@ -2,6 +2,8 @@
 #ifndef GEM_HPP_
 # define GEM_HPP_
 
+# define ALPHA 0.8f
+
 # include <map>
 # include "Model.hpp"
 
@@ -16,16 +18,21 @@ enum GemType {
 
 class Gem : public IEntity
 {
-
+    
 public:
     Gem(GemType type);
     Gem(const Gem &gem, GemType type, const glm::vec2 &position);
     ~Gem();
+    
     void destroyGeometry();
     void draw(Shader *shader);
-    virtual void setRecourse(const std::list<int> &recourse);
-    virtual const glm::vec2 &getPosition() const;
-    virtual void setPosition(const glm::vec2 &pos);
+    
+    void setRecourse(const std::list<int> &recourse);
+    void setPosition(const glm::vec2 &pos);
+    
+    const glm::vec2 &getPosition() const;
+    const glm::vec4 &getColor();
+    
     
 private:
     Model *_model;

@@ -53,7 +53,7 @@ void Parser::parseBct(const std::string &cmd)
             return ;
         }
     }
-    _map->push_back(new Ground(pos, *_cube, *_gem));
+    _map->push_back(new Ground(pos, *_gem));
     _map->back()->setRecourse(recourse);
 
 }

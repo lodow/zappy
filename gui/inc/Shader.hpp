@@ -35,9 +35,10 @@ public:
     
     void bind() const;
     
-    bool setUniform(std::string const& name, glm::vec3 const& vector) const;
-    bool setUniform(std::string const& name, glm::vec4 const& vector) const;
-    bool setUniform(std::string const& name, glm::mat4 const& matrix) const;
+    bool setUniform(std::string const& name, GLint value);
+    bool setUniform(std::string const& name, glm::vec3 const& vector);
+    bool setUniform(std::string const& name, glm::vec4 const& vector);
+    bool setUniform(std::string const& name, glm::mat4 const& matrix);
     
     GLuint getProgramID() const;
     Shader& operator=(Shader const &shader);
@@ -50,7 +51,7 @@ private:
     void bindAttribLocation();
     void bindUniformMap();
     
-    std::map<std::string,GLuint> _uniformMap;
+    std::map<std::string, GLuint> _uniformMap;
     
     std::string _vertexSource;
     std::string _fragmentSource;

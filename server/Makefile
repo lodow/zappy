@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Fri Jul  4 09:12:04 2014 fabien.linardon
+## Last update Thu Jul 10 14:05:57 2014 Jean Gravier
 ##
 
 SRC		=	main.c \
@@ -27,6 +27,8 @@ SRC		=	main.c \
 			eggs.c \
 			my_str_to_wordtab.c \
 			gen_ressources.c \
+			manage_prompt.c \
+			server_commands.c \
 			cmd_ia/avance.c \
 			cmd_ia/droite.c \
 			cmd_ia/gauche.c \
@@ -65,10 +67,18 @@ SRC		=	main.c \
 			cmd_gui/eht.c \
 			cmd_gui/edi.c \
 			cmd_gui/seg.c \
-			cmd_gui/smg.c
+			cmd_gui/smg.c \
+			cmd_server/servertime.c \
+			cmd_server/help.c \
+			cmd_server/kick.c \
+			cmd_server/add.c \
+			cmd_server/shutdown.c \
+			cmd_server/resize.c \
 
 CC		=	gcc
 FILETYPE	=	.c
+
+UNAME_S 	:= 	$(shell uname -s)
 
 RM		=	rm -f
 
@@ -82,7 +92,10 @@ CFLAGS		+=	-I$(INCDIR) -I../libnetwork/inc/
 CFLAGS		+=	-Wall -Wextra -Winit-self
 CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
 
-#LDFLAGS		+=	-Wl,-O1
+ifneq ($(UNAME_S), Darwin)
+	LDFLAGS	+=	-Wl,-O1
+endif
+
 LDFLAGS		+=	-L../libnetwork/ -lnet
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
