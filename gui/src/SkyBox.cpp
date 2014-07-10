@@ -22,7 +22,8 @@ SkyBox::~SkyBox()
 void SkyBox::draw(Shader *shader, const glm::vec3 &position)
 {
     _cube->setPosition(position);
-//    _cube->rotate(glm::vec3(1, 1, 0.6), 1.2f);
+    _cube->rotate(glm::vec3(0, 1, 0), 0.01f);
+
     glDisable(GL_DEPTH_TEST);
     _cube->draw(shader);
     glEnable(GL_DEPTH_TEST);

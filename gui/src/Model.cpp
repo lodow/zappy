@@ -7,7 +7,7 @@ Model::Model() : AObject()
 }
 
 Model::Model(const Model &model)
-: AObject(),_geometry(model._geometry), _texture(model._texture)
+: AObject(), _geometry(model._geometry), _texture(model._texture)
 {
     
 }
