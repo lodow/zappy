@@ -1,6 +1,6 @@
 #include <Ground.hpp>
 
-Ground::Ground(const glm::vec2 &pos, const Cube &cube, const Gem &gem) : _gem(gem), _position(pos)
+Ground::Ground(const glm::vec2 &pos, const Gem &gem) : _gem(gem), _position(pos)
 {
     for (int i = 0; i < 6; ++i) {
         _gemList.push_back(new Gem(_gem, static_cast<GemType>(i), _position));

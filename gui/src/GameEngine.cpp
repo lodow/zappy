@@ -85,7 +85,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     do_select(_elem, &_tv, _parser);
-    
+
     run();
 }
 
@@ -103,20 +103,18 @@ void	GameEngine::run() {
     
     Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     Camera 	camera;
+    sf::Clock clock;
     SkyBox 	skybox;
     Pan 	pan(glm::vec2(10, 10));
-    Player 	player(glm::vec2(0, 0));
     
     shader->create();
     
-    camera.setPos(glm::vec3(13.0f, 15.0f, 13.0f));
+    camera.setPos(glm::vec3(6.0f, 8.0f, 6.0f));
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
-    
+    clock.restart();
     pan.build();
     pan.scale(glm::vec3(10, 10, 1));
-    
-    _map.push_back(new Player(player));
-    
+
     while (_window.isOpen())
     {
         sf::Event event;
@@ -161,16 +159,20 @@ void	GameEngine::run() {
         
         do_select(_elem, &_tv, _parser);
         
+        shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
         pan.draw(shader);
         
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
             (*it)->draw(shader);
-        for (Map::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
+        for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
+            (*it)->update(clock);
             (*it)->draw(shader);
+        }
         
         shader->setUniform("ambientLight", glm::vec4(0.5, 0.5, 0.5, 1));
         
         _window.display();
+        clock.restart();
     }
     delete shader;
 }

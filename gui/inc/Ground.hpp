@@ -11,7 +11,7 @@ typedef std::list<Gem *> GemList;
 class Ground : public IEntity
 {
 public:
-    Ground(const glm::vec2 &pos, const Cube &cube, const Gem &gem);
+    Ground(const glm::vec2 &pos, const Gem &gem);
     virtual ~Ground();
     
     void draw(Shader *shader);
