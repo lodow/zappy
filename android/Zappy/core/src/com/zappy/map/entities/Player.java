@@ -51,6 +51,7 @@ public class Player extends Actor {
     private Vector3 rotation = new Vector3(0, 1, 0);
     private Vector2 randPos = new Vector2();
     private Queue<SmoothMove> smoothMoves = new LinkedList<SmoothMove>();
+    private Sprite current = new Sprite();
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -76,9 +77,11 @@ public class Player extends Actor {
 
     @Override
     public void act(float delta) {
-        Animation currentAnimation = player_animation.get(_dir);
 
         if (smoothMoves.size() > 0) {
+            eDirection tmp = smoothMoves.peek().dir;
+            Animation currentAnimation = player_animation.get(tmp);
+
             currentFrame = currentAnimation.getKeyFrame(state_time, true);
             state_time += delta;
         }
@@ -89,7 +92,7 @@ public class Player extends Actor {
     }
 
     public void draw(SpriteBatch batch, Vector2 sizeMap) {
-        Sprite current = new Sprite(currentFrame);
+        current.setRegion(currentFrame);
 
         matrix4.set(defaultMat);
         current.setSize(1f, 1f);

@@ -1,10 +1,12 @@
 package com.zappy.map.entities;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.zappy.assets.Assets;
 
@@ -28,13 +30,17 @@ public class Square extends Actor {
         Thystame
     };
 
+    private float stateTime = 0;
     private Map<eType, Matrix4> transform = new HashMap<eType, Matrix4>();
     private Map<eType, Integer> content = new HashMap<eType, Integer>();
     private Map<eType, Sprite> sprite_ressource = new HashMap<eType, Sprite>();
-    private Sprite egg;
-    private boolean incantation = false;
+    private HashMap<String, Animation> incantationAnimations = new HashMap<String, Animation>();
+    private Vector2 pos;
+    private Incantation incantation = null;
 
     public Square(Vector2 pos) {
+
+        this.pos = pos;
 
         TextureRegion ressource = Assets.ressource;
         this.sprite_ressource.put(Square.eType.Deraumere, (new Sprite(ressource, 0, 24, 22, 43 - 24)));
@@ -44,6 +50,7 @@ public class Square extends Actor {
         this.sprite_ressource.put(Square.eType.Sibur, (new Sprite(ressource, 52, 49, 73 - 52, 66 - 49)));
         this.sprite_ressource.put(Square.eType.Thystame, (new Sprite(ressource, 78, 49, 98 - 78, 66 - 49)));
 
+        incantationAnimations = Assets.getIncantationAnimation();
 
         for (int i = 0; i < 7; i++) {
             transform.put(eType.values()[i], new Matrix4());
@@ -51,7 +58,6 @@ public class Square extends Actor {
 
         Random rand = new Random();
         int random = rand.nextInt(Assets.food.size());
-
 
         sprite_ressource.put(eType.Nourriture, new Sprite(Assets.food.get(random)));
 
@@ -78,8 +84,6 @@ public class Square extends Actor {
         tmpSprite = sprite_ressource.get(eType.Nourriture); tmpSprite.setSize(.25f, .35f);
         tmpSprite.rotate(45); tmpSprite.setPosition(pos.y + 0.8f - 7.0f, pos.x + 0.25f + 3.0f);
 
-        //egg.setSize(0.45f, 0.7f); egg.rotate(45); egg.setPosition(pos.x - 5.2f, pos.y + 3.2f);
-
         content.put(eType.Nourriture, 0);
         content.put(eType.Linemate, 0);
         content.put(eType.Deraumere, 0);
@@ -94,9 +98,8 @@ public class Square extends Actor {
         return true;
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        for (eType  type : eType.values()) {
+    public void draw(Batch batch) {
+        for (eType type : eType.values()) {
             int number = content.get(type);
             if (number > 0) {
                 Sprite sprite = sprite_ressource.get(type);
@@ -114,6 +117,41 @@ public class Square extends Actor {
     }
 
     public void setIncentation(boolean bool) {
-        incantation = bool;
+        if (bool == true) {
+            System.out.println("incantation on : " + pos.toString());
+            int rand = (int)(Math.random() * 2);
+            incantation = new Incantation(incantationAnimations.get((rand == 1 ? "fire" : "tornado")));
+        } else {
+            incantation = null;
+        }
+    }
+
+    public Incantation getIncantation() {
+        return incantation;
+    }
+
+    public class Incantation {
+        private Animation incantation = null;
+        private Sprite currentFrame = new Sprite();
+        private Matrix4 matrix4 = new Matrix4(), defaultMat = new Matrix4();
+        private Vector3 rotation = new Vector3(0, 1, 0);
+
+        Incantation(Animation incantation) {
+            this.incantation = incantation;
+        }
+
+        public void draw(Batch batch, float delta) {
+            matrix4.set(defaultMat);
+
+            matrix4.translate(pos.y + 0.2f, 0, -pos.x - 0.2f);
+            matrix4.rotate(rotation, 45);
+            TextureRegion tmp = incantation.getKeyFrame(stateTime, true);
+            stateTime += delta;
+            currentFrame.setRegion(tmp);
+            currentFrame.setSize(1, 1);
+
+            batch.setTransformMatrix(matrix4);
+            currentFrame.draw(batch);
+        }
     }
 }

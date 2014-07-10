@@ -30,6 +30,7 @@ import com.zappy.map.entities.Square;
 import com.zappy.network.Network;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapViewer implements Screen {
@@ -52,6 +53,7 @@ public class MapViewer implements Screen {
     private boolean back = false;
     private ReturnDialog returnDialog;
     private Stage returnStage = new Stage();
+    private List<Square.Incantation> incatationList = new ArrayList<Square.Incantation>();
 
     public MapViewer(Network network, Zappy game, Skin skin) {
         this.game = game;
@@ -144,7 +146,11 @@ public class MapViewer implements Screen {
         Square[][] square = map.getSquare();
         for (int i = 0; i < square.length; i++) {
             for (int j = 0; j < square[i].length; j++) {
-                square[i][j].draw(batch, delta);
+                square[i][j].draw(batch);
+                Square.Incantation incantation = square[i][j].getIncantation();
+                if (incantation != null) {
+                    incatationList.add(incantation);
+                }
             }
         }
 
@@ -173,7 +179,6 @@ public class MapViewer implements Screen {
                     lastSelectedTile.setColor(1, 1, 1, 1);
                 Sprite sprite = groundSprite[(int)playerPos.y][(int)playerPos.x];
                 sprite.setColor(1, 0, 0, 1);
-                System.out.println("pos : x " + playerPos.x + " -  y : " + playerPos.y);
                 lastSelectedTile = sprite;
             }
             if (lastSelectedTile != null) {
@@ -189,6 +194,12 @@ public class MapViewer implements Screen {
             lastSelectedTile.setColor(1, 1, 1, 1);
             info.setShowing(false);
         }
+
+        for (Square.Incantation i : incatationList) {
+            i.draw(batch, delta);
+        }
+
+        incatationList.clear();
 
         batch.end();
 

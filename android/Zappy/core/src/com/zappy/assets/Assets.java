@@ -17,10 +17,11 @@ import java.util.List;
  */
 public class Assets {
 
-    public static Texture player_sheet, ground;
+    public static Texture player_sheet, ground, incantation;
 
     private static TextureRegion[][] anim_tab;
     private static HashMap<Player.eDirection, Animation> player_animation = new HashMap<Player.eDirection, Animation>();
+    private static HashMap<String, Animation> incantation_animation = new HashMap<String, Animation>();
     private static HashMap<Player.eDirection, Sprite> player_static = new HashMap<Player.eDirection, Sprite>();
     private static HashMap<Square.eType, Sprite> sprite_ressource = new HashMap<Square.eType, Sprite>();
     public static List<TextureRegion> food = new ArrayList<TextureRegion>();
@@ -29,6 +30,8 @@ public class Assets {
     private static int FRAME_COLS = 8;
     private static int FRAME_ROWS = 5;
     private static float speed = 0.06f;
+    private static int index = 0;
+
 
     public static void Load() {
         player_sheet = new Texture(Gdx.files.internal("data/sprites/animation_sheet.png"));
@@ -47,6 +50,31 @@ public class Assets {
 
         all = new Texture(Gdx.files.internal("data/sprites/all_sprite.png"));
         ressource = new TextureRegion(all, 0, 0, 150, 68);
+
+        // create incantations
+        TextureRegion incantation;
+        incantation = new TextureRegion(all, 0, 432, 393, 824 - 432);
+        anim_tab = incantation.split(incantation.getRegionWidth() / 5, incantation.getRegionHeight() / 5);
+        TextureRegion[] incantation1 = new TextureRegion[5 * 5];
+        index = 0;
+        for (int i = 0; i < anim_tab.length; i++) {
+            for (int j = 0; j < anim_tab[i].length; j++) {
+                incantation1[index++] = anim_tab[i][j];
+            }
+        }
+        incantation_animation.put("fire", new Animation(0.15f, incantation1));
+
+        incantation = new TextureRegion(all, 393, 431, 800 - 393, 900 - 431);
+        anim_tab = incantation.split(incantation.getRegionWidth() / 5, incantation.getRegionHeight() / 6);
+        TextureRegion[] incantation2 = new TextureRegion[5 * 6];
+        index = 0;
+        for (int i = 0; i < anim_tab.length; i++) {
+            for (int j = 0; j < anim_tab[i].length; j++) {
+                incantation2[index++] = anim_tab[i][j];
+            }
+        }
+        incantation_animation.put("tornado", new Animation(0.15f, incantation2));
+
 
         TextureRegion foodRegion = new TextureRegion(all, 2, 72, 101 - 2, 101 - 72);
         TextureRegion foodTmp[][] = foodRegion.split(foodRegion.getRegionWidth() / 7, foodRegion.getRegionHeight() / 2);
@@ -67,5 +95,9 @@ public class Assets {
 
     public static HashMap<Square.eType, Sprite> getSpriteRessource() {
         return (HashMap<Square.eType, Sprite>) sprite_ressource.clone();
+    }
+
+    public static HashMap<String, Animation> getIncantationAnimation() {
+        return (HashMap<String, Animation>) incantation_animation.clone();
     }
 }
