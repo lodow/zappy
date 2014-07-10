@@ -1,21 +1,42 @@
-#include "Ground.hpp"
+#include <Ground.hpp>
 
-Ground::Ground(const sf::Vector2i &pos) : _pos(pos)
+Ground::Ground(const glm::vec2 &pos, const Gem &gem) : _gem(gem), _position(pos)
 {
-
+    for (int i = 0; i < 6; ++i) {
+        _gemList.push_back(new Gem(_gem, static_cast<GemType>(i), _position));
+    }
 }
 
 Ground::~Ground()
 {
-
+    
 }
 
-void Ground::draw(__attribute__((unused)) sf::RenderWindow &window) const
+void    Ground::draw(Shader *shader)
 {
-  //window.draw(_text);
+    std::list<int>::const_iterator rec = _recourse.begin();
+    ++rec;
+    for (GemList::const_iterator it = _gemList.begin(), end = _gemList.end(); it != end; ++it) {
+        if (*rec)
+            (*it)->draw(shader);
+        ++rec;
+    }
 }
 
-const sf::Vector2i &Ground::getPos() const
+void Ground::setRecourse(const std::list<int> &recourse)
 {
-  return _pos;
+    _recourse = recourse;
+}
+
+const glm::vec2 &Ground::getPosition() const {
+    return _position;
+}
+
+void Ground::setPosition(const glm::vec2 &pos) {
+    _position = pos;
+}
+
+const GemList &Ground::getGemList() const
+{
+    return (_gemList);
 }

@@ -1,21 +1,32 @@
+
 #ifndef GROUND_HPP_
 # define GROUND_HPP_
 
-# include <SFML/Graphics.hpp>
-# include <SFML/Window.hpp>
-# include <SFML/OpenGL.hpp>
 # include "IEntity.hpp"
+# include "Cube.hpp"
+# include "Gem.hpp"
+
+typedef std::list<Gem *> GemList;
 
 class Ground : public IEntity
 {
 public:
-  Ground(const sf::Vector2i &pos);
-  virtual ~Ground();
-  virtual void draw(sf::RenderWindow &window) const;
-  virtual const sf::Vector2i &getPos() const;
+    Ground(const glm::vec2 &pos, const Gem &gem);
+    virtual ~Ground();
+    
+    void draw(Shader *shader);
+    
+    void setRecourse(const std::list<int> &recourse);
+    void setPosition(const glm::vec2 &pos);
 
+    const glm::vec2 &getPosition() const;
+    const GemList &getGemList() const;
+    
 private:
-  sf::Vector2i _pos;
+    Gem _gem;
+    std::list<int> _recourse;
+    GemList _gemList;
+    glm::vec2 _position;
 };
 
 #endif /* GROUND_HPP_ */
