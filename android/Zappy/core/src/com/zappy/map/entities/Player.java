@@ -34,9 +34,8 @@ public class Player extends Actor {
     }
 
     private boolean selected = false;
-    private Vector2 _realPos = new Vector2(0, 0);
+    private Vector2 _realPos;
     private Vector2 _pos;
-    private Vector2 _oldPos;
     private String _team;
     private int _id;
     private int _level;
@@ -45,7 +44,6 @@ public class Player extends Actor {
     private HashMap<eDirection, Sprite> player_static;
     private float state_time = 0;
     private TextureRegion currentFrame;
-    private SpriteBatch batch = new SpriteBatch();
     private Map<Square.eType, Integer> content = new HashMap<Square.eType, Integer>();
     private Matrix4 matrix4 = new Matrix4(), defaultMat = new Matrix4();
     private Vector3 rotation = new Vector3(0, 1, 0);
@@ -55,7 +53,7 @@ public class Player extends Actor {
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
-        _oldPos = _pos;
+        _realPos = pos;
         _team = team;
         _id = id;
         _level = level;
@@ -103,24 +101,24 @@ public class Player extends Actor {
 
             if (tmp.currentIteration > 0) {
                 switch (tmp.dir) {
-                    case Nord :
+                    case Nord:
                         if (_pos.y - delta < 0)
                             _pos.y = sizeMap.y - 1 + delta * tmp.currentIteration;
                         _pos.y -= delta;
                         break;
-                    case Sud :
+                    case Sud:
                         if (_pos.y + delta > sizeMap.y - 1)
-                            _pos.y =  - delta * tmp.currentIteration;
+                            _pos.y = -delta * tmp.currentIteration;
                         _pos.y += delta;
                         break;
-                    case Est :
+                    case Est:
                         if (_pos.x + delta > sizeMap.x - 1)
-                            _pos.x = - delta * tmp.currentIteration;
+                            _pos.x = -delta * tmp.currentIteration;
                         _pos.x += delta;
                         break;
-                    case Ouest :
+                    case Ouest:
                         if (_pos.x - delta < 0)
-                            _pos.x = sizeMap.x  - 1 + delta * tmp.currentIteration;
+                            _pos.x = sizeMap.x - 1 + delta * tmp.currentIteration;
                         _pos.x -= delta;
                         break;
                 }
@@ -162,12 +160,10 @@ public class Player extends Actor {
     }
 
     public void set_pos(Vector2 _pos) {
-
-        if (this._realPos.x != _pos.x || this._realPos.y != _pos.y) {
-            this._realPos.x = _pos.x;
-            this._realPos.y = _pos.y;
+          if (!this._realPos.equals(_pos)) {
+            this._realPos = _pos;
             this.smoothMoves.add(new SmoothMove(this._dir, 32));
-        }
+          }
     }
 
     private class SmoothMove {
