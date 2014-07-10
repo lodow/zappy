@@ -38,17 +38,17 @@ static void	display_start(t_server *server)
 
   serv_verbose(server);
   printf("\nConfiguration: max_cli(%s%zu%s), map_x(%s%zu%s), "
-	 "map_y(%s%zu%s), time(%s%zu%s)\n",
-	 GREEN, server->game.max_cli, WHITE,
-	 GREEN, server->game.width, WHITE,
-	 GREEN, server->game.height, WHITE,
-	 GREEN, server->game.time, WHITE);
+         "map_y(%s%zu%s), time(%s%zu%s)\n",
+         GREEN, server->game.max_cli, WHITE,
+         GREEN, server->game.width, WHITE,
+         GREEN, server->game.height, WHITE,
+         GREEN, server->game.time, WHITE);
   printf("Teams:");
   tmp = server->game.teams;
   while (tmp)
     {
       printf("\t%s%s%s\t\t (%s%zu%s)\n", YELLOW, ((t_team *)tmp->data)->name,
-	     WHITE, GREEN, ((t_team *)tmp->data)->max_cli, WHITE);
+             WHITE, GREEN, ((t_team *)tmp->data)->max_cli, WHITE);
       tmp = tmp->next;
     }
   printf("Generating world...");
@@ -67,9 +67,9 @@ static int	gen_world(t_server *server)
     {
       x = 0;
       if (!(server->map[y] = malloc(sizeof(t_map) * (server->game.width))))
-	return (EXIT_FAILURE);
+        return (EXIT_FAILURE);
       while (x < server->game.width)
-	memset(&(server->map[y][x++]), 0, sizeof(t_map));
+        memset(&(server->map[y][x++]), 0, sizeof(t_map));
       ++y;
     }
   gen_ressource(server, "linemate", AREA / 2 + DEMI_PERIMETER / 2);
@@ -90,8 +90,13 @@ int	handle_start(t_server *server)
       return (EXIT_FAILURE);
     }
   printf("%sdone%s\n\n", GREEN, WHITE);
-  help(NULL, NULL);
-  printf("\n%s", PROMPT);
+  if (isatty(STDIN_FILENO))
+    {
+      help(NULL, NULL);
+      printf("\n%s", PROMPT);
+    }
+  else
+    printf("%s", "Running in non interactive mode\n");
   fflush(stdout);
   return (EXIT_SUCCESS);
 }
