@@ -124,7 +124,7 @@ public class PopUpInformation extends Stage {
             Label tmp = entry.getValue();
             tmp.setText(entry.getKey() + " : " + number.toString());
         }
-        level.setText("level : " + player.get_level());
+        level.setText("level : " + player.get_level() + " (team " + player.get_team() + ")");
     }
 
     private class CrossClick extends ClickListener {
