@@ -100,8 +100,8 @@ void		do_select(t_list *fds, struct timeval *tv, void *global_arg)
   while (tmp)
     {
       fd = (t_selfd*)tmp->data;
-      fd->etype = (FD_ISSET(fd->fd, &setr)) * FDREAD
-                  + (FD_ISSET(fd->fd, &setw)) * FDWRITE;
+      fd->etype = (FD_ISSET(fd->fd, &setr) ? FDREAD : 0)
+                  + (FD_ISSET(fd->fd, &setw) ? FDWRITE : 0);
       fd->checktype = 0;
       fd->callback(fd, global_arg);
       tmp = nexttmp;
