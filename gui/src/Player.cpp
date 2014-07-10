@@ -19,7 +19,7 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
 
 Player::~Player()
 {
-  // TODO Auto-generated destructor stub
+  delete _clarkKent;
 }
 
 void Player::setOrientation(size_t orientation)
