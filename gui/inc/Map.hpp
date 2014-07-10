@@ -30,12 +30,15 @@ public:
   size_t playerSize() const;
   IEntity *back();
   Player *playerBack();
+  const glm::vec2 &getSize() const;
+  void setSize(const glm::vec2 &size);
 
 typedef std::list<IEntity *> Maps;
 
 private:
   Maps _grounds;
   Players _players;
+  glm::vec2 _size;
 
 };
 
