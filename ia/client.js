@@ -9,7 +9,7 @@
     var levels = [0, 0, 0, 0, 0 ,0, 0, 0]
     var mapX = 0;
     var mapY = 0;
-    var maxPlayers = 2;
+    var maxPlayers = 10;
 
     var match = {
                 avance : "^ok$",

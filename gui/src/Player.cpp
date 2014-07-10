@@ -5,7 +5,7 @@ Player::Player(const glm::vec2 &position, size_t nb, size_t lvl, size_t orientat
 {
   _clarkKent->loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
   _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
-  _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * orientation);
+  _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * orientation + 180);
   _way.push_back(glm::vec3(0, 0, -1));
   _way.push_back(glm::vec3(1, 0, 0));
   _way.push_back(glm::vec3(0, 0, 1));
@@ -17,9 +17,9 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
 {
   _clarkKent = new Model(*player._clarkKent);
   _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
-  _way.push_back(glm::vec3(0, 0, 1));
-  _way.push_back(glm::vec3(1, 0, 0));
   _way.push_back(glm::vec3(0, 0, -1));
+  _way.push_back(glm::vec3(1, 0, 0));
+  _way.push_back(glm::vec3(0, 0, 1));
   _way.push_back(glm::vec3(-1, 0, 0));
 }
 
@@ -44,7 +44,7 @@ void Player::update(__attribute__((unused)) const sf::Clock &clock)
       }
       if (!i) {
 	  _clarkKent->setRotation(glm::vec3(0, 0, 0));
-	  _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * _orientation.front());
+	  _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * _orientation.front() + 180);
       }
       _clarkKent->translate(glm::vec3((*it).x * 0.05f, 0, (*it).z * 0.05f));
       ++i;
