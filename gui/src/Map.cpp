@@ -31,22 +31,22 @@ Map::iterator Map::end()
   return _grounds.end();
 }
 
-Map::const_iterator Map::playerBegin() const
+Map::Players::const_iterator Map::playerBegin() const
 {
   return _players.begin();
 }
 
-Map::const_iterator Map::playerEnd() const
+Map::Players::const_iterator Map::playerEnd() const
 {
   return _players.end();
 }
 
-Map::iterator Map::playerBegin()
+Map::Players::iterator Map::playerBegin()
 {
   return _players.begin();
 }
 
-Map::iterator Map::playerEnd()
+Map::Players::iterator Map::playerEnd()
 {
   return _players.end();
 }
@@ -54,13 +54,31 @@ Map::iterator Map::playerEnd()
 
 void Map::push_back(IEntity* val)
 {
-  if (dynamic_cast<Ground *>(val))
-    _grounds.push_back(val);
-  else
-    _players.push_back(val);
+  _grounds.push_back(val);
+}
+
+void Map::push_back(Player* val)
+{
+  _players.push_back(val);
+}
+
+
+size_t Map::size() const
+{
+  return _grounds.size();
+}
+
+size_t Map::playerSize() const
+{
+  return _players.size();
 }
 
 IEntity *Map::back()
 {
   return _grounds.back();
+}
+
+Player *Map::playerBack()
+{
+  return _players.back();
 }

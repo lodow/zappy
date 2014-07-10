@@ -2,6 +2,8 @@
 #ifndef IENTITY_HPP_
 # define IENTITY_HPP_
 
+# include <SFML/Graphics.hpp>
+# include <SFML/Window.hpp>
 # include <glm/glm.hpp>
 # include <list>
 # include "Shader.hpp"

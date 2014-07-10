@@ -11,6 +11,7 @@ class Map
 public:
   typedef std::list<IEntity *>::const_iterator const_iterator;
   typedef std::list<IEntity *>::iterator iterator;
+  typedef std::list<Player *> Players;
 
 public:
   Map();
@@ -19,18 +20,22 @@ public:
   Map::const_iterator end() const;
   Map::iterator begin();
   Map::iterator end();
-  Map::const_iterator playerBegin() const;
-  Map::const_iterator playerEnd() const;
-  Map::iterator playerBegin();
-  Map::iterator playerEnd();
+  Map::Players::const_iterator playerBegin() const;
+  Map::Players::const_iterator playerEnd() const;
+  Map::Players::iterator playerBegin();
+  Map::Players::iterator playerEnd();
   void push_back(IEntity* val);
+  void push_back(Player* val);
+  size_t size() const;
+  size_t playerSize() const;
   IEntity *back();
+  Player *playerBack();
 
 typedef std::list<IEntity *> Maps;
 
 private:
   Maps _grounds;
-  Maps _players;
+  Players _players;
 
 };
 

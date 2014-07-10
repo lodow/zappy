@@ -44,7 +44,6 @@ void	Gem::draw(Shader *shader)
 {
     //glm::vec3 tempPos = _model->getPos();
     
-//    std::cout << "x: " << tempPos.x << " y: " << tempPos.y << " z: " << tempPos.z << std::endl;
     
 //    shader->setUniform("light", glm::vec4(tempPos.x, tempPos.y + 0.5f, tempPos.z, 1.0f));
     shader->setUniform("gColor", _colorType[_type]);

@@ -20,8 +20,11 @@ private:
 public:
     Parser(Map *map, Cube *cube, Gem *gem);
     virtual ~Parser();
-    void parseCmd(std::string &cmd);
+    void parseCmd(const std::string &cmd);
     void parseBct(const std::string &cmd);
+    void parsePnw(const std::string &cmd);
+    void parsePpo(const std::string &cmd);
+    void parsePdi(const std::string &cmd);
     
 private:
     int getNbFromString(const std::string &str) const;
