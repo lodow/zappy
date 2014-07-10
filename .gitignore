@@ -36,3 +36,8 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+<<<<<<< HEAD
+xcode_gui/
+zappy
+server/zappy
+libnetwork/libnet.a

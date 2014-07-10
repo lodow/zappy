@@ -5,7 +5,7 @@
 ** Login   <moriss_h@epitech.net>
 **
 ** Started on  Mon Oct  8 09:34:29 2012 hugues morisset
-** Last update Fri May 30 18:41:16 2014 Nicolas Bridoux
+** Last update Sun Jul  6 09:10:48 2014 fabien.linardon
 */
 
 #ifndef RING_BUFFER_H_INCLUDED
@@ -26,8 +26,8 @@ t_rbuf	*create_ring_buffer(size_t size);
 void		destroy_ring_buffer(void *buf);
 void		extend_ring_buffer(t_rbuf *buf, size_t addsize);
 
-inline size_t	ring_buffer_left_read(t_rbuf *buf);
-inline size_t	ring_buffer_left_write(t_rbuf *buf);
+size_t	ring_buffer_left_read(t_rbuf *buf);
+size_t	ring_buffer_left_write(t_rbuf *buf);
 
 void		write_buffer(t_rbuf *buf, const char *data, size_t size);
 size_t		read_buffer(t_rbuf *buf, char *data, size_t size);

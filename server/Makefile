@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Fri Jul  4 15:32:40 2014 Nicolas Bridoux
+## Last update Thu Jul 10 14:05:57 2014 Jean Gravier
 ##
 
 SRC		=	main.c \
@@ -78,6 +78,8 @@ SRC		=	main.c \
 CC		=	gcc
 FILETYPE	=	.c
 
+UNAME_S 	:= 	$(shell uname -s)
+
 RM		=	rm -f
 
 NAME		=	zappy
@@ -90,7 +92,10 @@ CFLAGS		+=	-I$(INCDIR) -I../libnetwork/inc/
 CFLAGS		+=	-Wall -Wextra -Winit-self
 CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
 
-LDFLAGS		+=	-Wl,-O1
+ifneq ($(UNAME_S), Darwin)
+	LDFLAGS	+=	-Wl,-O1
+endif
+
 LDFLAGS		+=	-L../libnetwork/ -lnet
 
 OBJ		=	$(patsubst %${FILETYPE},${OBJDIR}%.o, $(SRC))
