@@ -5,6 +5,7 @@ Cube6Face::Cube6Face()
 : AObject()
 {
     _geometry = NULL;
+    _texture = NULL;
 }
 
 Cube6Face::Cube6Face(const Cube6Face &cube)
