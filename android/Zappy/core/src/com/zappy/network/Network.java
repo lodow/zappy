@@ -27,7 +27,8 @@ public class Network {
     private BufferedReader input;
     private BufferedWriter output;
     private List<Player> players = new ArrayList<Player>();
-    String[] parts;
+    private String[] parts;
+    private int servTime = 0;
 
     public Network(String ip, int port) throws IOException, NumberFormatException {
         socket = new Socket(ip, port);
@@ -39,7 +40,11 @@ public class Network {
         String tmp = input.readLine(); // size of the map
         parts = tmp.split(" ");
         map = new Map(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
-        input.readLine();// time of the server (T)
+
+        tmp = input.readLine();// time of the server (T)
+        parts = tmp.split(" ");
+        servTime = Integer.parseInt(parts[1]);
+
         tmp = input.readLine();
         parts = tmp.split(" ");
         while (parts[0].compareTo("bct") == 0) {
@@ -64,7 +69,10 @@ public class Network {
         }
         while (tmp.compareTo("") != 0 && parts[0].compareTo("pnw") == 0) {
             // playersl
-            map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]));
+            map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]),
+                          Integer.parseInt(parts[3])), parts[6],
+                          Integer.parseInt(parts[1]), Integer.parseInt(parts[5]),
+                          Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]));
             if (input.ready())
                 tmp = input.readLine();
             else
@@ -93,6 +101,10 @@ public class Network {
 
     public Map getMap() {
         return map;
+    }
+
+    public int getServTime() {
+        return servTime;
     }
 
     public boolean update() throws IOException {
@@ -143,7 +155,11 @@ public class Network {
     }
 
     private void pnw() {
-        Player x = new Player(new Vector2(Integer.parseInt(parts[2]), Integer.parseInt(parts[3])), parts[6], Integer.parseInt(parts[1]), Integer.parseInt(parts[5]), Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]);
+        Player x = new Player(new Vector2(Integer.parseInt(parts[2]),
+                              Integer.parseInt(parts[3])),
+                              parts[6], Integer.parseInt(parts[1]),
+                              Integer.parseInt(parts[5]),
+                              Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]);
         map.addPlayer(x);
         try {
             output.write("plv " + x.get_id() + "\n");
@@ -232,8 +248,9 @@ public class Network {
         map.deleteEgg(Integer.parseInt(parts[1]));
     }
 
+    // time of server
     private void sgt() {
-        // time of server
+        servTime = Integer.parseInt(parts[1]);
     }
 
     private void seg() {

@@ -54,6 +54,7 @@ public class MapViewer implements Screen {
     private ReturnDialog returnDialog;
     private Stage returnStage = new Stage();
     private List<Square.Incantation> incatationList = new ArrayList<Square.Incantation>();
+    private int speed = 0;
 
     public MapViewer(Network network, Zappy game, Skin skin) {
         this.game = game;
@@ -110,6 +111,9 @@ public class MapViewer implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(1, 1, 1, 1);
 
+        speed = network.getServTime();
+//        System.out.println("servtime: " + network.getServTime());
+
         if (Gdx.input.isKeyPressed(Input.Keys.BACK) && !back) {
             back = true;
             returnDialog.setShowing(true);
@@ -124,7 +128,21 @@ public class MapViewer implements Screen {
             e.printStackTrace();
         }
 
-        Map map = network.getMap();
+         Map map = network.getMap();
+
+        // map resized ?
+        if (!map.getSize().equals(sizeMap)) {
+            sizeMap = map.getSize();
+
+            groundSprite = new Sprite[(int) sizeMap.y][(int) sizeMap.x];
+            for (int z = 0; z < sizeMap.y; z++) {
+                for (int x = 0; x < sizeMap.x; x++) {
+                    groundSprite[z][x] = new Sprite(Assets.ground);
+                    groundSprite[z][x].setPosition(x, z);
+                    groundSprite[z][x].setSize(1, 1);
+                }
+            }
+        }
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);
@@ -186,7 +204,7 @@ public class MapViewer implements Screen {
                     dead = false;
                 }
             }
-            p.act(delta);
+            p.act(delta, network.getServTime());
             p.draw(batch, sizeMap);
         }
 
@@ -218,6 +236,7 @@ public class MapViewer implements Screen {
             info.update(playerSelected);
             info.act(delta);
             info.draw();
+//            Table.drawDebug(info);
         }
 
         if (back == true) {

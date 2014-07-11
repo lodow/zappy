@@ -1,5 +1,6 @@
 package com.zappy.map.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,6 +34,9 @@ public class Player extends Actor {
         }
     }
 
+
+    private float servTime = 0;
+    private float frameDuration = 0;
     private boolean selected = false;
     private Vector2 _realPos;
     private Vector2 _pos;
@@ -73,13 +77,24 @@ public class Player extends Actor {
         content.put(Square.eType.Thystame, 0);
     }
 
-    @Override
-    public void act(float delta) {
+    public void act(float delta, float servTime) {
+
+        if (this.servTime != servTime) {
+            this.servTime = servTime;
+            if (servTime < 100) {
+                frameDuration = (servTime + 100) * 0.06f / 100.0f;
+            } else {
+                frameDuration = servTime * 0.06f / 100.0f;
+            }
+        }
 
         if (smoothMoves.size() > 0) {
             eDirection tmp = smoothMoves.peek().dir;
             Animation currentAnimation = player_animation.get(tmp);
+//            System.out.println("frame duration: " + currentAnimation.getFrameDuration());
 
+            currentAnimation.setFrameDuration(frameDuration);
+            System.out.println("frame duration: " + frameDuration);
             currentFrame = currentAnimation.getKeyFrame(state_time, true);
             state_time += delta;
         }
@@ -97,33 +112,37 @@ public class Player extends Actor {
 
         if (smoothMoves.size() > 0) {
             SmoothMove tmp = smoothMoves.peek();
-            float delta = 1.0f / tmp.totalIteration;
+            float delta = Gdx.graphics.getDeltaTime() * (servTime / 7.0f);
+//            System.out.println("calcul: " + Gdx.graphics.getDeltaTime() * (servTime / 7.0f));
+//            System.out.println("size queue: " + smoothMoves.size());
 
-            if (tmp.currentIteration > 0) {
+            tmp.distParcouru += delta;
+
+            if (tmp.distParcouru < tmp.dist) {
                 switch (tmp.dir) {
                     case Nord:
                         if (_pos.y - delta < 0)
-                            _pos.y = sizeMap.y - 1 + delta * tmp.currentIteration;
+                            _pos.y = sizeMap.y - 1 + tmp.dist - tmp.distParcouru;
                         _pos.y -= delta;
                         break;
                     case Sud:
                         if (_pos.y + delta > sizeMap.y - 1)
-                            _pos.y = -delta * tmp.currentIteration;
+                            _pos.y = -tmp.dist - tmp.distParcouru;
                         _pos.y += delta;
                         break;
                     case Est:
                         if (_pos.x + delta > sizeMap.x - 1)
-                            _pos.x = -delta * tmp.currentIteration;
+                            _pos.x = -tmp.dist - tmp.distParcouru;
                         _pos.x += delta;
                         break;
                     case Ouest:
                         if (_pos.x - delta < 0)
-                            _pos.x = sizeMap.x - 1 + delta * tmp.currentIteration;
+                            _pos.x = sizeMap.x - 1 + tmp.dist - tmp.distParcouru;
                         _pos.x -= delta;
                         break;
                 }
-                tmp.currentIteration--;
             } else {
+                _pos = tmp.posToGo;
                 smoothMoves.poll();
             }
         }
@@ -162,19 +181,20 @@ public class Player extends Actor {
     public void set_pos(Vector2 _pos) {
           if (!this._realPos.equals(_pos)) {
             this._realPos = _pos;
-            this.smoothMoves.add(new SmoothMove(this._dir, 32));
+            this.smoothMoves.add(new SmoothMove(this._dir, 1.0f, _pos));
           }
     }
 
     private class SmoothMove {
         public eDirection dir;
-        public int currentIteration = 0;
-        public int totalIteration = 0;
+        public float distParcouru = 0;
+        public float dist;
+        public Vector2 posToGo;
 
-        SmoothMove(eDirection dir, int iterate) {
+        SmoothMove(eDirection dir, float distance, Vector2 posToGo) {
             this.dir = dir;
-            this.currentIteration = iterate;
-            this.totalIteration = iterate;
+            this.dist = distance;
+            this.posToGo = posToGo;
         }
     }
 
