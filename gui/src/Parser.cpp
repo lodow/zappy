@@ -112,7 +112,15 @@ void Parser::parsePpo(const std::string &cmd)
 
 void Parser::parsePdi(const std::string &cmd)
 {
-  std::cout << cmd << std::endl;
+  size_t nb;
+
+  nb = getNbFromString(cmd);
+  for (Map::Players::iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
+      if ((*it)->getNb() == nb) {
+	 (*it)->setStatus(Player::DYING);
+	 return ;
+      }
+  }
 }
 
 void Parser::parsePin(const std::string &cmd)

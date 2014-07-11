@@ -100,6 +100,8 @@ GameEngine::~GameEngine()
     delete _gem;
 }
 
+typedef std::list<Map::Players::iterator> Deads;
+
 void	GameEngine::run() {
     
     Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
@@ -107,6 +109,7 @@ void	GameEngine::run() {
     sf::Clock clock;
     SkyBox 	skybox;
     Pan 	pan(_map.getSize());
+    Deads clarksToRemove;
     
     shader->create();
     
@@ -168,11 +171,20 @@ void	GameEngine::run() {
         for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
             (*it)->update(clock);
             (*it)->draw(shader);
+            if ((*it)->getStatus() == Player::DEAD) {
+              clarksToRemove.push_back(it);
+
+            }
         }
         
         shader->setUniform("ambientLight", glm::vec4(0.5, 0.5, 0.5, 1));
         
         _window.display();
+        for (Deads::iterator it = clarksToRemove.begin(), end = clarksToRemove.end(); it != end; ++it) {
+            _map.removePlayer(*it);
+        }
+        clarksToRemove.clear();
+
         clock.restart();
     }
     delete shader;

@@ -6,8 +6,9 @@
 
 class Player : public IEntity
 {
+public:
   enum Status {
-    ALIVE,
+    ALIVE = 0,
     DYING,
     DEAD,
     SUMMONING
@@ -26,6 +27,8 @@ public:
   bool moveTo(const glm::vec2 &pos);
   size_t getNb() const;
   void setOrientation(size_t orientation);
+  void setStatus(Status status);
+  Status getStatus() const;
 
 typedef std::list<glm::vec2> PosList;
 typedef std::list<glm::vec3> Way;
@@ -41,6 +44,7 @@ private:
   Way _way;
   std::list<size_t> _orientation;
   size_t _i;
+
 };
 
 #endif /* PLAYER_HPP_ */

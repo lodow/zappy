@@ -19,7 +19,7 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
 
 Player::~Player()
 {
-  delete _clarkKent;
+  //delete _clarkKent;
 }
 
 void Player::setOrientation(size_t orientation)
@@ -55,11 +55,20 @@ void Player::update(__attribute__((unused)) const sf::Clock &clock)
 	  _i = 0;
       }
   }
+  else if (_status == Player::DYING) {
+      _clarkKent->translate(glm::vec3(0, 0.05f, 0));
+      ++_i;
+      if (_i == 40)
+	_status = Player::DEAD;
+  }
 }
 
 void Player::draw(Shader *shader)
 {
-  shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
+  if (_status == Player::DYING)
+    shader->setUniform("gColor", glm::vec4(1, 1, 1, 0.5f));
+  else
+    shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
   _clarkKent->draw(shader);
 }
 
@@ -96,4 +105,14 @@ bool Player::moveTo(const glm::vec2 &pos)
     return true;
   }
   return false;
+}
+
+void Player::setStatus(Status status)
+{
+  _status = status;
+}
+
+Player::Status Player::getStatus() const
+{
+  return _status;
 }
