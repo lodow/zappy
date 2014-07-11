@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +32,8 @@ public class Network {
     private int servTime = 0;
 
     public Network(String ip, int port) throws IOException, NumberFormatException {
-        socket = new Socket(ip, port);
+        socket = new Socket();
+        socket.connect(new InetSocketAddress(ip, port), 5000);
         this.input = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         this.output = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
         input.readLine();

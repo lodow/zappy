@@ -54,6 +54,7 @@ public class Player extends Actor {
     private Vector2 randPos = new Vector2();
     private Queue<SmoothMove> smoothMoves = new LinkedList<SmoothMove>();
     private Sprite current = new Sprite();
+    private Vector2 sizeMap = null;
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -77,8 +78,8 @@ public class Player extends Actor {
         content.put(Square.eType.Thystame, 0);
     }
 
-    public void act(float delta, float servTime) {
-
+    public void act(float delta, float servTime, Vector2 sizeMap) {
+        this.sizeMap = sizeMap;
         if (this.servTime != servTime) {
             this.servTime = servTime;
             if (servTime < 100) {
@@ -91,10 +92,8 @@ public class Player extends Actor {
         if (smoothMoves.size() > 0) {
             eDirection tmp = smoothMoves.peek().dir;
             Animation currentAnimation = player_animation.get(tmp);
-//            System.out.println("frame duration: " + currentAnimation.getFrameDuration());
 
             currentAnimation.setFrameDuration(frameDuration);
-            System.out.println("frame duration: " + frameDuration);
             currentFrame = currentAnimation.getKeyFrame(state_time, true);
             state_time += delta;
         }
@@ -104,7 +103,7 @@ public class Player extends Actor {
         }
     }
 
-    public void draw(SpriteBatch batch, Vector2 sizeMap) {
+    public void draw(SpriteBatch batch) {
         current.setRegion(currentFrame);
 
         matrix4.set(defaultMat);
@@ -113,12 +112,10 @@ public class Player extends Actor {
         if (smoothMoves.size() > 0) {
             SmoothMove tmp = smoothMoves.peek();
             float delta = Gdx.graphics.getDeltaTime() * (servTime / 7.0f);
-//            System.out.println("calcul: " + Gdx.graphics.getDeltaTime() * (servTime / 7.0f));
-//            System.out.println("size queue: " + smoothMoves.size());
 
             tmp.distParcouru += delta;
 
-            if (tmp.distParcouru < tmp.dist) {
+            if (tmp.distParcouru < tmp.dist && smoothMoves.size() <= 5) {
                 switch (tmp.dir) {
                     case Nord:
                         if (_pos.y - delta < 0)
@@ -142,7 +139,8 @@ public class Player extends Actor {
                         break;
                 }
             } else {
-                _pos = tmp.posToGo;
+                _pos.x = tmp.posToGo.x;
+                _pos.y = tmp.posToGo.y;
                 smoothMoves.poll();
             }
         }
@@ -179,7 +177,9 @@ public class Player extends Actor {
     }
 
     public void set_pos(Vector2 _pos) {
-          if (!this._realPos.equals(_pos)) {
+        if (_pos.x < 0 || _pos.y < 0) {
+            System.err.println(_pos.toString());
+        } else if (!this._realPos.equals(_pos)) {
             this._realPos = _pos;
             this.smoothMoves.add(new SmoothMove(this._dir, 1.0f, _pos));
           }
@@ -215,6 +215,10 @@ public class Player extends Actor {
     }
 
     public Vector2 get_pos() {
-        return _pos;
+        if (sizeMap == null || _pos.x < 0 ||_pos.y < 0 || (_pos.x > sizeMap.x - 1) || (_pos.y > sizeMap.y - 1)) {
+            return _realPos;
+        } else {
+            return _pos;
+        }
     }
 }

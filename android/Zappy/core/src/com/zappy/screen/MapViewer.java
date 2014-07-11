@@ -54,7 +54,6 @@ public class MapViewer implements Screen {
     private ReturnDialog returnDialog;
     private Stage returnStage = new Stage();
     private List<Square.Incantation> incatationList = new ArrayList<Square.Incantation>();
-    private int speed = 0;
 
     public MapViewer(Network network, Zappy game, Skin skin) {
         this.game = game;
@@ -111,9 +110,6 @@ public class MapViewer implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(1, 1, 1, 1);
 
-        speed = network.getServTime();
-//        System.out.println("servtime: " + network.getServTime());
-
         if (Gdx.input.isKeyPressed(Input.Keys.BACK) && !back) {
             back = true;
             returnDialog.setShowing(true);
@@ -162,20 +158,17 @@ public class MapViewer implements Screen {
 
         // draw ressource
         Square[][] square = map.getSquare();
-        for (int i = 0; i < square.length; i++) {
-            for (int j = 0; j < square[i].length; j++) {
-                square[i][j].draw(batch);
-                Square.Incantation incantation = square[i][j].getIncantation();
-                if (incantation != null) {
-                    incatationList.add(incantation);
-                }
+        for (Square[] aSquare : square)
+            for (Square anASquare : aSquare) {
+                anASquare.draw(batch);
+                Square.Incantation incantation = anASquare.getIncantation();
+                if (incantation != null) incatationList.add(incantation);
             }
-        }
 
         //draw eggs
         List<Egg> egg = map.getEggs();
-        for (int i = 0; i < egg.size(); i++) {
-            egg.get(i).draw(batch);
+        for (Egg anEgg : egg) {
+            anEgg.draw(batch);
         }
 
         List<Player> currentPlayer = map.getPlayers();
@@ -204,8 +197,8 @@ public class MapViewer implements Screen {
                     dead = false;
                 }
             }
-            p.act(delta, network.getServTime());
-            p.draw(batch, sizeMap);
+            p.act(delta, network.getServTime(), sizeMap);
+            p.draw(batch);
         }
 
         if (dead && lastSelectedTile != null) {
@@ -228,7 +221,7 @@ public class MapViewer implements Screen {
         font.draw(batch, "FPS : " + Gdx.graphics.getFramesPerSecond(), 0, Gdx.graphics.getHeight());
         batch.end();
 
-        if (info.isShowing() == false) {
+        if (!info.isShowing()) {
             if (lastSelectedTile != null)
                 lastSelectedTile.setColor(1, 1, 1, 1);
             lastSelectedTile = null;
@@ -236,10 +229,9 @@ public class MapViewer implements Screen {
             info.update(playerSelected);
             info.act(delta);
             info.draw();
-//            Table.drawDebug(info);
         }
 
-        if (back == true) {
+        if (back) {
             if (returnDialog.isShowing()) {
                 returnStage.act(delta);
                 returnStage.draw();

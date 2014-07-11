@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class Assets {
 
-    public static Texture player_sheet, ground, incantation;
+    public static Texture player_sheet, ground;
 
     private static TextureRegion[][] anim_tab;
     private static HashMap<Player.eDirection, Animation> player_animation = new HashMap<Player.eDirection, Animation>();
@@ -26,6 +26,7 @@ public class Assets {
     private static HashMap<Square.eType, Sprite> sprite_ressource = new HashMap<Square.eType, Sprite>();
     public static List<TextureRegion> food = new ArrayList<TextureRegion>();
     public static TextureRegion ressource;
+    public static TextureRegion broadCast;
     public static Texture all;
     private static int FRAME_COLS = 8;
     private static int FRAME_ROWS = 5;
@@ -50,6 +51,7 @@ public class Assets {
 
         all = new Texture(Gdx.files.internal("data/sprites/all_sprite.png"));
         ressource = new TextureRegion(all, 0, 0, 150, 68);
+        broadCast = new TextureRegion(all, 176, 50, 224 - 167, 88 - 50);
 
         // create incantations
         TextureRegion incantation;

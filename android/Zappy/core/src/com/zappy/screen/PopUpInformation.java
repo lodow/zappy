@@ -25,24 +25,22 @@ import java.util.Map;
  * Created by debas_e on 08/07/2014.
  */
 public class PopUpInformation extends Stage {
-    private Table table = new Table();
-    private Skin skin;
     private boolean showing = false;
-    private Player player;
-    private HashMap<Square.eType, Image> img_ressource = new HashMap<Square.eType, Image>();
     private Label level, team;
     private HashMap<Square.eType, Label> labelInfo = new HashMap<Square.eType, Label>();
 
     public PopUpInformation (Skin skin) {
 
         TextureRegion ressource = Assets.ressource;
-        this.img_ressource.put(Square.eType.Deraumere, new Image(new Sprite(ressource, 0, 24, 22, 43 - 24)));
-        this.img_ressource.put(Square.eType.Linemate, new Image(new Sprite(ressource, 52, 0, 73 - 52, 18)));
-        this.img_ressource.put(Square.eType.Mendiane, new Image(new Sprite(ressource, 26, 0, 47 - 26, 19)));
-        this.img_ressource.put(Square.eType.Phiras, new Image(new Sprite(ressource, 102, 24, 124 - 102, 43 - 24)));
-        this.img_ressource.put(Square.eType.Sibur, new Image(new Sprite(ressource, 52, 49, 73 - 52, 66 - 49)));
-        this.img_ressource.put(Square.eType.Thystame, new Image(new Sprite(ressource, 78, 49, 98 - 78, 66 - 49)));
-        this.img_ressource.put(Square.eType.Nourriture, new Image(new Sprite(Assets.food.get(0))));
+        HashMap<Square.eType, Image> img_ressource = new HashMap<Square.eType, Image>();
+
+        img_ressource.put(Square.eType.Deraumere, new Image(new Sprite(ressource, 0, 24, 22, 43 - 24)));
+        img_ressource.put(Square.eType.Linemate, new Image(new Sprite(ressource, 52, 0, 73 - 52, 18)));
+        img_ressource.put(Square.eType.Mendiane, new Image(new Sprite(ressource, 26, 0, 47 - 26, 19)));
+        img_ressource.put(Square.eType.Phiras, new Image(new Sprite(ressource, 102, 24, 124 - 102, 43 - 24)));
+        img_ressource.put(Square.eType.Sibur, new Image(new Sprite(ressource, 52, 49, 73 - 52, 66 - 49)));
+        img_ressource.put(Square.eType.Thystame, new Image(new Sprite(ressource, 78, 49, 98 - 78, 66 - 49)));
+        img_ressource.put(Square.eType.Nourriture, new Image(new Sprite(Assets.food.get(0))));
 
         this.labelInfo.put(Square.eType.Deraumere, new Label("", skin, "default-font", Color.WHITE));
         this.labelInfo.put(Square.eType.Linemate, new Label("", skin, "default-font", Color.WHITE));
@@ -52,12 +50,11 @@ public class PopUpInformation extends Stage {
         this.labelInfo.put(Square.eType.Thystame, new Label("", skin, "default-font", Color.WHITE));
         this.labelInfo.put(Square.eType.Nourriture, new Label("", skin, "default-font", Color.WHITE));
 
-        this.skin = skin;
-
         Drawable patch = new TextureRegionDrawable(new TextureRegion(Assets.all, 175, 0, 50, 50));
 
         Image cross = new Image(new Texture(Gdx.files.internal("data/mainMenu/remove_cross.png")));
         cross.addListener(new CrossClick());
+        Table table = new Table();
         this.addActor(table);
 
         level = new Label("", skin, "default-font", Color.WHITE);

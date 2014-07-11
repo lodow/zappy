@@ -2,7 +2,6 @@ package com.zappy.InputCam;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
@@ -11,8 +10,6 @@ import com.badlogic.gdx.math.collision.Ray;
 public class MapInputProcessor implements InputProcessor {
 
     private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
-    private final Vector3 intersection = new Vector3();
-    private Sprite lastSelectedTile = null;
     private final Vector3 curr = new Vector3();
     private final Vector3 last = new Vector3(-1, -1, -1);
     private final Vector3 delta = new Vector3();
