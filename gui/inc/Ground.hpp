@@ -19,14 +19,21 @@ public:
     void setRecourse(const std::list<int> &recourse);
     void setPosition(const glm::vec2 &pos);
 
+    const glm::mat4 &getTransformation() const;
     const glm::vec2 &getPosition() const;
     const GemList &getGemList() const;
     
+    const glm::vec3 &getSphereCenter() const;
+    const float 	getSphereRadius() const;
+    
 private:
-    Gem _gem;
-    std::list<int> _recourse;
-    GemList _gemList;
-    glm::vec2 _position;
+    Gem 			_gem;
+    std::list<int> 	_recourse;
+    GemList 		_gemList;
+    glm::vec2 		_position;
+
+    glm::vec3 		_sphereCenter;
+    float			_sphereRadius;
 };
 
 #endif /* GROUND_HPP_ */

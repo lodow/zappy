@@ -68,6 +68,11 @@ void Player::setRecourse(const std::list<int> &recourse)
   _recourse = recourse;
 }
 
+const glm::mat4 &Player::getTransformation() const
+{
+    return (_clarkKent->getTransformation());
+}
+
 const glm::vec2 &Player::getPosition() const
 {
   return _position;
@@ -90,4 +95,15 @@ bool Player::moveTo(const glm::vec2 &pos)
     return true;
   }
   return false;
+}
+
+
+const glm::vec3	&Player::getSphereCenter() const
+{
+    return (_sphereCenter);
+}
+
+const float		Player::getSphereRadius() const
+{
+    return (_sphereRadius);
 }

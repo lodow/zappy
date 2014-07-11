@@ -30,15 +30,21 @@ public:
     void setRecourse(const std::list<int> &recourse);
     void setPosition(const glm::vec2 &pos);
     
+    const glm::mat4 &getTransformation() const;
+    
     const glm::vec2 &getPosition() const;
     const glm::vec4 &getColor();
     
+    const glm::vec3 &getSphereCenter() const;
+    const float 	getSphereRadius() const;
     
 private:
-    Model *_model;
+    Model 	*_model;
     GemType _type;
     std::map<GemType, glm::vec4> _colorType;
-    glm::vec2 _position;
+    glm::vec2 	_position;
+    glm::vec3 	_sphereCenter;
+    float	_sphereRadius;
 };
 
 #endif

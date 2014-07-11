@@ -5,7 +5,7 @@ SkyBox::SkyBox()
 {
     _cube = new Cube6Face;
     _cube->build();
-    _cube->scale(glm::vec3(2));
+    _cube->scale(glm::vec3(-2));
     _cube->loadTexture("res/textures/skybox.png");
 }
 

@@ -64,6 +64,11 @@ void Gem::setPosition(const glm::vec2 &pos)
   _position = pos;
 }
 
+const glm::mat4 &Gem::getTransformation() const
+{
+    return (_model->getTransformation());
+}
+
 const glm::vec2 &Gem::getPosition() const
 {
     return _position;
@@ -72,4 +77,15 @@ const glm::vec2 &Gem::getPosition() const
 const glm::vec4 &Gem::getColor()
 {
     return (_colorType[_type]);
+}
+
+
+const glm::vec3	&Gem::getSphereCenter() const
+{
+    return (_sphereCenter);
+}
+
+const float		Gem::getSphereRadius() const
+{
+    return (_sphereRadius);
 }

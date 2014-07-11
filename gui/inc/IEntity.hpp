@@ -18,6 +18,9 @@ public:
     virtual void setRecourse(const std::list<int> &recourse) = 0;
     virtual const glm::vec2 &getPosition() const = 0;
     virtual void setPosition(const glm::vec2 &pos) = 0;
+    virtual const glm::vec3 &getSphereCenter() const = 0;
+    virtual const float getSphereRadius() const = 0;
+    virtual const glm::mat4 &getTransformation() const = 0;
 };
 
 #endif /* IENTITY_HPP_ */

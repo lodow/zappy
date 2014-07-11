@@ -3,6 +3,37 @@
 #include "Pan.hpp"
 #include "GameEngine.hpp"
 
+bool RaySphereCollision(glm::vec3 sphereCenter, float sphereRadius, glm::vec3 vA, glm::vec3 vB)
+{
+    // Create the vector from end point vA to center of sphere
+    glm::vec3 vDirToSphere = sphereCenter - vA;
+    
+    // Create a normalized direction vector from end point vA to end point vB
+    glm::vec3 vLineDir = glm::normalize(vB-vA);
+    
+    // Find length of line segment
+    float fLineLength = glm::distance(vA, vB);
+    
+    // Using the dot product, we project the vDirToSphere onto the vector vLineDir
+    float t = glm::dot(vDirToSphere, vLineDir);
+    
+    glm::vec3 vClosestPoint;
+    // If our projected distance from vA is less than or equal to 0, the closest point is vA
+    if (t <= 0.0f)
+        vClosestPoint = vA;
+    // If our projected distance from vA is greater thatn line length, closest point is vB
+    else if (t >= fLineLength)
+        vClosestPoint = vB;
+    // Otherwise calculate the point on the line using t and return it
+    else
+        vClosestPoint = vA + vLineDir* t;
+    
+    // Now just check if closest point is within radius of sphere
+    return glm::distance(sphereCenter, vClosestPoint) <= sphereRadius;
+}
+
+
+
 int             read_from_server(t_selfd *fd)
 {
     char        buff[BUFSIZ];
@@ -48,7 +79,7 @@ GameEngine::GameEngine(const int &x, const int &y)
 {
     _window.setFramerateLimit(FPS);
     
-    //    glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     //    glBlendFunc(GL_ONE, GL_ONE);
@@ -61,7 +92,7 @@ GameEngine::GameEngine(const int &x, const int &y)
     _cube->loadTexture("res/textures/grass.png");
     
     /* Init connexion */
-    _client = create_connection("127.0.0.1", "4242", SOCK_STREAM, &connect_nb);
+    _client = create_connection("lodow.net", "4242", SOCK_STREAM, &connect_nb);
     if (!_client)
         return ;
     int status;
@@ -114,7 +145,6 @@ void	GameEngine::run() {
     camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
     clock.restart();
     pan.build();
-    pan.scale(glm::vec3(10, 10, 1));
 
     while (_window.isOpen())
     {
@@ -125,7 +155,23 @@ void	GameEngine::run() {
                 event.key.code == sf::Keyboard::Escape)
                 _window.close();
             if (event.type == sf::Event::MouseWheelMoved)
-                camera.translate(glm::vec3(-event.mouseWheel.delta / 50.0f));
+                camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                float y = event.mouseButton.y;
+//                std::cout << "x: " << test.x << std::endl;
+//                std::cout << "y: " << test.y << std::endl;
+//                std::cout << "z: " << test.z << std::endl;
+                for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+                {
+                    glm::vec3 vA = glm::unProject(glm::vec3(event.mouseButton.x, y, 0.0f), camera.getTransformation() * pan.getTransformation(), camera.getProjection(), glm::vec4(0, 0, 1920, 1080));
+                    glm::vec3 vB = glm::unProject(glm::vec3(event.mouseButton.x, y, 1.0f), camera.getTransformation() * pan.getTransformation(), camera.getProjection(), glm::vec4(0, 0, 1920, 1080));
+                    if (RaySphereCollision((*it)->getSphereCenter(), (*it)->getSphereRadius(), vA, vB))
+                    {
+                        std::cout << "X: " << (*it)->getPosition().x << ", Y: " << (*it)->getPosition().y << std::endl;
+                    }
+                }
+            }
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
