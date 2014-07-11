@@ -14,13 +14,11 @@ class Ground : public IEntity
 public:
     Ground(const glm::vec2 &pos, const Gem &gem, const Food &food);
     virtual ~Ground();
-    
-    void draw(Shader *shader);
-    
-    void setRecourse(const std::list<int> &recourse);
-    void setPosition(const glm::vec2 &pos);
-
-    const glm::vec2 &getPosition() const;
+    virtual void draw(Shader *shader);
+    virtual void setRecourse(const std::list<int> &recourse);
+    virtual const std::list<int> &getRecourse() const;
+    virtual void setPosition(const glm::vec2 &pos);
+    virtual const glm::vec2 &getPosition() const;
     const GemList &getGemList() const;
     
 private:

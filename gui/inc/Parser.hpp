@@ -31,6 +31,7 @@ private:
     void parsePnw(const std::string &cmd);
     void parsePpo(const std::string &cmd);
     void parsePdi(const std::string &cmd);
+    void parsePin(const std::string &cmd);
     
 private:
     Map     *_map;

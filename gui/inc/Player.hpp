@@ -6,6 +6,13 @@
 
 class Player : public IEntity
 {
+  enum Status {
+    ALIVE,
+    DYING,
+    DEAD,
+    SUMMONING
+  };
+
 public:
   Player();
   Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl);
@@ -13,18 +20,18 @@ public:
   void update(const sf::Clock &clock);
   virtual void draw(Shader *shader);
   virtual void setRecourse(const std::list<int> &recourse);
+  virtual const std::list<int> &getRecourse() const;
   virtual const glm::vec2 &getPosition() const;
   virtual void setPosition(const glm::vec2 &pos);
   bool moveTo(const glm::vec2 &pos);
   size_t getNb() const;
   void setOrientation(size_t orientation);
 
-private:
-
 typedef std::list<glm::vec2> PosList;
 typedef std::list<glm::vec3> Way;
 
 private:
+  Status _status;
   size_t _nb;
   glm::vec2 _position;
   Model *_clarkKent;

@@ -32,6 +32,12 @@ void Ground::setRecourse(const std::list<int> &recourse)
     _recourse = recourse;
 }
 
+const std::list<int> &Ground::getRecourse() const
+{
+  return _recourse;
+}
+
+
 const glm::vec2 &Ground::getPosition() const {
     return _position;
 }

@@ -69,6 +69,12 @@ const glm::vec2 &Gem::getPosition() const
     return _position;
 }
 
+const std::list<int> &Gem::getRecourse() const
+{
+  return _recourse;
+}
+
+
 const glm::vec4 &Gem::getColor()
 {
     return (_colorType[_type]);

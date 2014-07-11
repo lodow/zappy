@@ -8,6 +8,7 @@ Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _play
   _parse["pnw"] = &Parser::parsePnw;
   _parse["ppo"] = &Parser::parsePpo;
   _parse["pdi"] = &Parser::parsePdi;
+  _parse["pin"] = &Parser::parsePin;
 }
 
 Parser::~Parser()
@@ -112,5 +113,26 @@ void Parser::parsePpo(const std::string &cmd)
 void Parser::parsePdi(const std::string &cmd)
 {
   std::cout << cmd << std::endl;
+}
+
+void Parser::parsePin(const std::string &cmd)
+{
+  size_t nb;
+  std::string tmp = cmd;
+  std::list<int> recourse;
+
+  nb = getNbFromString(cmd);
+  tmp = cmd.substr(cmd.find_first_of(' ') + 1);
+  tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+  for (int i = 0; i != 7; ++i) {
+	tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+	recourse.push_back(getNbFromString(tmp));
+  }
+  for (Map::Players::iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
+      if ((*it)->getNb() == nb) {
+	  (*it)->setRecourse(recourse);
+	  return ;
+      }
+  }
 
 }

@@ -6,7 +6,7 @@ Player::Player() : _clarkKent(new Model)
 }
 
 Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl)
-: _nb(nb), _position(position), _lvl(lvl)
+: _status(ALIVE), _nb(nb), _position(position), _lvl(lvl)
 {
   _clarkKent = new Model(*player._clarkKent);
   _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
@@ -67,6 +67,12 @@ void Player::setRecourse(const std::list<int> &recourse)
 {
   _recourse = recourse;
 }
+
+const std::list<int> &Player::getRecourse() const
+{
+  return _recourse;
+}
+
 
 const glm::vec2 &Player::getPosition() const
 {

@@ -13,6 +13,7 @@ public:
   virtual ~Food();
   virtual void draw(Shader *shader);
   virtual void setRecourse(const std::list<int> &recourse);
+  virtual const std::list<int> &getRecourse() const;
   virtual void setPosition(const glm::vec2 &pos);
   virtual const glm::vec2 &getPosition() const;
 
@@ -20,6 +21,7 @@ public:
 private:
   Model *_model;
   glm::vec2 _pos;
+  std::list<int> _recourse;
 };
 
 #endif /* FOOD_HPP_ */

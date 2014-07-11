@@ -29,6 +29,12 @@ void Food::setRecourse(__attribute__((unused)) const std::list<int> &recourse)
 
 }
 
+const std::list<int> &Food::getRecourse() const
+{
+  return _recourse;
+}
+
+
 void Food::setPosition(const glm::vec2 &pos)
 {
   _pos = pos;
