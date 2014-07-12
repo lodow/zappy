@@ -65,7 +65,7 @@ void Player::update(__attribute__((unused)) const sf::Clock &clock)
 
 void Player::draw(Shader *shader)
 {
-  if (_status == Player::DYING)
+  if (_status == Player::DYING && _posList.empty())
     shader->setUniform("gColor", glm::vec4(1, 1, 1, 0.5f));
   else
     shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));

@@ -180,7 +180,7 @@ void	GameEngine::run() {
         shader->setUniform("ambientLight", glm::vec4(0.5, 0.5, 0.5, 1));
         
         _window.display();
-        for (Deads::iterator it = clarksToRemove.begin(), end = clarksToRemove.end(); it != end; ++it) {
+        for (Deads::const_iterator it = clarksToRemove.begin(), end = clarksToRemove.end(); it != end; ++it) {
             _map.removePlayer(*it);
         }
         clarksToRemove.clear();
