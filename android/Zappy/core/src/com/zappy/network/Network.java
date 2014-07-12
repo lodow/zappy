@@ -41,16 +41,22 @@ public class Network {
         output.flush();
         String tmp = input.readLine(); // size of the map
         parts = tmp.split(" ");
+        if (parts.length < 3)
+            throw new IOException();
         map = new Map(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
 
         tmp = input.readLine();// time of the server (T)
         parts = tmp.split(" ");
+        if (parts.length < 2)
+            throw new IOException();
         servTime = Integer.parseInt(parts[1]);
 
         tmp = input.readLine();
         parts = tmp.split(" ");
         while (parts[0].compareTo("bct") == 0) {
             // resources in the map
+            if (parts.length < 10)
+                throw new IOException();
             map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Nourriture, Integer.parseInt(parts[3]));
             map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Linemate, Integer.parseInt(parts[4]));
             map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Deraumere, Integer.parseInt(parts[5]));
@@ -71,6 +77,8 @@ public class Network {
         }
         while (tmp.compareTo("") != 0 && parts[0].compareTo("pnw") == 0) {
             // playersl
+            if (parts.length < 7)
+                throw new IOException();
             map.addPlayer(new Player(new Vector2(Integer.parseInt(parts[2]),
                           Integer.parseInt(parts[3])), parts[6],
                           Integer.parseInt(parts[1]), Integer.parseInt(parts[5]),
@@ -83,6 +91,8 @@ public class Network {
         }
         while (tmp.compareTo("") != 0 && parts[0].compareTo("enw") == 0) {
             // eggs
+            if (parts.length < 5)
+                throw new IOException();
             map.addEgg(new Egg(new Vector2(Integer.parseInt(parts[3]), Integer.parseInt(parts[4])), Integer.parseInt(parts[1])));
             if (input.ready())
                 tmp = input.readLine();
@@ -138,11 +148,15 @@ public class Network {
         }
     }
 
-    private void msz() {
+    private void msz() throws IOException {
+        if (parts.length < 3)
+            throw new IOException();
         map = new Map(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
     }
 
-    private void bct() {
+    private void bct() throws IOException {
+        if (parts.length < 10)
+            throw new IOException();
         map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Nourriture, Integer.parseInt(parts[3]));
         map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Linemate, Integer.parseInt(parts[4]));
         map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Square.eType.Deraumere, Integer.parseInt(parts[5]));
@@ -156,7 +170,9 @@ public class Network {
         // name of teams
     }
 
-    private void pnw() {
+    private void pnw() throws IOException {
+        if (parts.length < 7)
+            throw new IOException();
         Player x = new Player(new Vector2(Integer.parseInt(parts[2]),
                               Integer.parseInt(parts[3])),
                               parts[6], Integer.parseInt(parts[1]),
@@ -172,7 +188,9 @@ public class Network {
         }
     }
 
-    private void ppo() {
+    private void ppo() throws IOException {
+        if (parts.length < 5)
+            throw new IOException();
         Player x =  map.getPlayer(Integer.parseInt(parts[1]));
         if (x != null) {
             x.set_dir(Player.eDirection.values()[Integer.parseInt(parts[4]) - 1]);
@@ -180,15 +198,18 @@ public class Network {
         }
     }
 
-    private void plv() {
+    private void plv() throws IOException {
+        if (parts.length < 3)
+            throw new IOException();
         Player x =  map.getPlayer(Integer.parseInt(parts[1]));
         if (x != null) {
             x.set_level(Integer.parseInt(parts[2]));
         }
     }
 
-    private void pin() {
-
+    private void pin() throws IOException {
+        if (parts.length < 11)
+            throw new IOException();
         Player x =  map.getPlayer(Integer.parseInt(parts[1]));
         if (x != null) {
             x.setItem(Square.eType.Nourriture, Integer.parseInt(parts[4]));
@@ -205,18 +226,24 @@ public class Network {
         // un joueur expulse
     }
 
-    private void pbc() {
+    private void pbc() throws IOException {
+        if (parts.length < 2)
+            throw new IOException();
         Player x =  map.getPlayer(Integer.parseInt(parts[1]));
         if (x != null) {
             x.createBrodcast();
         }
     }
 
-    private void pic() {
+    private void pic() throws IOException {
+        if (parts.length < 3)
+            throw new IOException();
         map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), true);
     }
 
-    private void pie() {
+    private void pie() throws IOException {
+        if (parts.length < 3)
+            throw new IOException();
         map.setMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), false);
     }
 
@@ -231,34 +258,50 @@ public class Network {
         // prend ressource
     }
 
-    private void pdi() {
+    private void pdi() throws IOException {
+        if (parts.length < 2)
+            throw new IOException();
+
         map.deletePlayer(Integer.parseInt(parts[1]));
     }
 
-    private void enw() {
+    private void enw() throws IOException {
+        if (parts.length < 5)
+            throw new IOException();
         map.addEgg(new Egg(new Vector2(Integer.parseInt(parts[3]), Integer.parseInt(parts[4])), Integer.parseInt(parts[1])));
     }
 
-    private void eht() {
+    private void eht() throws IOException {
+        if (parts.length < 2)
+            throw new IOException();
+
         Egg x = map.getEgg(Integer.parseInt(parts[1]));
         if (x != null)
             x.set_state(Egg.eState.Bloom);
     }
 
-    private void ebo() {
+    private void ebo() throws IOException {
+        if (parts.length < 2)
+            throw new IOException();
         map.deleteEgg(Integer.parseInt(parts[1]));
     }
 
-    private void edi() {
+    private void edi() throws IOException {
+        if (parts.length < 2)
+            throw new IOException();
         map.deleteEgg(Integer.parseInt(parts[1]));
     }
 
     // time of server
-    private void sgt() {
+    private void sgt() throws IOException {
+        if (parts.length < 2)
+            throw new IOException();
         servTime = Integer.parseInt(parts[1]);
     }
 
-    private void seg() {
+    private void seg() throws IOException {
+        if (parts.length < 2)
+            throw new IOException();
         map.setEndOfGame(parts[1]);
     }
 
