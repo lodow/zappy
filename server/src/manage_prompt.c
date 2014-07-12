@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu Jul  3 22:02:03 2014 Nicolas Bridoux
-** Last update Fri Jul  4 21:31:51 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:39:02 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -48,7 +48,8 @@ int		handle_prompt(t_selfd *fd, t_server *serv)
       if ((r = read(fd->fd, buff, sizeof(buff))) > 0)
         buff[r] = '\0';
       if ((r == 0) && !isatty(fd->fd))
-        rm_from_list(&(serv->watch), find_in_list(serv->watch, fd), &destroy_fd);
+        rm_from_list(&(serv->watch),
+		     find_in_list(serv->watch, fd), &destroy_fd);
       handle_special_cases(serv, buff);
       if (buff[0] >= 32 && buff[0] < 127)
         serv->cmd = concat(serv->cmd, buff);
