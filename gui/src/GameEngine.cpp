@@ -70,6 +70,7 @@ GameEngine::GameEngine(float x, float y)
     _player = NULL;
     _mainShader = NULL;
     _textShader = NULL;
+    _parser = NULL;
     
     _window.setFramerateLimit(FPS);
     
