@@ -2,13 +2,6 @@
 #include "utils.hpp"
 #include "Gem.hpp"
 
-uint64_t cpu_cycle()
-{
-    unsigned int lo, hi;
-    __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
-    return (((uint64_t)hi << 32) | lo);
-}
-
 Gem::Gem(GemType type)
 : _type(type)
 {
@@ -18,10 +11,10 @@ Gem::Gem(GemType type)
     _colorType[MENDIANE] 	= glm::vec4(1, 1, 0, ALPHA); // Yellow
     _colorType[PHIRAS] 		= glm::vec4(1, 0, 1, ALPHA); // Pink
     _colorType[THYSTAME] 	= glm::vec4(0, 1, 1, ALPHA); // Cyan
-    
+
     _model = new Model;
     _model->loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
-    
+
 }
 
 Gem::Gem(const Gem &gem, GemType type, const glm::vec2 &position)
@@ -30,9 +23,7 @@ Gem::Gem(const Gem &gem, GemType type, const glm::vec2 &position)
     _type = type;
     _colorType = gem._colorType;
     _position = position;
-    
-    srand(cpu_cycle());
-    
+
     _position.x += ((rand() % 6) / 10.0f) - 0.25f;
     _position.y += ((rand() % 6) / 10.0f) - 0.25f;
 

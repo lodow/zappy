@@ -12,14 +12,12 @@ Food::Food(const Food &food, const glm::vec2 &pos)
 {
     _model = new Model(*food._model);
     _pos = pos;
-    
-    srand(cpu_cycle());
-    
+
     _pos.x += ((rand() % 6) / 10.0f) - 0.25f;
     _pos.y += ((rand() % 6) / 10.0f) - 0.25f;
-    
+
     _model->translate(glm::vec3(_pos.x, 0.5f, _pos.y));
-    
+
     _sphereRadius = 0.3f;
     _sphereCenter = _model->getPos();
 }
@@ -43,7 +41,7 @@ void Food::update(const sf::Clock &clock, UNUSED float serverSpeed)
 
 void Food::setRecourse(UNUSED const std::list<int> &recourse)
 {
-    
+
 }
 
 const std::list<int> &Food::getRecourse() const
