@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Fri Jul  4 19:14:12 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:15:36 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -213,7 +213,7 @@ char	**my_str_to_wordtab(char *str, char delim);
 */
 
 void	gen_food(t_server *serv);
-void	gen_ressource(t_server *serv, char *name, int nb);
+void	gen_ressource(t_server *serv, char *name, int nb, char to_show);
 void	gen_rocks(t_server *serv, t_map *need);
 
 /*

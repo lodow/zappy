@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Fri Jul  4 15:32:15 2014 Nicolas Bridoux
-** Last update Wed Jul  9 17:25:15 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:18:16 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -67,12 +67,12 @@ static void	replace_players_and_notify_gui(t_server *server)
 	  }
       tmp = tmp->next;
     }
-  gen_ressource(server, "linemate", AREA / 2 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "deraumere", AREA / 3 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "sibur", AREA / 4 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "mendiane", AREA / 6 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "phiras", AREA / 8 + DEMI_PERIMETER / 2);
-  gen_ressource(server, "thystame", AREA / 10 + DEMI_PERIMETER / 2);
+  gen_ressource(server, "linemate", AREA / 2 + DEMI_PERIMETER / 2, 0);
+  gen_ressource(server, "deraumere", AREA / 3 + DEMI_PERIMETER / 2, 0);
+  gen_ressource(server, "sibur", AREA / 4 + DEMI_PERIMETER / 2, 0);
+  gen_ressource(server, "mendiane", AREA / 6 + DEMI_PERIMETER / 2, 0);
+  gen_ressource(server, "phiras", AREA / 8 + DEMI_PERIMETER / 2, 0);
+  gen_ressource(server, "thystame", AREA / 10 + DEMI_PERIMETER / 2, 0);
   replace_eggs_and_notify_gui(server);
 }
 
