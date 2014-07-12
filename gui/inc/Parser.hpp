@@ -27,6 +27,7 @@ public:
 private:
     int getNbFromString(const std::string &str) const;
     void parseMsz(const std::string &cmd);
+    void parseSgt(const std::string &cmd);
     void parseBct(const std::string &cmd);
     void parsePnw(const std::string &cmd);
     void parsePpo(const std::string &cmd);

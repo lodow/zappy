@@ -41,7 +41,7 @@ Gem::Gem(const Gem &gem, GemType type, const glm::vec2 &position)
 
 Gem::~Gem()
 {
-    delete _model;
+    //delete _model;
 }
 
 void	Gem::draw(Shader *shader) const
@@ -51,7 +51,7 @@ void	Gem::draw(Shader *shader) const
     _model->draw(shader);
 }
 
-void	Gem::update(const sf::Clock &clock)
+void	Gem::update(const sf::Clock &clock, UNUSED float serverSpeed)
 {
     _model->rotate(glm::vec3(0, 1, 0), 1.0f * clock.getElapsedTime().asMilliseconds());
 }

@@ -132,8 +132,9 @@ bool	GameEngine::initConnection(const std::string &host, const std::string &port
     
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
-    do_select(_elem, &_tv, _parser);
     
+    while (!_map.getSize().x || !_map.getSize().y)
+      do_select(_elem, &_tv, _parser);
     return (true);
 }
 
@@ -148,6 +149,8 @@ void	GameEngine::initOpenGL() const
 void	GameEngine::run()
 {
     sf::Clock clock;
+    
+    Deads clarksToRemove;
     
     _mainShader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     _textShader = new Shader("res/shaders/text.vert", "res/shaders/text.frag");
@@ -209,16 +212,24 @@ void	GameEngine::run()
         _mainShader->setUniform("light", glm::vec4(0.1, 0.6, -0.1, 0));
         _mainShader->setUniform("ambientLight", glm::vec4(0.2, 0.2, 0.2, 1));
         
+        if (_pan->getSize() != _map.getSize()) {
+            _pan->scale(glm::vec3(_map.getSize().x / _pan->getSize().x, _map.getSize().y / _pan->getSize().y, 1));
+            _pan->translate(glm::vec3((_map.getSize().x - _pan->getSize().x) / 2, 0, (_map.getSize().y - _pan->getSize().y) / 2));
+            _pan->setSize(_map.getSize());
+        }
         _pan->draw(_mainShader);
 
-        for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+        for (Map::const_iterator it = _map.begin(), end = _map.end(); it != end; ++it)
         {
-            (*it)->update(clock);
+            (*it)->update(clock, _map.getTime() / 7);
             (*it)->draw(_mainShader);
         }
-        for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
-            (*it)->update(clock);
+        for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
+        {
+            (*it)->update(clock, _map.getTime() / 7);
             (*it)->draw(_mainShader);
+            if ((*it)->getStatus() == Player::DEAD)
+                clarksToRemove.push_back(it);
         }
         
         _textShader->bind();
@@ -229,6 +240,13 @@ void	GameEngine::run()
             _groundInfo.draw(_textShader);
         
         _window.display();
+
+        clock.restart();
+        
+        for (Deads::const_iterator it = clarksToRemove.begin(), end = clarksToRemove.end(); it != end; ++it) {
+            _map.removePlayer(*it);
+        }
+        clarksToRemove.clear();
     }
 }
 

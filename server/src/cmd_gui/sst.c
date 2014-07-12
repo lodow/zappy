@@ -5,15 +5,15 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Wed May 28 16:52:09 2014 Nicolas Bridoux
-** Last update Thu Jul 10 21:38:58 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:43:42 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
-void		sst(t_server *serv, t_selfd *fd, char **args)
+void	sst(t_server *serv, t_selfd *fd, char **args)
 {
-  char		buff[BUFF_SIZE];
-  int		t;
+  char	buff[BUFF_SIZE];
+  int	t;
 
   if (args[0])
     {

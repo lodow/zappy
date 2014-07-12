@@ -35,17 +35,17 @@ void    Ground::draw(Shader *shader) const
     }
 }
 
-void	Ground::update(const sf::Clock &clock)
+void	Ground::update(const sf::Clock &clock, float serverSpeed)
 {
     std::list<int>::const_iterator rec = _recourse.begin();
     
     if (*rec) {
-        _food.update(clock);
+        _food.update(clock, serverSpeed);
     }
     ++rec;
     for (GemList::const_iterator it = _gemList.begin(), end = _gemList.end(); it != end; ++it) {
         if (*rec)
-            (*it)->update(clock);
+            (*it)->update(clock, serverSpeed);
         ++rec;
     }
 

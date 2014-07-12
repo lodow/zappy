@@ -13,9 +13,10 @@ public:
     virtual ~Pan();
     
     void build();
-    
+    const glm::vec2 &getSize() const;
+    void setSize(const glm::vec2 &size);
     void draw(Shader *shader);
-    
+
 private:
     Pan(const Pan& c);
     Pan& operator=(const Pan& c);

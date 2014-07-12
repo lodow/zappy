@@ -1,11 +1,11 @@
 /*
 ** manage_prompt.c for manage_prompt.c in /home/bridou_n/projets/zappy/server
-** 
+**
 ** Made by Nicolas Bridoux
 ** Login   <bridou_n@epitech.net>
-** 
+**
 ** Started on  Thu Jul  3 22:02:03 2014 Nicolas Bridoux
-** Last update Fri Jul  4 21:31:51 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:39:02 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -45,13 +45,16 @@ int		handle_prompt(t_selfd *fd, t_server *serv)
     serv->cmd = strdup("");
   if (ISREADABLE(fd))
     {
-      if ((r = read(STDIN_FILENO, buff, sizeof(buff))) > 0)
-	buff[r] = '\0';
+      if ((r = read(fd->fd, buff, sizeof(buff))) > 0)
+        buff[r] = '\0';
+      if ((r == 0) && !isatty(fd->fd))
+        rm_from_list(&(serv->watch),
+		     find_in_list(serv->watch, fd), &destroy_fd);
       handle_special_cases(serv, buff);
       if (buff[0] >= 32 && buff[0] < 127)
-	serv->cmd = concat(serv->cmd, buff);
-      if (serv->cmd)
-	printf("\r%s%s", PROMPT, serv->cmd);
+        serv->cmd = concat(serv->cmd, buff);
+      if (serv->cmd && isatty(fd->fd))
+        printf("\r%s%s", PROMPT, serv->cmd);
       fflush(stdout);
       memset(buff, 0, sizeof(buff));
     }
@@ -64,21 +67,22 @@ int		raw_mode(char flag)
   static t_term	old;
   static t_term	new;
 
+  if (!isatty(STDIN_FILENO))
+      return (-1);
   if (flag == ON)
     {
       if (tcgetattr(STDIN_FILENO, &old) == -1)
-	return (-1);
+        return (-1);
       new = old;
       new.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP
-			      | INLCR | IGNCR | ICRNL | IXON);
+                       | INLCR | IGNCR | ICRNL | IXON);
       new.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
       new.c_cflag &= ~(CSIZE | PARENB);
       new.c_cflag |= CS8;
       if (tcsetattr(STDIN_FILENO, TCSANOW, &new) == -1)
-	return (-1);
+        return (-1);
     }
-  else
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &old) == -1)
-      return (-1);
+  else if (tcsetattr(STDIN_FILENO, TCSANOW, &old) == -1)
+    return (-1);
   return (0);
 }

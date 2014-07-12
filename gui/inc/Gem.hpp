@@ -26,7 +26,7 @@ public:
     
     void destroyModel();
     virtual void draw(Shader *shader) const;
-    virtual void update(const sf::Clock &clock);
+    virtual void update(const sf::Clock &clock, float serverSpeed);
     
     void setRecourse(const std::list<int> &recourse);
     void setPosition(const glm::vec2 &pos);

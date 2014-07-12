@@ -5,14 +5,14 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat Jun  7 14:31:38 2014 Nicolas Bridoux
-** Last update Mon Jun 23 23:03:57 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:13:45 2014 Nicolas Bridoux
 */
 
 #include "server.h"
 
 extern char	*g_off[8];
 
-void		gen_ressource(t_server *serv, char *name, int nb)
+void		gen_ressource(t_server *serv, char *name, int nb, char to_show)
 {
   size_t	x;
   size_t	y;
@@ -29,6 +29,8 @@ void		gen_ressource(t_server *serv, char *name, int nb)
 	    x = rand() % serv->game.width;
 	    y = rand() % serv->game.height;
 	    ++(*((size_t *)&(serv->map[y][x]) + i));
+	    if (to_show)
+	      bct_event(serv, &serv->map[y][x], x, y);
 	    --nb;
 	  }
 	break ;

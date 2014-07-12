@@ -16,7 +16,7 @@ public:
     virtual ~Ground();
     
     virtual void draw(Shader *shader) const;
-    virtual void update(const sf::Clock &clock);
+    virtual void update(const sf::Clock &clock, float serverSpeed);
     
     virtual void setRecourse(const std::list<int> &recourse);
     virtual void setPosition(const glm::vec2 &pos);

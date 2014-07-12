@@ -36,7 +36,7 @@ void Food::draw(Shader *shader) const
     _model->draw(shader);
 }
 
-void Food::update(const sf::Clock &clock)
+void Food::update(const sf::Clock &clock, UNUSED float serverSpeed)
 {
     _model->rotate(glm::vec3(0, 1, 0), 1.0f * clock.getElapsedTime().asMilliseconds());
 }

@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Fri Jul  4 10:34:31 2014 Nicolas Bridoux
-** Last update Fri Jul  4 10:50:08 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:17:29 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -21,8 +21,7 @@ static void	add_res(t_server *serv, char **args, int nb)
     {
       if (!strcmp(args[0], g_off[i]))
 	{
-	  gen_ressource(serv, g_off[i], nb);
-	  mct_event(serv);
+	  gen_ressource(serv, g_off[i], nb, 1);
 	  printf("%s%d %ss successfully added to the map.\n%s",
 		 GREEN, nb, args[0], WHITE);
 	  return ;

@@ -3,7 +3,7 @@
 # define PLAYERINFO_HPP_
 
 # include <map>
-# include "Ground.hpp"
+# include "Player.hpp"
 # include "FontText.hpp"
 # include "Rectangle.hpp"
 
@@ -15,14 +15,14 @@ public:
     
     void	draw(Shader *shader);
     
-    void	setGround(Ground *selectedGround);
-    Ground	*getGround() const;
+    void	setPlayer(Player *selectedPlayer);
+    Player	*getPlayer() const;
     
     void	setVisible(bool visibility);
     bool	isVisible() const;
     
 private:
-    Ground		*_ground;
+    Player		*_player;
     Rectangle	_rect;
     
     int		_posX;

@@ -1,3 +1,4 @@
+
 #ifndef MAP_HPP_
 # define MAP_HPP_
 
@@ -24,6 +25,8 @@ public:
   Map::Players::const_iterator playerEnd() const;
   Map::Players::iterator playerBegin();
   Map::Players::iterator playerEnd();
+  Map::Players::iterator removePlayer(Players::iterator player);
+  Map::iterator erase(Map::iterator entity);
   void push_back(Ground* val);
   void push_back(Player* val);
   size_t size() const;
@@ -32,6 +35,8 @@ public:
   Player *playerBack();
   const glm::vec2 &getSize() const;
   void setSize(const glm::vec2 &size);
+  float getTime() const;
+  void setTime(float time);
 
 typedef std::list<Ground *> Maps;
 
@@ -39,7 +44,7 @@ private:
   Maps _grounds;
   Players _players;
   glm::vec2 _size;
-
+  float _time;
 };
 
 #endif /* MAP_HPP_ */

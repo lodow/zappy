@@ -24,7 +24,7 @@ void	PlayerInfo::draw(Shader *shader)
     std::stringstream	ss;
     
     FontText		tempText;
-    std::list<int>	list = _ground->getRecourse();
+    std::list<int>	list = _player->getRecourse();
     unsigned int	resourceAmmount[7];
     int 			space = 0;
     int				i = 0;
@@ -53,14 +53,14 @@ void	PlayerInfo::draw(Shader *shader)
     glEnable(GL_CULL_FACE);
 }
 
-void	PlayerInfo::setGround(Ground *selectedGround)
+void	PlayerInfo::setPlayer(Player *selectedPlayer)
 {
-    _ground = selectedGround;
+    _player = selectedPlayer;
 }
 
-Ground	*PlayerInfo::getGround() const
+Player	*PlayerInfo::getPlayer() const
 {
-    return (_ground);
+    return (_player);
 }
 
 void	PlayerInfo::setVisible(bool visibility)

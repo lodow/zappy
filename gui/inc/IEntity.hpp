@@ -14,7 +14,7 @@ public:
     virtual ~IEntity() {};
     
     virtual void draw(Shader *shader) const = 0;
-    virtual void update(const sf::Clock &clock) = 0;
+    virtual void update(const sf::Clock &clock, float serverSpeed) = 0;
     virtual void setRecourse(const std::list<int> &recourse) = 0;
     virtual const std::list<int> &getRecourse() const = 0;
     virtual const glm::vec2 &getPosition() const = 0;

@@ -9,6 +9,7 @@ Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _play
   _parse["ppo"] = &Parser::parsePpo;
   _parse["pdi"] = &Parser::parsePdi;
   _parse["pin"] = &Parser::parsePin;
+  _parse["sgt"] = &Parser::parseSgt;
 }
 
 Parser::~Parser()
@@ -19,6 +20,7 @@ Parser::~Parser()
 void Parser::parseCmd(const std::string &cmd)
 {
     std::string tmp = cmd.substr(0, cmd.find_first_of(' '));
+
     if (_parse.find(tmp) != _parse.end())
         (this->*_parse[tmp])(cmd.substr(cmd.find_first_of(' ') + 1));
 }
@@ -36,6 +38,13 @@ int Parser::getNbFromString(const std::string &str) const
     return nb;
 }
 
+void Parser::parseSgt(const std::string &cmd)
+{
+  float time = getNbFromString(cmd);
+
+  _map->setTime(time);
+}
+
 void Parser::parseMsz(const std::string &cmd)
 {
   glm::vec2 pos;
@@ -43,6 +52,14 @@ void Parser::parseMsz(const std::string &cmd)
   pos.x = getNbFromString(cmd);
   pos.y = getNbFromString(cmd.substr(cmd.find_first_of(' ') + 1));
   _map->setSize(pos);
+  if (_map->size()) {
+      for (Map::iterator it = _map->begin(); it != _map->end();) {
+	  it = _map->erase(it);
+      }
+      for (Map::Players::iterator it = _map->playerBegin(); it != _map->playerEnd();) {
+     	  it = _map->removePlayer(it);
+      }
+  }
 }
 
 void Parser::parseBct(const std::string &cmd)
@@ -101,8 +118,8 @@ void Parser::parsePpo(const std::string &cmd)
   pos.y = getNbFromString(tmp);
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   orientation = getNbFromString(tmp) - 1;
-  for (Map::Players::iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
-      if ((*it)->getNb() == nb) {
+  for (Map::Players::const_iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
+      if ((*it)->getNb() == nb && (*it)->getStatus() != Player::DEAD) {
 	  if ((*it)->moveTo(pos))
 	    (*it)->setOrientation(orientation);
 	  return ;
@@ -112,7 +129,15 @@ void Parser::parsePpo(const std::string &cmd)
 
 void Parser::parsePdi(const std::string &cmd)
 {
-  std::cout << cmd << std::endl;
+  size_t nb;
+
+  nb = getNbFromString(cmd);
+  for (Map::Players::const_iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
+      if ((*it)->getNb() == nb) {
+	 (*it)->setStatus(Player::DYING);
+	 return ;
+      }
+  }
 }
 
 void Parser::parsePin(const std::string &cmd)
@@ -128,7 +153,7 @@ void Parser::parsePin(const std::string &cmd)
 	tmp = tmp.substr(tmp.find_first_of(' ') + 1);
 	recourse.push_back(getNbFromString(tmp));
   }
-  for (Map::Players::iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
+  for (Map::Players::const_iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
       if ((*it)->getNb() == nb) {
 	  (*it)->setRecourse(recourse);
 	  return ;

@@ -47,6 +47,8 @@ extern "C"
 #include "liste.h"
 }
 
+typedef std::list<Map::Players::iterator> Deads;
+
 class GameEngine {
 public:
     GameEngine(float x, float y);
@@ -55,7 +57,7 @@ public:
     void	run();
     
     void	selectObject(int x, int y);
-    
+
 private:
     bool	initConnection(const std::string &host, const std::string &port);
     void	initOpenGL() const;
