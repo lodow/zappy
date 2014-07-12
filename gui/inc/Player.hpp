@@ -4,6 +4,8 @@
 # include "IEntity.hpp"
 # include "Model.hpp"
 
+# define COMPARE(a, b) std::abs(a - b) < FLT_EPSILON
+
 class Player : public IEntity
 {
 public:
@@ -18,7 +20,7 @@ public:
   Player();
   Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl);
   virtual ~Player();
-  void update(const sf::Clock &clock);
+  void update(const sf::Clock &clock, float speedOfServer);
   virtual void draw(Shader *shader);
   virtual void setRecourse(const std::list<int> &recourse);
   virtual const std::list<int> &getRecourse() const;
@@ -43,8 +45,8 @@ private:
   PosList _posList;
   Way _way;
   std::list<size_t> _orientation;
-  size_t _i;
-
+  float _distance;
+  glm::vec2 _previousPos;
 };
 
 #endif /* PLAYER_HPP_ */

@@ -97,3 +97,13 @@ void Map::setSize(const glm::vec2 &size)
 {
   _size = size;
 }
+
+float Map::getTime() const
+{
+  return _time;
+}
+
+void Map::setTime(float time)
+{
+  _time = time;
+}
