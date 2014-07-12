@@ -206,7 +206,10 @@ public class Network {
     }
 
     private void pbc() {
-        // broadcast
+        Player x =  map.getPlayer(Integer.parseInt(parts[1]));
+        if (x != null) {
+            x.createBrodcast();
+        }
     }
 
     private void pic() {

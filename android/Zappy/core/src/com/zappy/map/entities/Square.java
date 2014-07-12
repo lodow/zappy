@@ -37,6 +37,7 @@ public class Square extends Actor {
     private HashMap<String, Animation> incantationAnimations = new HashMap<String, Animation>();
     private Vector2 pos;
     private Incantation incantation = null;
+    private float servTime = 0;
 
     public Square(Vector2 pos) {
 
@@ -118,7 +119,7 @@ public class Square extends Actor {
 
     public void setIncentation(boolean bool) {
         if (bool == true) {
-            System.out.println("incantation on : " + pos.toString());
+//            System.out.println("incantation on : " + pos.toString());
             int rand = (int)(Math.random() * 2);
             incantation = new Incantation(incantationAnimations.get((rand == 1 ? "fire" : "tornado")));
         } else {
@@ -135,16 +136,22 @@ public class Square extends Actor {
         private Sprite currentFrame = new Sprite();
         private Matrix4 matrix4 = new Matrix4(), defaultMat = new Matrix4();
         private Vector3 rotation = new Vector3(0, 1, 0);
+        private float servTime = 0;
+        private float frameDuration = 0;
 
         Incantation(Animation incantation) {
             this.incantation = incantation;
         }
 
         public void draw(Batch batch, float delta) {
+
             matrix4.set(defaultMat);
 
             matrix4.translate(pos.y + 0.2f, 0, -pos.x - 0.2f);
             matrix4.rotate(rotation, 45);
+
+            incantation.setFrameDuration(frameDuration);
+
             TextureRegion tmp = incantation.getKeyFrame(stateTime, true);
             stateTime += delta;
             currentFrame.setRegion(tmp);

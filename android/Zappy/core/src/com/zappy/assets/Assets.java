@@ -51,7 +51,7 @@ public class Assets {
 
         all = new Texture(Gdx.files.internal("data/sprites/all_sprite.png"));
         ressource = new TextureRegion(all, 0, 0, 150, 68);
-        broadCast = new TextureRegion(all, 176, 50, 224 - 167, 88 - 50);
+        broadCast = new TextureRegion(all, 176, 50, 225 - 176, 95 - 50);
 
         // create incantations
         TextureRegion incantation;

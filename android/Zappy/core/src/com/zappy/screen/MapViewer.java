@@ -54,6 +54,7 @@ public class MapViewer implements Screen {
     private ReturnDialog returnDialog;
     private Stage returnStage = new Stage();
     private List<Square.Incantation> incatationList = new ArrayList<Square.Incantation>();
+    private List<Player.BroadCast> broadCastList = new ArrayList<Player.BroadCast>();
 
     public MapViewer(Network network, Zappy game, Skin skin) {
         this.game = game;
@@ -177,6 +178,9 @@ public class MapViewer implements Screen {
         for (Player p : currentPlayer) {
             Vector2 playerPos = p.get_pos();
 
+            Player.BroadCast b = p.getBroadCast();
+            if (b != null) broadCastList.add(b);
+
             if (touched && intersection.x == (int)playerPos.x && intersection.z == (int)-playerPos.y && !selected) {
                 p.setSelected(true);
                 selected = true;
@@ -209,7 +213,11 @@ public class MapViewer implements Screen {
         for (Square.Incantation i : incatationList) {
             i.draw(batch, delta);
         }
+        for (Player.BroadCast b : broadCastList) {
+            b.draw(batch);
+        }
 
+        broadCastList.clear();
         incatationList.clear();
 
         batch.end();

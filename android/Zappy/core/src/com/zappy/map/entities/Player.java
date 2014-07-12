@@ -2,6 +2,7 @@ package com.zappy.map.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -54,7 +55,9 @@ public class Player extends Actor {
     private Vector2 randPos = new Vector2();
     private Queue<SmoothMove> smoothMoves = new LinkedList<SmoothMove>();
     private Sprite current = new Sprite();
+    private Sprite broadCastSprite;
     private Vector2 sizeMap = null;
+    private BroadCast broadCast = null;
 
     public Player(Vector2 pos, String team, int id, int level, eDirection dir) {
         _pos = pos;
@@ -76,6 +79,10 @@ public class Player extends Actor {
         content.put(Square.eType.Mendiane, 0);
         content.put(Square.eType.Phiras, 0);
         content.put(Square.eType.Thystame, 0);
+
+        broadCastSprite = new Sprite(Assets.broadCast);
+        broadCastSprite.setSize(1, 1);
+        broadCastSprite.setPosition(0, 0.8f);
     }
 
     public void act(float delta, float servTime, Vector2 sizeMap) {
@@ -151,7 +158,12 @@ public class Player extends Actor {
         batch.setTransformMatrix(matrix4);
 
         current.draw(batch);
+
+        if (broadCast != null && broadCast.getElapsedTime() > (7.0f / servTime)) {
+                broadCast = null;
+            }
     }
+
 
     public Boolean setItem(Square.eType type, Integer number) {
         content.put(type, number);
@@ -219,6 +231,39 @@ public class Player extends Actor {
             return _realPos;
         } else {
             return _pos;
+        }
+    }
+
+    public void createBrodcast() {
+//        System.out.println("broadcast");
+        if (broadCast == null) {
+            broadCast = new BroadCast();
+        }
+    }
+
+    public BroadCast getBroadCast() {
+        return broadCast;
+    }
+
+    public class BroadCast {
+        private Matrix4 matBroad;
+        private float broadCastTime = 0;
+
+        BroadCast() {
+            matBroad = new Matrix4();
+            matBroad.translate(_pos.x + 0.2f + randPos.x, 0, -_pos.y + randPos.y);
+            matBroad.rotate(rotation, 45);
+        }
+
+        public void draw(Batch batch) {
+            batch.setTransformMatrix(matBroad);
+            broadCastSprite.draw(batch);
+            broadCastTime += Gdx.graphics.getDeltaTime();
+            broadCastSprite.draw(batch);
+        }
+
+        public float getElapsedTime() {
+            return this.broadCastTime;
         }
     }
 }
