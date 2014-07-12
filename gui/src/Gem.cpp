@@ -2,7 +2,8 @@
 #include "utils.hpp"
 #include "Gem.hpp"
 
-uint64_t cpu_cycle(){
+uint64_t cpu_cycle()
+{
     unsigned int lo, hi;
     __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
     return (((uint64_t)hi << 32) | lo);
@@ -43,17 +44,24 @@ Gem::~Gem()
     delete _model;
 }
 
-void	Gem::draw(Shader *shader)
+void	Gem::draw(Shader *shader) const
 {
-    _model->rotate(glm::vec3(0, 1, 0), 3);
-    shader->setUniform("gColor", _colorType[_type]);
+    shader->setUniform("gColor", _colorType.find(_type)->second);
+    shader->setUniform("ambientLight", glm::vec4(0.02, 0.02, 0.02, 1));
     _model->draw(shader);
 }
 
-void	Gem::destroyGeometry()
+void	Gem::update(const sf::Clock &clock)
 {
-    _model->destroyGeometry();
+    _model->rotate(glm::vec3(0, 1, 0), 1.0f * clock.getElapsedTime().asMilliseconds());
 }
+
+void	Gem::destroyModel()
+{
+    if (_model != NULL)
+        _model->destroyGeometry();
+}
+
 void Gem::setRecourse(UNUSED const std::list<int> &recourse)
 {
 
@@ -64,28 +72,22 @@ void Gem::setPosition(const glm::vec2 &pos)
   _position = pos;
 }
 
-const glm::mat4 &Gem::getTransformation() const
-{
-    return (_model->getTransformation());
-}
-
 const glm::vec2 &Gem::getPosition() const
 {
-    return _position;
+    return (_position);
+}
+
+const std::list<int> &Gem::getRecourse() const
+{
+  return (_recourse);
+}
+
+GemType	Gem::getType() const
+{
+    return (_type);
 }
 
 const glm::vec4 &Gem::getColor()
 {
     return (_colorType[_type]);
-}
-
-
-const glm::vec3	&Gem::getSphereCenter() const
-{
-    return (_sphereCenter);
-}
-
-const float		Gem::getSphereRadius() const
-{
-    return (_sphereRadius);
 }

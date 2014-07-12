@@ -10,7 +10,8 @@ public:
     explicit SkyBox();
     virtual ~SkyBox();
     
-    void draw(Shader *shader, const glm::vec3 &position);
+    void draw(Shader *shader) const;
+    void update(const glm::vec3 &position);
     
 protected:
     Cube6Face	*_cube;

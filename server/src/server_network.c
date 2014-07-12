@@ -72,6 +72,7 @@ void		server_setup_select(t_server *serv)
           add_to_list(&(serv->watch), fd);
         i++;
       }
-  if ((fd = create_fd(STDIN_FILENO, NULL, &handle_prompt)))
+  if (isatty(STDIN_FILENO)
+      && (fd = create_fd(STDIN_FILENO, NULL, &handle_prompt)))
     add_to_list(&(serv->watch), fd);
 }

@@ -23,7 +23,8 @@ SRC		=	main.cpp \
 			Player.cpp \
 			Map.cpp \
 			Pan.cpp \
-            SkyBox.cpp
+            SkyBox.cpp \
+            Food.cpp \
 
 CC		=	g++
 FILETYPE	=	.cpp

@@ -2,6 +2,10 @@
 #ifndef GAMEENGINE_HPP_
 # define GAMEENGINE_HPP_
 
+# ifndef GLM_FORCE_RADIANS
+#  define GLM_FORCE_RADIANS
+# endif
+
 # ifdef __APPLE__
 #  include <OpenGL/gl3.h>
 # else
@@ -12,7 +16,11 @@
 #  include <GL/glext.h>
 # endif
 
+# define WINDOW_NAME	"ZAPPY"
+# define FPS            60
+
 # include <glm/glm.hpp>
+# include <glm/gtc/matrix_transform.hpp>
 # include <glm/gtx/transform.hpp>
 # include <SFML/Graphics.hpp>
 # include <SFML/Window.hpp>
@@ -26,6 +34,10 @@
 # include "Gem.hpp"
 # include "Ground.hpp"
 # include "Map.hpp"
+# include "Parser.hpp"
+# include "Pan.hpp"
+# include "SkyBox.hpp"
+# include "GroundInfo.hpp"
 
 extern "C"
 {
@@ -35,31 +47,39 @@ extern "C"
 #include "liste.h"
 }
 
-# define WINDOW_NAME	"ZAPPY"
-# define FPS            60
-
-# include "Parser.hpp"
-
 class GameEngine {
-private:
-    Camera            _camera;
-    Cube              *_cube;
-    Gem				  *_gem;
-    
-    sf::RenderWindow  _window;
-    
-    Map               _map;
-    t_net             *_client;
-    t_list            *_elem;
-    struct timeval    _tv;
-    Parser            *_parser;
-    Player *_player;
-    
 public:
-    GameEngine(const int&, const int&);
+    GameEngine(float x, float y);
     ~GameEngine();
     
     void	run();
+    
+    void	selectObject(int x, int y);
+    
+private:
+    bool	initConnection(const std::string &host, const std::string &port);
+    void	initOpenGL() const;
+    
+    Camera            	_camera;
+    SkyBox				*_skybox;
+    Pan					*_pan;
+    Gem				  	*_gem;
+    
+    Shader				*_mainShader;
+    Shader				*_textShader;
+    
+    sf::RenderWindow  	_window;
+    float				_sizeX;
+    float				_sizeY;
+    
+    GroundInfo			_groundInfo;
+    
+    Map               	_map;
+    t_net             	*_client;
+    t_list            	*_elem;
+    struct timeval    	_tv;
+    Parser            	*_parser;
+    Player 			  	*_player;
 };
 
 int handle_server(t_selfd *fd, void *serv);

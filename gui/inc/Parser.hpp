@@ -11,6 +11,7 @@
 # include "Ground.hpp"
 # include "Map.hpp"
 # include "Player.hpp"
+# include "Food.hpp"
 
 class Parser
 {
@@ -22,20 +23,22 @@ public:
     Parser(Map *map, Gem *gem, Player *player);
     virtual ~Parser();
     void parseCmd(const std::string &cmd);
+
+private:
+    int getNbFromString(const std::string &str) const;
     void parseMsz(const std::string &cmd);
     void parseBct(const std::string &cmd);
     void parsePnw(const std::string &cmd);
     void parsePpo(const std::string &cmd);
     void parsePdi(const std::string &cmd);
-    
-private:
-    int getNbFromString(const std::string &str) const;
+    void parsePin(const std::string &cmd);
     
 private:
     Map     *_map;
     Gem     *_gem;
     Parse   _parse;
     Player *_player;
+    Food *_food;
 };
 
 #endif /* PARSER_HPP_ */

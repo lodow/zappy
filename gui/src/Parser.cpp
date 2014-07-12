@@ -1,13 +1,14 @@
 
 #include "Parser.hpp"
 
-Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _player(player)
+Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _player(player), _food(new Food)
 {
   _parse["msz"] = &Parser::parseMsz;
   _parse["bct"] = &Parser::parseBct;
   _parse["pnw"] = &Parser::parsePnw;
   _parse["ppo"] = &Parser::parsePpo;
   _parse["pdi"] = &Parser::parsePdi;
+  _parse["pin"] = &Parser::parsePin;
 }
 
 Parser::~Parser()
@@ -63,7 +64,7 @@ void Parser::parseBct(const std::string &cmd)
             return ;
         }
     }
-    _map->push_back(new Ground(pos, *_gem));
+    _map->push_back(new Ground(pos, *_gem, *_food));
     _map->back()->setRecourse(recourse);
 
 }
@@ -73,7 +74,6 @@ void Parser::parsePnw(const std::string &cmd)
   glm::vec2 pos;
   size_t nb;
   std::string tmp = cmd;
-  size_t orientation;
   size_t lvl;
 
   nb = getNbFromString(cmd);
@@ -82,7 +82,6 @@ void Parser::parsePnw(const std::string &cmd)
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   pos.y = getNbFromString(tmp);
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
-  orientation = getNbFromString(tmp) - 1;
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   lvl = getNbFromString(tmp);
   _map->push_back(new Player(*_player, pos, nb, lvl));
@@ -114,5 +113,26 @@ void Parser::parsePpo(const std::string &cmd)
 void Parser::parsePdi(const std::string &cmd)
 {
   std::cout << cmd << std::endl;
+}
+
+void Parser::parsePin(const std::string &cmd)
+{
+  size_t nb;
+  std::string tmp = cmd;
+  std::list<int> recourse;
+
+  nb = getNbFromString(cmd);
+  tmp = cmd.substr(cmd.find_first_of(' ') + 1);
+  tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+  for (int i = 0; i != 7; ++i) {
+	tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+	recourse.push_back(getNbFromString(tmp));
+  }
+  for (Map::Players::iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
+      if ((*it)->getNb() == nb) {
+	  (*it)->setRecourse(recourse);
+	  return ;
+      }
+  }
 
 }

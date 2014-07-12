@@ -9,8 +9,8 @@
 class Map
 {
 public:
-  typedef std::list<IEntity *>::const_iterator const_iterator;
-  typedef std::list<IEntity *>::iterator iterator;
+  typedef std::list<Ground *>::const_iterator const_iterator;
+  typedef std::list<Ground *>::iterator iterator;
   typedef std::list<Player *> Players;
 
 public:
@@ -24,7 +24,7 @@ public:
   Map::Players::const_iterator playerEnd() const;
   Map::Players::iterator playerBegin();
   Map::Players::iterator playerEnd();
-  void push_back(IEntity* val);
+  void push_back(Ground* val);
   void push_back(Player* val);
   size_t size() const;
   size_t playerSize() const;
@@ -33,7 +33,7 @@ public:
   const glm::vec2 &getSize() const;
   void setSize(const glm::vec2 &size);
 
-typedef std::list<IEntity *> Maps;
+typedef std::list<Ground *> Maps;
 
 private:
   Maps _grounds;

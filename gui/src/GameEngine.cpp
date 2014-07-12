@@ -1,38 +1,25 @@
 
-#include "SkyBox.hpp"
-#include "Pan.hpp"
+#include "FontText.hpp"
 #include "GameEngine.hpp"
 
-bool RaySphereCollision(glm::vec3 sphereCenter, float sphereRadius, glm::vec3 vA, glm::vec3 vB)
+bool checkCollision(glm::vec3 sphereCenter, float sphereRadius, glm::vec3 vA, glm::vec3 vB)
 {
-    // Create the vector from end point vA to center of sphere
     glm::vec3 vDirToSphere = sphereCenter - vA;
+    glm::vec3 vLineDir = glm::normalize(vB - vA);
+    glm::vec3 vClosestPoint;
     
-    // Create a normalized direction vector from end point vA to end point vB
-    glm::vec3 vLineDir = glm::normalize(vB-vA);
-    
-    // Find length of line segment
     float fLineLength = glm::distance(vA, vB);
-    
-    // Using the dot product, we project the vDirToSphere onto the vector vLineDir
     float t = glm::dot(vDirToSphere, vLineDir);
     
-    glm::vec3 vClosestPoint;
-    // If our projected distance from vA is less than or equal to 0, the closest point is vA
     if (t <= 0.0f)
         vClosestPoint = vA;
-    // If our projected distance from vA is greater thatn line length, closest point is vB
     else if (t >= fLineLength)
         vClosestPoint = vB;
-    // Otherwise calculate the point on the line using t and return it
     else
         vClosestPoint = vA + vLineDir* t;
     
-    // Now just check if closest point is within radius of sphere
-    return glm::distance(sphereCenter, vClosestPoint) <= sphereRadius;
+    return (glm::distance(sphereCenter, vClosestPoint) <= sphereRadius);
 }
-
-
 
 int             read_from_server(t_selfd *fd)
 {
@@ -74,36 +61,63 @@ std::string get_command(t_selfd *fd)
     return (std::string(""));
 }
 
-GameEngine::GameEngine(const int &x, const int &y)
-: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Default, sf::ContextSettings(32, 8, 0, 3, 0))
+GameEngine::GameEngine(float x, float y)
+: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(32, 8, 0, 3, 0)), _camera(x, y), _groundInfo(x, y)
 {
+    _sizeX = x;
+    _sizeY = y;
+    _gem = NULL;
+    _player = NULL;
+    _mainShader = NULL;
+    _textShader = NULL;
+    
     _window.setFramerateLimit(FPS);
     
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    //    glBlendFunc(GL_ONE, GL_ONE);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    _gem = new Gem(LINEMATE);
-    _cube = new Cube;
-    _player = new Player;
-    _cube->build();
-    _cube->loadTexture("res/textures/grass.png");
-    
-    /* Init connexion */
-    _client = create_connection("lodow.net", "4242", SOCK_STREAM, &connect_nb);
-    if (!_client)
+    if (!initConnection("::1", "4242"))
         return ;
+    
+    initOpenGL();
+    
+    run();
+}
+
+GameEngine::~GameEngine()
+{
+    if (_gem != NULL)
+    {
+        _gem->destroyModel();
+        delete _gem;
+    }
+    if (_player != NULL)
+    {
+        _player->destroyModel();
+        delete _player;
+    }
+    if (_parser != NULL)
+        delete _parser;
+    if (_mainShader != NULL)
+        delete _mainShader;
+    if (_textShader != NULL)
+        delete _textShader;
+    if (_skybox != NULL)
+        delete _skybox;
+}
+
+bool	GameEngine::initConnection(const std::string &host, const std::string &port)
+{
+    _client = create_connection(host.c_str(), port.c_str(), SOCK_STREAM, &connect_nb);
+    if (!_client)
+        return (false);
     int status;
-    std::cout << "Connecting . " << std::endl;
+    std::cout << "Connecting . ";
     while ((status = is_connected(_client)) == 1) {
         usleep(500);
         std::cout << ".";
     }
+    std::cout << std::endl;
     if (status == -1) {
         std::cerr << "Error on connection" << std::endl;
-        return ;
+        return (false);
     }
     _elem = NULL;
     
@@ -112,42 +126,45 @@ GameEngine::GameEngine(const int &x, const int &y)
     _tv.tv_sec = 0;
     _tv.tv_usec = 1000;
     
+    _gem = new Gem(LINEMATE);
+    _player = new Player;
     _parser = new Parser(&_map, _gem, _player);
     
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     do_select(_elem, &_tv, _parser);
-
-    run();
+    
+    return (true);
 }
 
-GameEngine::~GameEngine()
+void	GameEngine::initOpenGL() const
 {
-    _cube->destroyGeometry();
-    _gem->destroyGeometry();
-    
-    delete _parser;
-    delete _cube;
-    delete _gem;
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void	GameEngine::run() {
-    
-    Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
-    Camera 	camera;
+void	GameEngine::run()
+{
     sf::Clock clock;
-    SkyBox 	skybox;
-    Pan 	pan(_map.getSize());
     
-    shader->create();
+    _mainShader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
+    _textShader = new Shader("res/shaders/text.vert", "res/shaders/text.frag");
     
-    camera.setPos(glm::vec3(6.0f, 8.0f, 6.0f));
-    camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
-    clock.restart();
-    pan.build();
+    _skybox = new SkyBox;
+    _pan = new Pan(_map.getSize());
+    _pan->build();
+    
+    _mainShader->create();
+    _textShader->create();
+    
+    _camera.setPos(glm::vec3(6.0f, 8.0f, 6.0f));
+    _camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
 
     while (_window.isOpen())
     {
+        clock.restart();
         sf::Event event;
         while (_window.pollEvent(event))
         {
@@ -155,73 +172,85 @@ void	GameEngine::run() {
                 event.key.code == sf::Keyboard::Escape)
                 _window.close();
             if (event.type == sf::Event::MouseWheelMoved)
-                camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
+                _camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
             if (event.type == sf::Event::MouseButtonPressed)
-            {
-                float y = event.mouseButton.y;
-//                std::cout << "x: " << test.x << std::endl;
-//                std::cout << "y: " << test.y << std::endl;
-//                std::cout << "z: " << test.z << std::endl;
-                for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
-                {
-                    glm::vec3 vA = glm::unProject(glm::vec3(event.mouseButton.x, y, 0.0f), camera.getTransformation() * pan.getTransformation(), camera.getProjection(), glm::vec4(0, 0, 1920, 1080));
-                    glm::vec3 vB = glm::unProject(glm::vec3(event.mouseButton.x, y, 1.0f), camera.getTransformation() * pan.getTransformation(), camera.getProjection(), glm::vec4(0, 0, 1920, 1080));
-                    if (RaySphereCollision((*it)->getSphereCenter(), (*it)->getSphereRadius(), vA, vB))
-                    {
-                        std::cout << "X: " << (*it)->getPosition().x << ", Y: " << (*it)->getPosition().y << std::endl;
-                    }
-                }
-            }
+                selectObject(event.mouseButton.x, event.mouseButton.y);
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            camera.translate(glm::vec3(-0.1, 0, -0.1));
+            _camera.translate(glm::vec3(-0.1, 0, -0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            camera.translate(glm::vec3(0.1, 0, 0.1));
+            _camera.translate(glm::vec3(0.1, 0, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            camera.translate(glm::vec3(-0.1, 0, 0.1));
+            _camera.translate(glm::vec3(-0.1, 0, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            camera.translate(glm::vec3(0.1, 0, -0.1));
+            _camera.translate(glm::vec3(0.1, 0, -0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            camera.translate(glm::vec3(0.1, 0.1, 0.1));
+            _camera.translate(glm::vec3(0.1, 0.1, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-            camera.translate(glm::vec3(-0.1, -0.1, -0.1));
+           _camera.translate(glm::vec3(-0.1, -0.1, -0.1));
         
 //        camera.update(event.key.code);
-        camera.lookAt();
+        _camera.lookAt();
         
-        shader->bind();
-        shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
-        shader->setUniform("camPos", camera.getPos());
-        shader->setUniform("projection", camera.getProjection());
-        shader->setUniform("view", camera.getTransformation());
-        shader->setUniform("light", glm::vec4(0));
-        
-        skybox.draw(shader, camera.getPos());
-        
-        shader->setUniform("light", glm::vec4(0.1, 0.6, -0.1, 0));
-        shader->setUniform("ambientLight", glm::vec4(0.2, 0.2, 0.2, 1));
-        
+        _mainShader->bind();
+        _mainShader->setUniform("gColor", glm::vec4(1));
+        _mainShader->setUniform("camPos", _camera.getPos());
+        _mainShader->setUniform("projection", _camera.getProjection());
+        _mainShader->setUniform("view", _camera.getTransformation());
+        _mainShader->setUniform("light", glm::vec4(0));
+
+        _skybox->update(_camera.getPos());
+        _skybox->draw(_mainShader);
         do_select(_elem, &_tv, _parser);
+
+        _mainShader->setUniform("light", glm::vec4(0.1, 0.6, -0.1, 0));
+        _mainShader->setUniform("ambientLight", glm::vec4(0.2, 0.2, 0.2, 1));
         
-        shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
-        pan.draw(shader);
-        
+        _pan->draw(_mainShader);
+
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
-            (*it)->draw(shader);
+        {
+            (*it)->update(clock);
+            (*it)->draw(_mainShader);
+        }
         for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
             (*it)->update(clock);
-            (*it)->draw(shader);
+            (*it)->draw(_mainShader);
         }
         
-        shader->setUniform("ambientLight", glm::vec4(0.5, 0.5, 0.5, 1));
+        _textShader->bind();
+        _textShader->setUniform("gColor", glm::vec4(1));
+        _textShader->setUniform("projection", glm::ortho(0.0f, _sizeX, _sizeY, 0.0f, -1.0f, 1.0f));
+        _textShader->setUniform("view", glm::mat4(1));
+        if (_groundInfo.isVisible())
+            _groundInfo.draw(_textShader);
         
         _window.display();
-        clock.restart();
     }
-    delete shader;
+}
+
+void		GameEngine::selectObject(int mouseX, int mouseY)
+{
+    mouseY = _sizeY - mouseY;
+    glm::vec3 vA = glm::unProject(glm::vec3(mouseX, mouseY, 0.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
+    glm::vec3 vB = glm::unProject(glm::vec3(mouseX, mouseY, 1.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
+    
+    for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+    {
+        if (checkCollision((*it)->getSphereCenter(), (*it)->getSphereRadius(), vA, vB))
+        {
+//            std::cout << "X: " << (*it)->getPosition().x << ", Y: " << (*it)->getPosition().y << std::endl;
+//            (*it)->setSelected(true);
+            _groundInfo.setGround((*it));
+            _groundInfo.setVisible(true);
+            break;
+        }
+        else
+            _groundInfo.setVisible(false);
+    }
 }
 
 int handle_server(t_selfd *fd, void *parser)

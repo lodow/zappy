@@ -51,5 +51,6 @@ void	Pan::build()
 void	Pan::draw(Shader *shader)
 {
     sf::Texture::bind(_texture);
+    shader->setUniform("gColor", glm::vec4(1));
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
 }

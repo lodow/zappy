@@ -52,7 +52,7 @@ Map::Players::iterator Map::playerEnd()
 }
 
 
-void Map::push_back(IEntity* val)
+void Map::push_back(Ground* val)
 {
   _grounds.push_back(val);
 }
