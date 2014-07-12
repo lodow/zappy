@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Fri Jul  4 15:32:15 2014 Nicolas Bridoux
-** Last update Sat Jul 12 20:18:16 2014 Nicolas Bridoux
+** Last update Sat Jul 12 21:30:04 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -23,9 +23,7 @@ static void	notify_gui(t_server *serv)
 	  ((t_client *)fd->data)->type_cli == GUI)
 	{
 	  msz(serv, fd, NULL);
-	  sgt(serv, fd, NULL);
 	  mct(serv, fd, NULL);
-	  tna(serv, fd, NULL);
 	  pnw_init(serv, fd);
 	  enw_init(serv, fd);
 	}

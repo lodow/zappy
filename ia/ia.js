@@ -184,7 +184,7 @@
 
 		var callbackStone = function (res) {
 			if (!res) {
-				cli.avance(function (res) {
+				cli.goDirection(getNeedyPlace(see), function (dir) {
 					cli.voir(function (see) {
 						searchStones(see);
 					});
