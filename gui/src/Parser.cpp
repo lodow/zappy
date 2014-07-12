@@ -20,6 +20,7 @@ Parser::~Parser()
 void Parser::parseCmd(const std::string &cmd)
 {
     std::string tmp = cmd.substr(0, cmd.find_first_of(' '));
+
     if (_parse.find(tmp) != _parse.end())
         (this->*_parse[tmp])(cmd.substr(cmd.find_first_of(' ') + 1));
 }
@@ -51,6 +52,14 @@ void Parser::parseMsz(const std::string &cmd)
   pos.x = getNbFromString(cmd);
   pos.y = getNbFromString(cmd.substr(cmd.find_first_of(' ') + 1));
   _map->setSize(pos);
+  if (_map->size()) {
+      for (Map::iterator it = _map->begin(); it != _map->end();) {
+	  it = _map->erase(it);
+      }
+      for (Map::Players::iterator it = _map->playerBegin(); it != _map->playerEnd();) {
+     	  it = _map->removePlayer(it);
+      }
+  }
 }
 
 void Parser::parseBct(const std::string &cmd)

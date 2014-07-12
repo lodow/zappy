@@ -85,9 +85,8 @@ GameEngine::GameEngine(const int &x, const int &y)
     
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
-    do_select(_elem, &_tv, _parser);
-//    _parser->parseCmd(std::string("pnw #2 0 0 2 1 N\n"));
-//    _parser->parseCmd(std::string("ppo #2 1 0 2\n"));
+    while (!_map.getSize().x || !_map.getSize().y)
+      do_select(_elem, &_tv, _parser);
 
     run();
 }
@@ -103,7 +102,6 @@ GameEngine::~GameEngine()
 }
 
 void	GameEngine::run() {
-    
     Shader 	*shader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     Camera 	camera;
     sf::Clock clock;
@@ -162,7 +160,11 @@ void	GameEngine::run() {
         shader->setUniform("ambientLight", glm::vec4(0.2, 0.2, 0.2, 1));
         
         do_select(_elem, &_tv, _parser);
-        
+        if (pan.getSize() != _map.getSize()) {
+            pan.scale(glm::vec3(_map.getSize().x / pan.getSize().x, _map.getSize().y / pan.getSize().y, 1));
+            pan.translate(glm::vec3((_map.getSize().x - pan.getSize().x) / 2, 0, (_map.getSize().y - pan.getSize().y) / 2));
+            pan.setSize(_map.getSize());
+        }
         shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
         pan.draw(shader);
         

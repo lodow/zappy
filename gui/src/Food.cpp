@@ -15,7 +15,7 @@ Food::Food(const Food &food, const glm::vec2 &pos)
 
 Food::~Food()
 {
-  delete _model;
+  //delete _model;
 }
 
 void Food::draw(Shader *shader)

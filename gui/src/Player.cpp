@@ -10,6 +10,7 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
 {
   _clarkKent = new Model(*player._clarkKent);
   _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
+  _clarkKent->scale(glm::vec3(0.7, 0.7, 0.7));
   _way.push_back(glm::vec3(0, 0, -1));
   _way.push_back(glm::vec3(1, 0, 0));
   _way.push_back(glm::vec3(0, 0, 1));

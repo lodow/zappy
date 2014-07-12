@@ -51,10 +51,16 @@ Map::Players::iterator Map::playerEnd()
   return _players.end();
 }
 
-void Map::removePlayer(Players::iterator player)
+Map::Players::iterator Map::removePlayer(Players::iterator player)
 {
   delete *player;
-  _players.erase(player);
+  return _players.erase(player);
+}
+
+Map::iterator Map::erase(Map::iterator entity)
+{
+  delete *entity;
+  return _grounds.erase(entity);
 }
 
 void Map::push_back(IEntity* val)

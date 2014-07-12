@@ -51,3 +51,13 @@ void	Pan::draw(Shader *shader)
     sf::Texture::bind(_texture);
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
 }
+
+const glm::vec2 &Pan::getSize() const
+{
+  return _size;
+}
+
+void Pan::setSize(const glm::vec2 &size)
+{
+  _size = size;
+}
