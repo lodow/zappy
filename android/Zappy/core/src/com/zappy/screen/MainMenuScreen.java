@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,7 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.zappy.Zappy;
+import com.zappy.assets.Assets;
 import com.zappy.network.Network;
+import com.zappy.screen.popup.ErrorPopUp;
 
 import java.io.IOException;
 
@@ -29,6 +33,7 @@ public class MainMenuScreen implements Screen {
     private TextButton connectionButton;
     private Group background;
     private String ipString = "", portString = "";
+    private Batch batch;
 
     private int CONNECT_BUTTON_ID = 2;
     private Zappy game;
@@ -97,7 +102,11 @@ public class MainMenuScreen implements Screen {
         stage.addActor(background);
         stage.addActor(table);
 
+        batch = new SpriteBatch();
+
         Gdx.input.setInputProcessor(stage);
+
+        Assets.menuMusic.play();
     }
 
     @Override
@@ -117,6 +126,7 @@ public class MainMenuScreen implements Screen {
     public void render (float delta) {
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
 
         if (ipTextField.getText().length() > 0 && portTextField.getText().length() > 0) {
             connectionButton.setDisabled(false);
@@ -127,6 +137,8 @@ public class MainMenuScreen implements Screen {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+
+        Assets.soundController.draw(batch);
 
     }
 
@@ -175,6 +187,8 @@ public class MainMenuScreen implements Screen {
                 else {
                     try {
                         Network network = new Network(ipString, port);
+                        Assets.menuMusic.stop();
+                        Assets.gameMusic.play();
                         game.setScreen(new MapViewer(network, game, skin));
                     } catch (IOException e) {
                         Gdx.app.log("network", "error network" + ipString + " - " + port);

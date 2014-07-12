@@ -136,8 +136,6 @@ public class Square extends Actor {
         private Sprite currentFrame = new Sprite();
         private Matrix4 matrix4 = new Matrix4(), defaultMat = new Matrix4();
         private Vector3 rotation = new Vector3(0, 1, 0);
-        private float servTime = 0;
-        private float frameDuration = 0;
 
         Incantation(Animation incantation) {
             this.incantation = incantation;
@@ -149,8 +147,6 @@ public class Square extends Actor {
 
             matrix4.translate(pos.y + 0.2f, 0, -pos.x - 0.2f);
             matrix4.rotate(rotation, 45);
-
-            incantation.setFrameDuration(frameDuration);
 
             TextureRegion tmp = incantation.getKeyFrame(stateTime, true);
             stateTime += delta;

@@ -17,8 +17,7 @@ public class Map {
     private Square[][] map;
     private List<Egg> eggs = new ArrayList<Egg>();
     private List<Player> players = new ArrayList<Player>();
-    private Boolean endOfGame = false;
-    private String  Team1Win;
+    private String teamWin = "";
 
     public Map(int x, int y) {
         map = new Square[x][y];
@@ -36,12 +35,11 @@ public class Map {
     }
 
     public void setEndOfGame(String team1) {
-        Team1Win = team1;
-        endOfGame = true;
+        teamWin = team1;
     }
 
-    public Boolean getEndOfGame() {
-        return endOfGame;
+    public String getEndOfGame() {
+        return teamWin;
     }
 
     public Vector2 getSize(){

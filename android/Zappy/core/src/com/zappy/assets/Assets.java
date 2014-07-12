@@ -1,12 +1,14 @@
 package com.zappy.assets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.zappy.map.entities.Player;
 import com.zappy.map.entities.Square;
+import com.zappy.screen.sound.SoundController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,9 @@ public class Assets {
     private static HashMap<Player.eDirection, Sprite> player_static = new HashMap<Player.eDirection, Sprite>();
     private static HashMap<Square.eType, Sprite> sprite_ressource = new HashMap<Square.eType, Sprite>();
     public static List<TextureRegion> food = new ArrayList<TextureRegion>();
+    public static Music menuMusic, gameMusic;
+    public static TextureRegion soundOn, soundOff;
+    public static SoundController soundController;
     public static TextureRegion ressource;
     public static TextureRegion broadCast;
     public static Texture all;
@@ -35,6 +40,18 @@ public class Assets {
 
 
     public static void Load() {
+
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/music/gameMusic.mp3"));
+        gameMusic.setLooping(true);
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("data/music/menuMusic.mp3"));
+        menuMusic.setLooping(true);
+
+        Texture sound = new Texture(Gdx.files.internal("data/music/soundSprite.png"));
+        soundOff = new TextureRegion(sound, 0, 0, 64, 64);
+        soundOn = new TextureRegion(sound, 64, 0, 64, 64);
+
+        soundController = new SoundController();
+
         player_sheet = new Texture(Gdx.files.internal("data/sprites/animation_sheet.png"));
         ground = new Texture(Gdx.files.internal("data/sprites/ground.jpg"));
 

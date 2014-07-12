@@ -28,6 +28,9 @@ import com.zappy.map.entities.Egg;
 import com.zappy.map.entities.Player;
 import com.zappy.map.entities.Square;
 import com.zappy.network.Network;
+import com.zappy.screen.popup.PopUpInformation;
+import com.zappy.screen.popup.ReturnDialog;
+import com.zappy.screen.popup.winDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,9 +53,10 @@ public class MapViewer implements Screen {
     private BitmapFont font = new BitmapFont();
     private PopUpInformation info;
     private Player playerSelected = null;
-    private boolean back = false;
+    private boolean back = false, endOfGame = false;
     private ReturnDialog returnDialog;
-    private Stage returnStage = new Stage();
+    private winDialog winDialog;
+    private Stage returnStage = new Stage(), winStage = new Stage();
     private List<Square.Incantation> incatationList = new ArrayList<Square.Incantation>();
     private List<Player.BroadCast> broadCastList = new ArrayList<Player.BroadCast>();
 
@@ -66,7 +70,7 @@ public class MapViewer implements Screen {
         this.info = new PopUpInformation(skin);
         this.camera = new OrthographicCamera(20, 20 * (Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
 
-        this.camera.position.set(sizeMap.x / 2 + 5, 10, sizeMap.y / 2 - 5);
+        this.camera.position.set(sizeMap.x / 2 + 10, 10, -sizeMap.y / 2 + 10);
         this.camera.direction.set(-1, -1, -1);
         this.camera.near = 1;
         this.camera.far = 100;
@@ -85,6 +89,7 @@ public class MapViewer implements Screen {
         groundMatrix.setToRotation(new Vector3(1, 0, 0), -90);
 
         returnDialog = new ReturnDialog("", skin);
+        winDialog = new winDialog("", skin);
         initaliseInputProcessors();
 
     }
@@ -102,6 +107,7 @@ public class MapViewer implements Screen {
         inputMultiplexer.addProcessor(inputProcessor);
         inputMultiplexer.addProcessor(info);
         inputMultiplexer.addProcessor(returnStage);
+        inputMultiplexer.addProcessor(winStage);
 
         Gdx.input.setCatchBackKey(true);
     }
@@ -131,6 +137,8 @@ public class MapViewer implements Screen {
         if (!map.getSize().equals(sizeMap)) {
             sizeMap = map.getSize();
 
+            this.camera.position.set(sizeMap.x / 2 + 10, 10, -sizeMap.y / 2 + 10);
+
             groundSprite = new Sprite[(int) sizeMap.y][(int) sizeMap.x];
             for (int z = 0; z < sizeMap.y; z++) {
                 for (int x = 0; x < sizeMap.x; x++) {
@@ -157,6 +165,9 @@ public class MapViewer implements Screen {
 
         batch.enableBlending();
 
+        List<Player> currentPlayer = map.getPlayers();
+        boolean touched =  checkTileTouched(), selected = false, dead = true;
+
         // draw ressource
         Square[][] square = map.getSquare();
         for (Square[] aSquare : square)
@@ -168,12 +179,11 @@ public class MapViewer implements Screen {
 
         //draw eggs
         List<Egg> egg = map.getEggs();
-        for (Egg anEgg : egg) {
-            anEgg.draw(batch);
+        if (currentPlayer.size() > 0) {
+            for (Egg anEgg : egg) {
+                anEgg.draw(batch);
+            }
         }
-
-        List<Player> currentPlayer = map.getPlayers();
-        boolean touched =  checkTileTouched(), selected = false, dead = true;
 
         for (Player p : currentPlayer) {
             Vector2 playerPos = p.get_pos();
@@ -247,9 +257,28 @@ public class MapViewer implements Screen {
                 back = false;
                 boolean result = returnDialog.getResult();
                 if (result) {
+                    Assets.gameMusic.stop();
+                    Assets.menuMusic.play();
                     game.setScreen(new MainMenuScreen(game));
                 } else {
                     returnDialog.resetButton();
+                }
+            }
+        }
+
+        if (map.getEndOfGame().length() > 0) {
+            if (!endOfGame) {
+                winDialog.setShowing(true);
+                winDialog.setLabelText("Team \"" + map.getEndOfGame() + "\" win the game !");
+                winDialog.show(winStage);
+                endOfGame = true;
+            } else {
+                if (winDialog.isShowing()) {
+                    winStage.act(delta);
+                    winStage.draw();
+                } else {
+                    Assets.gameMusic.stop();
+                    game.setScreen(new MainMenuScreen(game));
                 }
             }
         }
@@ -293,8 +322,10 @@ public class MapViewer implements Screen {
 
     @Override
     public void dispose() {
+        Assets.gameMusic.dispose();
         info.dispose();
         skin.dispose();
         returnStage.dispose();
+        winStage.dispose();
     }
 }
