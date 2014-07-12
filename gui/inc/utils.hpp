@@ -3,6 +3,7 @@
 
 # include <string>
 # include <iostream>
+# include <stdint.h>
 
 # define UNUSED	__attribute__ ((__unused__))
 
