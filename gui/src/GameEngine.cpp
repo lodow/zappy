@@ -86,6 +86,8 @@ GameEngine::GameEngine(const int &x, const int &y)
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
     do_select(_elem, &_tv, _parser);
+//    _parser->parseCmd(std::string("pnw #2 0 0 2 1 N\n"));
+//    _parser->parseCmd(std::string("ppo #2 1 0 2\n"));
 
     run();
 }
@@ -99,8 +101,6 @@ GameEngine::~GameEngine()
     delete _cube;
     delete _gem;
 }
-
-typedef std::list<Map::Players::iterator> Deads;
 
 void	GameEngine::run() {
     
@@ -166,17 +166,17 @@ void	GameEngine::run() {
         shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
         pan.draw(shader);
         
-        for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+        for (Map::const_iterator it = _map.begin(), end = _map.end(); it != end; ++it)
             (*it)->draw(shader);
         for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
-            (*it)->update(clock);
+            (*it)->update(clock, _map.getTime() / 7);
             (*it)->draw(shader);
             if ((*it)->getStatus() == Player::DEAD) {
               clarksToRemove.push_back(it);
 
             }
         }
-        
+        clock.restart();
         shader->setUniform("ambientLight", glm::vec4(0.5, 0.5, 0.5, 1));
         
         _window.display();
@@ -185,7 +185,6 @@ void	GameEngine::run() {
         }
         clarksToRemove.clear();
 
-        clock.restart();
     }
     delete shader;
 }
