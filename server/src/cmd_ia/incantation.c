@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 ** 
 ** Started on  Sat May 24 20:03:06 2014 Nicolas Bridoux
-** Last update Thu Jul  3 18:55:18 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:33:36 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -45,7 +45,7 @@ size_t		nb_players_at(t_server *serv, size_t x, size_t y, int lvl)
   return (nb);
 }
 
-static void	send_to_everyone_on_square(t_server *serv, size_t x,
+void		send_to_everyone_on_square(t_server *serv, size_t x,
 					   size_t y, char *msg)
 {
   t_selfd	*fd;

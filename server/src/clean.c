@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Thu May 22 16:44:51 2014 Nicolas Bridoux
-** Last update Fri Jul  4 11:04:08 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:35:09 2014 Nicolas Bridoux
 */
 
 #include "server.h"
@@ -78,6 +78,13 @@ void		quit_server(t_server *serv)
   return (free_eggs_and_map(serv));
 }
 
+static void	fail_incant(t_server *serv, t_selfd *fd)
+{
+  pie(serv, fd, KO);
+  send_to_everyone_on_square(serv, ((t_client *)fd->data)->x,
+			     ((t_client *)fd->data)->y, "ko");
+}
+
 void		clean_client(t_server *serv, t_selfd *fd)
 {
   t_list	*tmp;
@@ -87,8 +94,10 @@ void		clean_client(t_server *serv, t_selfd *fd)
   while (tmp)
     {
       instr = tmp->data;
-      if (instr->fd == fd)
+      if (instr && instr->fd == fd)
 	{
+	  if (instr->cmd && !strcmp(instr->cmd, "incantation"))
+	    fail_incant(serv, fd);
 	  if (instr->cmd && strcmp(instr->cmd, "life") &&
 	      strcmp(instr->cmd, "timeout"))
 	    free(instr->cmd);

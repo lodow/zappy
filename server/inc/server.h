@@ -5,7 +5,7 @@
 ** Login   <bridou_n@epitech.net>
 **
 ** Started on  Tue May 20 18:21:33 2014 Nicolas Bridoux
-** Last update Sat Jul 12 20:15:36 2014 Nicolas Bridoux
+** Last update Sat Jul 12 20:34:29 2014 Nicolas Bridoux
 */
 
 #ifndef SERVER_H_INCLUDED
@@ -235,6 +235,7 @@ int	check_incant(t_server *serv, t_selfd *fd, char send);
 void	incantation(t_server *serv, t_selfd *fd, char **args);
 void	check_end_game(t_server *serv);
 size_t	nb_players_at(t_server *serv, size_t x, size_t y, int lvl);
+void	send_to_everyone_on_square(t_server *serv, size_t x, size_t y, char *msg);
 void	ia_fork(t_server *serv, t_selfd *fd, char **args);
 void	connect_nbr(t_server *serv, t_selfd *fd, char **args);
 
