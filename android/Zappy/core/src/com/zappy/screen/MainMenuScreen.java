@@ -138,8 +138,7 @@ public class MainMenuScreen implements Screen {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        Assets.soundController.draw(batch);
-
+        Assets.soundController.draw(batch, this);
     }
 
     @Override

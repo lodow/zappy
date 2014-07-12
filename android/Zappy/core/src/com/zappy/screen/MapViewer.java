@@ -117,6 +117,8 @@ public class MapViewer implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(1, 1, 1, 1);
 
+        Assets.soundController.draw(batch, this);
+
         if (Gdx.input.isKeyPressed(Input.Keys.BACK) && !back) {
             back = true;
             returnDialog.setShowing(true);
