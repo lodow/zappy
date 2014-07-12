@@ -183,17 +183,16 @@
 		}
 
 		var callbackStone = function (res) {
-			if (!res) {
-				cli.goDirection(getNeedyPlace(see), function (dir) {
-					cli.voir(function (see) {
-						searchStones(see);
+			cli.voir(function (see) {
+				if (!res)
+					cli.goDirection(getNeedyPlace(see), function (dir) {
+						cli.voir(function (see_update) {
+							searchStones(see_update);
+						});
 					});
-				});
-			} else {
-				cli.voir(function (see) {
+				else
 					searchStones(see);
-				});
-			}
+			});
 		}
 
 		var searchStones = function (see) {
