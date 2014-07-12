@@ -24,6 +24,7 @@ public:
   Map::Players::const_iterator playerEnd() const;
   Map::Players::iterator playerBegin();
   Map::Players::iterator playerEnd();
+  void removePlayer(Players::iterator player);
   void push_back(IEntity* val);
   void push_back(Player* val);
   size_t size() const;
