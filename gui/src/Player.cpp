@@ -5,6 +5,9 @@
 Player::Player() : _clarkKent(new Model)
 {
     _clarkKent->loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
+    
+    updateSphereCenter();
+    _sphereRadius = 0.5f;
 }
 
 Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl)
@@ -17,6 +20,9 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
     _way.push_back(glm::vec3(1, 0, 0));
     _way.push_back(glm::vec3(0, 0, 1));
     _way.push_back(glm::vec3(-1, 0, 0));
+    
+    updateSphereCenter();
+    _sphereRadius = 0.5f;
 }
 
 Player::~Player()
@@ -31,48 +37,45 @@ void	Player::destroyModel()
 
 void Player::setOrientation(size_t orientation)
 {
-    //    _orientation.push_back(orientation);
-    //}
-    //
-    //void Player::update(UNUSED const sf::Clock &clock)
-    //{
-    //    if (!_posList.empty()) {
-    //        Way::const_iterator it = _way.begin();
-    //        for (size_t j = 0; j != _orientation.front() && j != 4; ++j) {
-    //            ++it;
-    //        }
-    //        if (!_i) {
-    //            _clarkKent->setRotation(glm::vec3(0, 0, 0));
-    //            _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * _orientation.front() + 180);
-    //        }
-    //        _clarkKent->translate(glm::vec3((*it).x * 0.05f, 0, (*it).z * 0.05f));
-    //        ++_i;
-    //        if (_i == 20) {
-    //            if (std::abs(_position.x - _posList.front().x) > 1 + FLT_EPSILON) {
-    //                float un = (_posList.front().x - _position.x) / std::abs(_posList.front().x - _position.x);
-    //                _clarkKent->translate(glm::vec3(_posList.front().x - _position.x + un, 0, 0));
-    //            }
-    //            else if (std::abs(_position.y - _posList.front().y) > 1 + FLT_EPSILON) {
-    //                float un = (_posList.front().y - _position.y) / std::abs(_posList.front().y - _position.y);
-    //                _clarkKent->translate(glm::vec3(0, 0, _posList.front().y - _position.y + un));
-    //            }
-    //            _position = _posList.front();
-    //            _posList.pop_front();
-    //            _orientation.pop_front();
-    //            _i = 0;
-    //        }
-    //    }
-    //}
-    //
-    //void Player::draw(Shader *shader) const
-    //{
-    //    shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
-    //    shader->setUniform("ambientLight", glm::vec4(0.02, 0.02, 0.02, 1));
-    //    _clarkKent->draw(shader);
-    //}
-    //
     _orientation.push_back(orientation);
 }
+
+//void Player::update(UNUSED const sf::Clock &clock)
+//{
+//    if (!_posList.empty()) {
+//        Way::const_iterator it = _way.begin();
+//        for (size_t j = 0; j != _orientation.front() && j != 4; ++j) {
+//            ++it;
+//        }
+//        if (!_i) {
+//            _clarkKent->setRotation(glm::vec3(0, 0, 0));
+//            _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * _orientation.front() + 180);
+//        }
+//        _clarkKent->translate(glm::vec3((*it).x * 0.05f, 0, (*it).z * 0.05f));
+//        ++_i;
+//        if (_i == 20) {
+//            if (std::abs(_position.x - _posList.front().x) > 1 + FLT_EPSILON) {
+//                float un = (_posList.front().x - _position.x) / std::abs(_posList.front().x - _position.x);
+//                _clarkKent->translate(glm::vec3(_posList.front().x - _position.x + un, 0, 0));
+//            }
+//            else if (std::abs(_position.y - _posList.front().y) > 1 + FLT_EPSILON) {
+//                float un = (_posList.front().y - _position.y) / std::abs(_posList.front().y - _position.y);
+//                _clarkKent->translate(glm::vec3(0, 0, _posList.front().y - _position.y + un));
+//            }
+//            _position = _posList.front();
+//            _posList.pop_front();
+//            _orientation.pop_front();
+//            _i = 0;
+//        }
+//    }
+//}
+//
+//void Player::draw(Shader *shader) const
+//{
+//    shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
+//    shader->setUniform("ambientLight", glm::vec4(0.02, 0.02, 0.02, 1));
+//    _clarkKent->draw(shader);
+//}
 
 void Player::update(const sf::Clock &clock, float serverSpeed)
 {
@@ -90,15 +93,18 @@ void Player::update(const sf::Clock &clock, float serverSpeed)
         if ((_distance + distance) > 1)
             distance = 1 - _distance;
         _clarkKent->translate(glm::vec3((*it).x * distance, 0, (*it).z * distance));
+        updateSphereCenter();
         _distance += distance;
         if (_distance > 1 || COMPARE(_distance, 1)) {
             if (std::abs(_position.x - _posList.front().x) > 1) {
                 float un = (_posList.front().x - _position.x) / std::abs(_posList.front().x - _position.x);
                 _clarkKent->translate(glm::vec3(_posList.front().x - _position.x + un, 0, 0));
+                updateSphereCenter();
             }
             else if (std::abs(_position.y - _posList.front().y) > 1) {
                 float un = (_posList.front().y - _position.y) / std::abs(_posList.front().y - _position.y);
                 _clarkKent->translate(glm::vec3(0, 0, _posList.front().y - _position.y + un));
+                updateSphereCenter();
             }
             _position = _posList.front();
             _posList.pop_front();
@@ -121,6 +127,12 @@ void Player::draw(Shader *shader) const
     else
         shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
     _clarkKent->draw(shader);
+}
+
+void	Player::updateSphereCenter()
+{
+    _sphereCenter = _clarkKent->getPos();
+    _sphereCenter.y += 0.5f;
 }
 
 void Player::setRecourse(const std::list<int> &recourse)
@@ -168,7 +180,7 @@ const glm::vec3	&Player::getSphereCenter() const
     return (_sphereCenter);
 }
 
-const float		Player::getSphereRadius() const
+float		Player::getSphereRadius() const
 {
     return (_sphereRadius);
 }
@@ -181,4 +193,9 @@ void Player::setStatus(Status status)
 Player::Status Player::getStatus() const
 {
     return _status;
+}
+
+int	Player::getLevel()
+{
+    return (_lvl);
 }

@@ -62,7 +62,7 @@ std::string get_command(t_selfd *fd)
 }
 
 GameEngine::GameEngine(float x, float y)
-: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(32, 8, 0, 3, 0)), _camera(x, y), _groundInfo(x, y)
+: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(32, 8, 0, 3, 0)), _camera(x, y), _groundInfo(x, y), _playerInfo(x, y)
 {
     _sizeX = x;
     _sizeY = y;
@@ -177,7 +177,7 @@ void	GameEngine::run()
             if (event.type == sf::Event::MouseWheelMoved)
                 _camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
             if (event.type == sf::Event::MouseButtonPressed)
-                selectObject(event.mouseButton.x, event.mouseButton.y);
+                selectObject(event);
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -238,6 +238,8 @@ void	GameEngine::run()
         _textShader->setUniform("view", glm::mat4(1));
         if (_groundInfo.isVisible())
             _groundInfo.draw(_textShader);
+        if(_playerInfo.isVisible())
+            _playerInfo.draw(_textShader);
         
         _window.display();
 
@@ -250,24 +252,41 @@ void	GameEngine::run()
     }
 }
 
-void		GameEngine::selectObject(int mouseX, int mouseY)
+void		GameEngine::selectObject(const sf::Event &mouseEvent)
 {
-    mouseY = _sizeY - mouseY;
+    int mouseX = mouseEvent.mouseButton.x;
+    int mouseY = _sizeY - mouseEvent.mouseButton.y;
+    
     glm::vec3 vA = glm::unProject(glm::vec3(mouseX, mouseY, 0.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
     glm::vec3 vB = glm::unProject(glm::vec3(mouseX, mouseY, 1.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
     
-    for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+    if (mouseEvent.mouseButton.button == sf::Mouse::Button::Right)
     {
-        if (checkCollision((*it)->getSphereCenter(), (*it)->getSphereRadius(), vA, vB))
+        for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
         {
-//            std::cout << "X: " << (*it)->getPosition().x << ", Y: " << (*it)->getPosition().y << std::endl;
-//            (*it)->setSelected(true);
-            _groundInfo.setGround((*it));
-            _groundInfo.setVisible(true);
-            break;
+            if (checkCollision((*it)->getSphereCenter(), (*it)->getSphereRadius(), vA, vB))
+            {
+                _playerInfo.setPlayer((*it));
+                _playerInfo.setVisible(true);
+                break;
+            }
+            else
+                _playerInfo.setVisible(false);
         }
-        else
-            _groundInfo.setVisible(false);
+    }
+    else if (mouseEvent.mouseButton.button == sf::Mouse::Button::Left)
+    {
+        for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
+        {
+            if (checkCollision((*it)->getSphereCenter(), (*it)->getSphereRadius(), vA, vB))
+            {
+                _groundInfo.setGround((*it));
+                _groundInfo.setVisible(true);
+                break;
+            }
+            else
+                _groundInfo.setVisible(false);
+        }
     }
 }
 

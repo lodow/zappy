@@ -79,7 +79,7 @@ const glm::vec3	&Ground::getSphereCenter() const
     return (_sphereCenter);
 }
 
-const float		Ground::getSphereRadius() const
+float		Ground::getSphereRadius() const
 {
     return (_sphereRadius);
 }

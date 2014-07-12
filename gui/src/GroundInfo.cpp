@@ -1,7 +1,8 @@
 
+#include "utils.hpp"
 #include "GroundInfo.hpp"
 
-GroundInfo::GroundInfo(int winSizeX, int winSizeY)
+GroundInfo::GroundInfo(int winSizeX, UNUSED int winSizeY)
 : _rect(winSizeX / 2 - (556 / 2), 10, 556, 50)
 {
     _posX = winSizeX / 2 - (556 / 2);

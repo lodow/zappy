@@ -21,7 +21,7 @@ public:
     virtual const glm::vec2 &getPosition() const;
     
     virtual const glm::vec3	&getSphereCenter() const;
-    virtual const float		getSphereRadius() const;
+    virtual float		getSphereRadius() const;
     
 private:
     Model 			*_model;

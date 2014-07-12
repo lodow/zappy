@@ -38,6 +38,7 @@
 # include "Pan.hpp"
 # include "SkyBox.hpp"
 # include "GroundInfo.hpp"
+# include "PlayerInfo.hpp"
 
 extern "C"
 {
@@ -55,13 +56,16 @@ public:
     ~GameEngine();
     
     void	run();
-    
-    void	selectObject(int x, int y);
 
 private:
     bool	initConnection(const std::string &host, const std::string &port);
     void	initOpenGL() const;
+    void	selectObject(const sf::Event &mouseEvent);
     
+    sf::RenderWindow  	_window;
+    float				_sizeX;
+    float				_sizeY;
+
     Camera            	_camera;
     SkyBox				*_skybox;
     Pan					*_pan;
@@ -70,11 +74,8 @@ private:
     Shader				*_mainShader;
     Shader				*_textShader;
     
-    sf::RenderWindow  	_window;
-    float				_sizeX;
-    float				_sizeY;
-    
     GroundInfo			_groundInfo;
+    PlayerInfo			_playerInfo;
     
     Map               	_map;
     t_net             	*_client;

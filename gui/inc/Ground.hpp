@@ -27,7 +27,7 @@ public:
     const GemList &getGemList() const;
     
     const glm::vec3 &getSphereCenter() const;
-    const float 	getSphereRadius() const;
+    float 	getSphereRadius() const;
     
     void		setSelected(bool selected);
     

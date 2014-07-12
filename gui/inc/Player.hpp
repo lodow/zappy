@@ -38,9 +38,10 @@ public:
     virtual const glm::mat4 &getTransformation() const;
     virtual const glm::vec2 &getPosition() const;
     virtual const glm::vec3 &getSphereCenter() const;
-    virtual const float		getSphereRadius() const;
+    virtual float		getSphereRadius() const;
     void setStatus(Status status);
     Status getStatus() const;
+    int	getLevel();
 
     
 private:
@@ -49,6 +50,8 @@ private:
     typedef std::list<glm::vec3> Way;
     
 private:
+    void updateSphereCenter();
+    
     Status 			_status;
     size_t 			_nb;
     glm::vec2 		_position;

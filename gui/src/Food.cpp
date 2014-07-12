@@ -67,7 +67,7 @@ const glm::vec3	&Food::getSphereCenter() const
     return (_sphereCenter);
 }
 
-const float		Food::getSphereRadius() const
+float		Food::getSphereRadius() const
 {
     return (_sphereRadius);
 }
