@@ -41,6 +41,9 @@ extern "C"
 # include "Parser.hpp"
 
 class GameEngine {
+
+typedef std::list<Map::Players::iterator> Deads;
+
 private:
     Camera            _camera;
     Cube              *_cube;
