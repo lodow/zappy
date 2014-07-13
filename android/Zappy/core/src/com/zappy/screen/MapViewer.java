@@ -28,9 +28,9 @@ import com.zappy.map.entities.Egg;
 import com.zappy.map.entities.Player;
 import com.zappy.map.entities.Square;
 import com.zappy.network.Network;
-import com.zappy.screen.popup.PopUpInformation;
-import com.zappy.screen.popup.ReturnDialog;
-import com.zappy.screen.popup.winDialog;
+import com.zappy.popup.PopUpInformation;
+import com.zappy.popup.ReturnDialog;
+import com.zappy.popup.winDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class MapViewer implements Screen {
     private Player playerSelected = null;
     private boolean back = false, endOfGame = false;
     private ReturnDialog returnDialog;
-    private com.zappy.screen.popup.winDialog winDialog;
+    private winDialog winDialog;
     private Stage returnStage = new Stage(), winStage = new Stage();
     private List<Square.Incantation> incatationList = new ArrayList<Square.Incantation>();
     private List<Player.BroadCast> broadCastList = new ArrayList<Player.BroadCast>();

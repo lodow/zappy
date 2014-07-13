@@ -223,6 +223,7 @@ void	GameEngine::run()
         if (_map.isResized())
         {
             _groundInfo.setGround(NULL);
+            _playerInfo.setPlayer(NULL);
             _map.setResized(false);
         }
         
