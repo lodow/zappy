@@ -11,6 +11,9 @@ public:
     Food();
     Food(const Food &food, const glm::vec2 &pos);
     virtual ~Food();
+    
+    void	destroyModel();
+    
     virtual void draw(Shader *shader) const;
     virtual void update(const sf::Clock &clock, float serverSpeed);
     

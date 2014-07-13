@@ -169,27 +169,16 @@ void	GameEngine::run()
             if (event.type == sf::Event::Closed ||
                 event.key.code == sf::Keyboard::Escape)
                 _window.close();
-            if (event.type == sf::Event::MouseWheelMoved)
-                _camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
             if (event.type == sf::Event::MouseButtonPressed)
                 selectObject(event);
+            if (event.type == sf::Event::MouseWheelMoved)
+                _camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
         }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            _camera.translate(glm::vec3(-0.1, 0, -0.1));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            _camera.translate(glm::vec3(0.1, 0, 0.1));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            _camera.translate(glm::vec3(-0.1, 0, 0.1));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            _camera.translate(glm::vec3(0.1, 0, -0.1));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            _camera.translate(glm::vec3(0.1, 0.1, 0.1));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-           _camera.translate(glm::vec3(-0.1, -0.1, -0.1));
-
+        
+        _camera.update();
+        
         _camera.lookAt();
 
         _mainShader->bind();
@@ -242,12 +231,11 @@ void	GameEngine::run()
         if(_playerInfo.isVisible())
             _playerInfo.draw(_textShader);
 
-        _window.display();
-
         for (Deads::const_iterator it = clarksToRemove.begin(), end = clarksToRemove.end(); it != end; ++it) {
             _map.removePlayer(*it);
         }
         clarksToRemove.clear();
+        _window.display();
     }
 }
 
@@ -267,10 +255,14 @@ void		GameEngine::selectObject(const sf::Event &mouseEvent)
             {
                 _playerInfo.setPlayer((*it));
                 _playerInfo.setVisible(true);
+                _camera.follow((*it));
                 break;
             }
             else
+            {
                 _playerInfo.setVisible(false);
+                _camera.follow(NULL);
+            }
         }
     }
     else if (mouseEvent.mouseButton.button == sf::Mouse::Left)

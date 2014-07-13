@@ -24,7 +24,13 @@ Food::Food(const Food &food, const glm::vec2 &pos)
 
 Food::~Food()
 {
-    delete _model;
+
+}
+
+void	Food::destroyModel()
+{
+    if (_model != NULL)
+        _model->destroyGeometry();
 }
 
 void Food::draw(Shader *shader) const

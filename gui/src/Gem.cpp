@@ -32,7 +32,7 @@ Gem::Gem(const Gem &gem, GemType type, const glm::vec2 &position)
 
 Gem::~Gem()
 {
-    //delete _model;
+    
 }
 
 void	Gem::draw(Shader *shader) const

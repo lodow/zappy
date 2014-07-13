@@ -9,6 +9,7 @@
 # include <SFML/Window.hpp>
 # include <glm/glm.hpp>
 # include <glm/gtc/matrix_transform.hpp>
+# include "Player.hpp"
 
 class Camera
 {
@@ -19,7 +20,10 @@ public:
     void    lookAt();
     void    translate(glm::vec3 vec);
     
-    void	update(const sf::Keyboard::Key &key);
+    void	update();
+    
+    bool	isFollowing() const;
+    void	follow(Player *player);
     
     void	setPointView(glm::vec3 vec);
     void	setPos(glm::vec3 pos);
@@ -37,7 +41,8 @@ private:
     glm::vec3	_pos_view;
     glm::vec3	_dir;
     
-    std::map<sf::Keyboard::Key, glm::vec3> _translationKeyMap;
+    Player		*_player;
+    bool		_following;
 };
 
 #endif /* _CAMERA_HPP_ */
