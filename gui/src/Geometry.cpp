@@ -49,15 +49,21 @@ void    Geometry::build(GLenum usage)
 {
     int verticesBytes, UVBytes, normalsBytes = 0;
     
+    if (!_vertices.size() || !_UVs.size())
+    {
+        std::cerr << "Geometry Error: one vector is empty at least" << std::endl;
+        return ;
+    }
+    
     verticesBytes = _vertices.size() * sizeof(float);
     UVBytes = _UVs.size() * sizeof(float);
     normalsBytes = _normals.size() * sizeof(float);
     
-//    if(glIsVertexArray(_vaoID) == GL_TRUE)
-//        glDeleteVertexArrays(1, &_vaoID);
-//    
-//    if(glIsBuffer(_vboID) == GL_TRUE)
-//        glDeleteBuffers(1, &_vboID);
+    if (!verticesBytes)
+    {
+        std::cerr << "Geometry: Vertices empty" << std::endl;
+        return ;
+    }
     
     glGenBuffers(1, &_vboID);
     GEN_VERTEX_ARRAY(1, &_vaoID);

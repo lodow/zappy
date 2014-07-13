@@ -1,6 +1,10 @@
 #ifndef _CAMERA_HPP_
 # define _CAMERA_HPP_
 
+# ifndef GLM_FORCE_RADIANS
+#  define GLM_FORCE_RADIANS
+# endif
+
 # include <map>
 # include <SFML/Window.hpp>
 # include <glm/glm.hpp>
@@ -9,7 +13,7 @@
 class Camera
 {
 public:
-    Camera();
+    Camera(int sizeX, int sizeY);
     ~Camera();
     
     void    lookAt();

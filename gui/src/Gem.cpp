@@ -2,12 +2,6 @@
 #include "utils.hpp"
 #include "Gem.hpp"
 
-uint64_t cpu_cycle(){
-    unsigned int lo, hi;
-    __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
-    return (((uint64_t)hi << 32) | lo);
-}
-
 Gem::Gem(GemType type)
 : _type(type)
 {
@@ -17,10 +11,10 @@ Gem::Gem(GemType type)
     _colorType[MENDIANE] 	= glm::vec4(1, 1, 0, ALPHA); // Yellow
     _colorType[PHIRAS] 		= glm::vec4(1, 0, 1, ALPHA); // Pink
     _colorType[THYSTAME] 	= glm::vec4(0, 1, 1, ALPHA); // Cyan
-    
+
     _model = new Model;
     _model->loadObj("res/models/gem/gem.obj", "res/models/gem/gem.png");
-    
+
 }
 
 Gem::Gem(const Gem &gem, GemType type, const glm::vec2 &position)
@@ -29,9 +23,7 @@ Gem::Gem(const Gem &gem, GemType type, const glm::vec2 &position)
     _type = type;
     _colorType = gem._colorType;
     _position = position;
-    
-    srand(cpu_cycle());
-    
+
     _position.x += ((rand() % 6) / 10.0f) - 0.25f;
     _position.y += ((rand() % 6) / 10.0f) - 0.25f;
 
@@ -43,17 +35,24 @@ Gem::~Gem()
     //delete _model;
 }
 
-void	Gem::draw(Shader *shader)
+void	Gem::draw(Shader *shader) const
 {
-    _model->rotate(glm::vec3(0, 1, 0), 3);
-    shader->setUniform("gColor", _colorType[_type]);
+    shader->setUniform("gColor", _colorType.find(_type)->second);
+    shader->setUniform("ambientLight", glm::vec4(0.02, 0.02, 0.02, 1));
     _model->draw(shader);
 }
 
-void	Gem::destroyGeometry()
+void	Gem::update(const sf::Clock &clock, UNUSED float serverSpeed)
 {
-    _model->destroyGeometry();
+    _model->rotate(glm::vec3(0, 1, 0), 1.0f * clock.getElapsedTime().asMilliseconds());
 }
+
+void	Gem::destroyModel()
+{
+    if (_model != NULL)
+        _model->destroyGeometry();
+}
+
 void Gem::setRecourse(UNUSED const std::list<int> &recourse)
 {
 
@@ -66,14 +65,18 @@ void Gem::setPosition(const glm::vec2 &pos)
 
 const glm::vec2 &Gem::getPosition() const
 {
-    return _position;
+    return (_position);
 }
 
 const std::list<int> &Gem::getRecourse() const
 {
-  return _recourse;
+  return (_recourse);
 }
 
+GemType	Gem::getType() const
+{
+    return (_type);
+}
 
 const glm::vec4 &Gem::getColor()
 {

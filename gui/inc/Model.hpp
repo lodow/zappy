@@ -2,6 +2,10 @@
 #ifndef MODEL_HPP_
 # define MODEL_HPP_
 
+# ifndef GLM_FORCE_RADIANS
+#  define GLM_FORCE_RADIANS
+# endif
+
 # include <SFML/Graphics.hpp>
 # include <vector>
 # include <glm/glm.hpp>

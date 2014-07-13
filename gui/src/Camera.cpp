@@ -1,10 +1,10 @@
 
 #include "Camera.hpp"
 
-Camera::Camera()
+Camera::Camera(int sizeX, int sizeY)
 : _pos(0.0, 0.0, 0.0), _pos_view(0.0, 0.0, 1.0), _dir(0.0, 1.0, 0.0)
 {
-    _projection = glm::perspective(60.0f, 1600.0f / 900.0f, 0.1f, 1000.0f);
+    _projection = glm::perspective(glm::radians(50.0f), static_cast<float>(sizeX) / static_cast<float>(sizeY), 0.1f, 100.0f);
     
     _translationKeyMap[sf::Keyboard::Up]    = glm::vec3(0, 0, -0.1);
     _translationKeyMap[sf::Keyboard::Down]  = glm::vec3(0, 0, 0.1);

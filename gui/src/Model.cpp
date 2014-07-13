@@ -213,5 +213,6 @@ void    Model::draw(Shader *shader)
 
 void	Model::destroyGeometry()
 {
-    delete _geometry;
+    if (_geometry != NULL)
+        delete _geometry;
 }

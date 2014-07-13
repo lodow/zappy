@@ -63,7 +63,7 @@ Map::iterator Map::erase(Map::iterator entity)
   return _grounds.erase(entity);
 }
 
-void Map::push_back(IEntity* val)
+void Map::push_back(Ground* val)
 {
   _grounds.push_back(val);
 }

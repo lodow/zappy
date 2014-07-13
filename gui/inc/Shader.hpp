@@ -2,14 +2,16 @@
 #ifndef SHADER_HPP_
 # define SHADER_HPP_
 
-# ifndef GL_GLEXT_PROTOTYPES
-#  define GL_GLEXT_PROTOTYPES
+# ifndef GLM_FORCE_RADIANS
+#  define GLM_FORCE_RADIANS
 # endif
 
 # ifdef __APPLE__
-#  include <OpenGL/gl.h>
-#  include <OpenGL/glext.h>
+#  include <OpenGL/gl3.h>
 # else
+#   ifndef GL_GLEXT_PROTOTYPES
+#    define GL_GLEXT_PROTOTYPES
+#   endif
 #  include <GL/gl.h>
 #  include <GL/glext.h>
 # endif
@@ -31,14 +33,14 @@ public:
     ~Shader();
     
     void create();
-    void destroy();
+    void deleteShader();
     
     void bind() const;
     
-    bool setUniform(std::string const& name, GLint value);
-    bool setUniform(std::string const& name, glm::vec3 const& vector);
-    bool setUniform(std::string const& name, glm::vec4 const& vector);
-    bool setUniform(std::string const& name, glm::mat4 const& matrix);
+    bool setUniform(std::string const& name, GLint value) const;
+    bool setUniform(std::string const& name, glm::vec3 const& vector) const;
+    bool setUniform(std::string const& name, glm::vec4 const& vector) const;
+    bool setUniform(std::string const& name, glm::mat4 const& matrix) const;
     
     GLuint getProgramID() const;
     Shader& operator=(Shader const &shader);

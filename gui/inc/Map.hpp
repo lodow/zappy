@@ -1,3 +1,4 @@
+
 #ifndef MAP_HPP_
 # define MAP_HPP_
 
@@ -9,8 +10,8 @@
 class Map
 {
 public:
-  typedef std::list<IEntity *>::const_iterator const_iterator;
-  typedef std::list<IEntity *>::iterator iterator;
+  typedef std::list<Ground *>::const_iterator const_iterator;
+  typedef std::list<Ground *>::iterator iterator;
   typedef std::list<Player *> Players;
 
 public:
@@ -26,7 +27,7 @@ public:
   Map::Players::iterator playerEnd();
   Map::Players::iterator removePlayer(Players::iterator player);
   Map::iterator erase(Map::iterator entity);
-  void push_back(IEntity* val);
+  void push_back(Ground* val);
   void push_back(Player* val);
   size_t size() const;
   size_t playerSize() const;
@@ -37,7 +38,7 @@ public:
   float getTime() const;
   void setTime(float time);
 
-typedef std::list<IEntity *> Maps;
+typedef std::list<Ground *> Maps;
 
 private:
   Maps _grounds;

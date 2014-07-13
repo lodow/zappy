@@ -1,3 +1,4 @@
+
 #include "Pan.hpp"
 
 Pan::Pan(const glm::vec2 &size)
@@ -40,6 +41,7 @@ void	Pan::build()
     
     rotate(glm::vec3(1, 0, 0), -90);
     translate(glm::vec3((_size.x / 2) - 0.5f, 0.5f, (_size.y / 2) - 0.5f));
+    scale(glm::vec3(_size.x + 1, _size.y + 1, 1));
     
     _texture->loadFromFile("res/textures/grass.png");
     _texture->setRepeated(true);
@@ -49,6 +51,7 @@ void	Pan::build()
 void	Pan::draw(Shader *shader)
 {
     sf::Texture::bind(_texture);
+    shader->setUniform("gColor", glm::vec4(1));
     _geometry->draw(shader, getTransformation(), GL_TRIANGLES);
 }
 

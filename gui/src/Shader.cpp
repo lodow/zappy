@@ -18,7 +18,7 @@ Shader::Shader(Shader const &shader)
 
 Shader::~Shader()
 {
-    destroy();
+    deleteShader();
 }
 
 
@@ -46,7 +46,7 @@ void Shader::create()
     {
         //        Getting error message length
         GLint length(0);
-        char *error(NULL);
+        char  *error(NULL);
         
         glGetProgramiv(_programID, GL_INFO_LOG_LENGTH, &length);
         
@@ -86,7 +86,7 @@ void Shader::initialize(GLuint &shader, GLenum type, const std::string &path)
     {
         glDeleteShader(shader);
         //        throw Erreur(std::string("Shader file: ") + source+std::string(" can't be open "), -1);
-        std::cerr << std::string("Shader file: ") + path+std::string(" can't be open ") << std::endl;
+        std::cerr << std::string("Shader file: ") + path + std::string(" can't be open ") << std::endl;
     }
     
     while(getline(fileStream, srcLine))
@@ -129,7 +129,6 @@ void Shader::bindAttribLocation()
     glBindAttribLocation(_programID, 1, "vColor");
     glBindAttribLocation(_programID, 2, "vNormal");
     glBindAttribLocation(_programID, 3, "vTexCoord");
-    //    glBindAttribLocation(_programID, 4, "vTangent");
 }
 
 void Shader::bindUniformMap()
@@ -157,27 +156,27 @@ void Shader::bindUniformMap()
     delete[] temp_buffer;
 }
 
-bool Shader::setUniform(const std::string &name, GLint value)
+bool Shader::setUniform(const std::string &name, GLint value) const
 {
-    glUniform1i(_uniformMap[name], value);
+    glUniform1i(_uniformMap.find(name)->second, value);
     return (true);
 }
 
-bool Shader::setUniform(const std::string &name, const glm::vec3 &vector)
+bool Shader::setUniform(const std::string &name, const glm::vec3 &vector) const
 {
-    glUniform3fv(_uniformMap[name], 1, glm::value_ptr(vector));
+    glUniform3fv(_uniformMap.find(name)->second, 1, glm::value_ptr(vector));
     return (true);
 }
 
-bool Shader::setUniform(const std::string &name, const glm::vec4 &vector)
+bool Shader::setUniform(const std::string &name, const glm::vec4 &vector) const
 {
-    glUniform4fv(_uniformMap[name], 1, glm::value_ptr(vector));
+    glUniform4fv(_uniformMap.find(name)->second, 1, glm::value_ptr(vector));
     return (true);
 }
 
-bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix)
+bool Shader::setUniform(const std::string &name, const glm::mat4 &matrix) const
 {
-    glUniformMatrix4fv(_uniformMap[name], 1, GL_FALSE, glm::value_ptr(matrix));
+    glUniformMatrix4fv(_uniformMap.find(name)->second, 1, GL_FALSE, glm::value_ptr(matrix));
     
     return (true);
 }
@@ -195,7 +194,7 @@ int Shader::operator[](const std::string &uni_string)
 }
 
 
-void Shader::destroy()
+void Shader::deleteShader()
 {
     glDeleteShader(_vertexID);
     glDeleteShader(_fragmentID);
@@ -216,7 +215,7 @@ Shader& Shader::operator=(Shader const &shader)
         _fragmentSource = shader._fragmentSource;
         _initialise = shader._initialise;
         
-        destroy();
+        deleteShader();
         create();
     }
     return *this;
