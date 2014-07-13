@@ -216,8 +216,6 @@ void	GameEngine::run()
             (*it)->draw(_mainShader);
             if ((*it)->isBroadcasting())
             {
-                
-                std::cout << "broadcast" << std::endl;
                 glm::vec2 temp = (*it)->getPosition();
                 glm::vec3 broadcastPos = glm::project(glm::vec3(temp.x, 2.0f, temp.y), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
                 _textShader->bind();
