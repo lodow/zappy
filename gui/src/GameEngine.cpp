@@ -214,18 +214,6 @@ void	GameEngine::run()
         for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
             (*it)->update(clock, _map.getTime() / 7);
             (*it)->draw(_mainShader);
-            if ((*it)->isBroadcasting())
-            {
-                
-                std::cout << "broadcast" << std::endl;
-                glm::vec2 temp = (*it)->getPosition();
-                glm::vec3 broadcastPos = glm::project(glm::vec3(temp.x, 2.0f, temp.y), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
-                _textShader->bind();
-                _textShader->setUniform("gColor", glm::vec4(1));
-                _textShader->setUniform("projection", glm::ortho(0.0f, _sizeX, _sizeY, 0.0f, -1.0f, 1.0f));
-                _textShader->setUniform("view", glm::mat4(1));
-                (*it)->drawBroadcast(_textShader, broadcastPos, _sizeY);
-            }
             if ((*it)->getStatus() == Player::DEAD)
                 clarksToRemove.push_back(it);
         }
@@ -245,6 +233,16 @@ void	GameEngine::run()
             _groundInfo.setGround(NULL);
             _map.setResized(false);
         }
+        
+        for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
+            if ((*it)->isBroadcasting())
+            {
+                glm::vec2 temp = (*it)->getPosition();
+                glm::vec3 broadcastPos = glm::project(glm::vec3(temp.x, 2.0f, temp.y), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
+                (*it)->drawBroadcast(_textShader, broadcastPos, _sizeY);
+            }
+        }
+        
         _groundInfo.update();
         if (_groundInfo.isVisible())
             _groundInfo.draw(_textShader);
