@@ -34,7 +34,10 @@ void	Camera::translate(glm::vec3 vec)
 
 void	Camera::updateView()
 {
-    _pos_view = _player->getModelPos();
+    if (_player != NULL)
+        _pos_view = _player->getModelPos();
+    else
+        _following = false;
 }
 
 void	Camera::updateKeys()

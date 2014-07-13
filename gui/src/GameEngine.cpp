@@ -224,6 +224,7 @@ void	GameEngine::run()
         {
             _groundInfo.setGround(NULL);
             _playerInfo.setPlayer(NULL);
+            _camera.follow(NULL);
             _map.setResized(false);
         }
         
