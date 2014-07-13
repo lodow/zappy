@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Fri Jul 11 23:36:09 2014 Jean Gravier
+## Last update Sun Jul 13 15:34:33 2014 Maxime
 ##
 
 SRC		=	main.c \
@@ -90,7 +90,7 @@ INCDIR		=	inc/
 
 CFLAGS		+=	-I$(INCDIR) -I../libnetwork/inc/
 CFLAGS		+=	-Wall -Wextra -Winit-self
-CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
+CFLAGS		+=	-Wunused-function -pipe -Winit-self
 
 ifneq ($(UNAME_S), Darwin)
 	LDFLAGS	+=	-Wl,-O1
