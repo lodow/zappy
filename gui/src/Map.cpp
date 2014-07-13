@@ -51,10 +51,36 @@ Map::Players::iterator Map::playerEnd()
   return _players.end();
 }
 
+Map::Eggs::const_iterator Map::eggBegin() const
+{
+  return _eggs.begin();
+}
+
+Map::Eggs::const_iterator Map::eggEnd() const
+{
+  return _eggs.end();
+}
+
+Map::Eggs::iterator Map::eggBegin()
+{
+  return _eggs.begin();
+}
+
+Map::Eggs::iterator Map::eggEnd()
+{
+  return _eggs.end();
+}
+
 Map::Players::iterator Map::removePlayer(Players::iterator player)
 {
   delete *player;
   return _players.erase(player);
+}
+
+Map::Eggs::iterator Map::removeEgg(Eggs::iterator egg)
+{
+  delete *egg;
+  return _eggs.erase(egg);
 }
 
 Map::iterator Map::erase(Map::iterator entity)
@@ -73,6 +99,10 @@ void Map::push_back(Player* val)
   _players.push_back(val);
 }
 
+void Map::push_back(Egg* val)
+{
+  _eggs.push_back(val);
+}
 
 size_t Map::size() const
 {
@@ -82,6 +112,11 @@ size_t Map::size() const
 size_t Map::playerSize() const
 {
   return _players.size();
+}
+
+size_t Map::eggSize() const
+{
+  return _eggs.size();
 }
 
 IEntity *Map::back()

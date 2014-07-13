@@ -2,7 +2,8 @@
 #include "Parser.hpp"
 #include "FormatException.hpp"
 
-Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _player(player), _food(new Food)
+Parser::Parser(Map *map, Gem *gem, Player *player)
+: _map(map), _gem(gem), _player(player), _food(new Food), _egg(new Egg)
 {
   _parse["msz"] = &Parser::parseMsz;
   _parse["bct"] = &Parser::parseBct;
@@ -12,6 +13,8 @@ Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _play
   _parse["pin"] = &Parser::parsePin;
   _parse["sgt"] = &Parser::parseSgt;
   _parse["plv"] = &Parser::parsePlv;
+  _parse["enw"] = &Parser::parseEnw;
+  _parse["eht"] = &Parser::parseEht;
 }
 
 Parser::~Parser()
@@ -85,6 +88,9 @@ void Parser::parseMsz(const std::string &cmd)
       }
       for (Map::Players::iterator it = _map->playerBegin(); it != _map->playerEnd();) {
      	  it = _map->removePlayer(it);
+      }
+      for (Map::Eggs::iterator it = _map->eggBegin(); it != _map->eggEnd();) {
+	  it = _map->removeEgg(it);
       }
   }
 }
@@ -207,4 +213,31 @@ void Parser::parsePlv(const std::string &cmd)
       if ((*it)->getNb() == nb)
 	(*it)->setLvl(lvl);
   }
+}
+
+void Parser::parseEnw(const std::string &cmd)
+{
+  std::string tmp;
+  size_t nb;
+  glm::vec2 pos;
+
+  nb = getNbFromString(cmd);
+  tmp = cmd.substr(cmd.find_first_of(' ') + 1);
+  tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+  pos.x = getNbFromString(tmp);
+  tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+  pos.y = getNbFromString(tmp);
+  _map->push_back(new Egg(*_egg, pos, nb));
+}
+
+void Parser::parseEht(const std::string &cmd)
+{
+  size_t nb = getNbFromString(cmd);
+
+  for (Map::Eggs::iterator it = _map->eggBegin(), end = _map->eggEnd(); it != end; ++it)
+    if ((*it)->getNb() == nb) {
+	_map->removeEgg(it);
+	return ;
+    }
+
 }

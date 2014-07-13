@@ -221,17 +221,19 @@ void	GameEngine::run()
         }
         _pan->draw(_mainShader);
 
-        for (Map::const_iterator it = _map.begin(), end = _map.end(); it != end; ++it)
-        {
+        for (Map::const_iterator it = _map.begin(), end = _map.end(); it != end; ++it) {
             (*it)->update(clock, _map.getTime() / 7);
             (*it)->draw(_mainShader);
         }
-        for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
-        {
+        for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it) {
             (*it)->update(clock, _map.getTime() / 7);
             (*it)->draw(_mainShader);
             if ((*it)->getStatus() == Player::DEAD)
                 clarksToRemove.push_back(it);
+        }
+        for (Map::Eggs::const_iterator it = _map.eggBegin(), end = _map.eggEnd(); it != end; ++it) {
+            (*it)->update(clock, _map.getTime() / 7);
+            (*it)->draw(_mainShader);
         }
         clock.restart();
         _textShader->bind();

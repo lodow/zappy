@@ -29,6 +29,7 @@ SRC		=	main.cpp \
             FontText.cpp \
             GroundInfo.cpp \
             PlayerInfo.cpp \
+            Egg.cpp \
 
 CC		=	g++
 FILETYPE	=	.cpp
@@ -42,7 +43,7 @@ SRCDIR		=	src/
 INCDIR		=	inc/
 
 CXXFLAGS	+=	-I$(INCDIR) -I../libnetwork/inc/
-CXXFLAGS	+=	-Wall -Wextra -W -g
+CXXFLAGS	+=	-Wall -Wextra -W
 
 LDFLAGS		+=	-Wl,-O1
 LDFLAGS		+=	-lsfml-graphics -lsfml-window -lsfml-system

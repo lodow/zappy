@@ -12,6 +12,7 @@
 # include "Map.hpp"
 # include "Player.hpp"
 # include "Food.hpp"
+# include "Egg.hpp"
 
 class Parser
 {
@@ -34,6 +35,8 @@ private:
     void parsePdi(const std::string &cmd);
     void parsePin(const std::string &cmd);
     void parsePlv(const std::string &cmd);
+    void parseEnw(const std::string &cmd);
+    void parseEht(const std::string &cmd);
     
 private:
     Map     *_map;
@@ -41,6 +44,7 @@ private:
     Parse   _parse;
     Player *_player;
     Food *_food;
+    Egg *_egg;
 };
 
 #endif /* PARSER_HPP_ */
