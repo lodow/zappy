@@ -45,7 +45,7 @@ public class MainMenuScreen implements Screen {
         create();
     }
 
-    public void create () {
+    public void create() {
         WIDTH = Gdx.graphics.getWidth();
         HEIGHT = Gdx.graphics.getHeight();
 
@@ -59,7 +59,7 @@ public class MainMenuScreen implements Screen {
         ipTextField = new TextField("lodow.net", skin);
         portTextField = new TextField("4242", skin);
 
-        Label ipLabel = new Label(  "Ip   : ", skin);
+        Label ipLabel = new Label("Ip   : ", skin);
         Label portLabel = new Label("port : ", skin);
 
         connectionButton = new TextButton("Connect", skin);
@@ -110,7 +110,7 @@ public class MainMenuScreen implements Screen {
     }
 
     @Override
-    public void resize (int width, int height) {
+    public void resize(int width, int height) {
     }
 
     @Override
@@ -123,16 +123,15 @@ public class MainMenuScreen implements Screen {
     }
 
     @Override
-    public void render (float delta) {
+    public void render(float delta) {
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(1, 1, 1, 1);
 
         if (ipTextField.getText().length() > 0 && portTextField.getText().length() > 0) {
             connectionButton.setDisabled(false);
-        }
-        else if (!connectionButton.isDisabled()) {
-                connectionButton.setDisabled(true);
+        } else if (!connectionButton.isDisabled()) {
+            connectionButton.setDisabled(true);
         }
 
         stage.act(Gdx.graphics.getDeltaTime());
@@ -171,6 +170,7 @@ public class MainMenuScreen implements Screen {
                 boolean error = false;
                 ipString = ipTextField.getText();
                 portString = portTextField.getText();
+                String errorMsg = "";
 
                 try {
                     port = Integer.parseInt(portString);
@@ -182,27 +182,27 @@ public class MainMenuScreen implements Screen {
                     ErrorPopUp err = new ErrorPopUp("", "Invalid Port !\nPlease give a valid one",
                             new TextButton("Retry", skin), skin);
                     err.show(stage);
-                }
-                else {
-                    try {
-                        Network network = new Network(ipString, port);
-                        Assets.menuMusic.stop();
-                        Assets.gameMusic.play();
-                        game.setScreen(new MapViewer(network, game, skin));
-                    } catch (IOException e) {
-                        Gdx.app.log("network", "error network" + ipString + " - " + port);
-                        error = true;
-                    } catch (NumberFormatException e) {
-                        Gdx.app.log("network", "error network" + ipString + " - " + port);
-                        error = true;
-                    }
-                    if (error) {
-                        ErrorPopUp err = new ErrorPopUp("", "Error establishing connection with\nIp : " + ipString + "\n" + "Port : " + port,
-                                new TextButton("Retry", skin), skin);
-                        err.show(stage);
+                } else {
+                        Network network = null;
+                        try {
+                            network = new Network(ipString, port);
+                            Assets.menuMusic.stop();
+                            Assets.gameMusic.play();
+                            game.setScreen(new MapViewer(network, game, skin));
+                        } catch (IOException e) {
+                            Gdx.app.log("network", "error network" + ipString + " - " + port);
+                            errorMsg = "error network" + ipString + " - " + port;
+                        } catch (NumberFormatException e) {
+                            Gdx.app.log("network", "error network" + ipString + " - " + port);
+                            errorMsg = "error network" + ipString + " - " + port;
+                        }
+                        if (errorMsg.length() > 0) {
+                            ErrorPopUp err = new ErrorPopUp("", "Error establishing connection with\nIp : " + ipString + "\n" + "Port : " + port,
+                                    new TextButton("Retry", skin), skin);
+                            err.show(stage);
+                        }
                     }
                 }
             }
         }
     }
-}
