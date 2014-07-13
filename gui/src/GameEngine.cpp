@@ -100,20 +100,10 @@ GameEngine::~GameEngine()
 
 bool	GameEngine::initConnection(const std::string &host, const std::string &port)
 {
-    _client = create_connection(host.c_str(), port.c_str(), SOCK_STREAM, &connect_nb);
+    _client = create_connection(host.c_str(), port.c_str(), SOCK_STREAM, &connect);
     if (!_client)
         return (false);
-    int status;
-    std::cout << "Connecting . ";
-    while ((status = is_connected(_client)) == 1) {
-        usleep(500);
-        std::cout << ".";
-    }
-    std::cout << std::endl;
-    if (status == -1) {
-        std::cerr << "Error on connection" << std::endl;
-        return (false);
-    }
+
     _elem = NULL;
 
     add_to_list(&_elem, static_cast<void *>(create_fd(_client->socket, NULL, (int (*)())(&handle_server))));
@@ -146,12 +136,12 @@ void	GameEngine::run()
     sf::Clock clock;
 
     Deads clarksToRemove;
-    
+
     Rectangle toto(0, 0, 50, 50);
-    
+
     toto.loadTexture("res/textures/broadcast.png");
     toto.build();
-    
+
     _mainShader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     _textShader = new Shader("res/shaders/text.vert", "res/shaders/text.frag");
 
@@ -175,15 +165,17 @@ void	GameEngine::run()
                 event.key.code == sf::Keyboard::Escape)
                 _window.close();
             if (event.type == sf::Event::MouseButtonPressed)
-                selectObject(event);
+                selectObject(event.mouseButton.x, event.mouseButton.y);
             if (event.type == sf::Event::MouseWheelMoved)
                 _camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
         }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        _camera.update();
-        
+        _camera.updateKeys();
+        if (_camera.isFollowing())
+            _camera.updateView();
+
         _camera.lookAt();
 
         _mainShader->bind();
@@ -222,12 +214,12 @@ void	GameEngine::run()
             (*it)->draw(_mainShader);
         }
         clock.restart();
-        
+
         _textShader->bind();
         _textShader->setUniform("gColor", glm::vec4(1));
         _textShader->setUniform("projection", glm::ortho(0.0f, _sizeX, _sizeY, 0.0f, -1.0f, 1.0f));
         _textShader->setUniform("view", glm::mat4(1));
-                
+
         if (_map.isResized())
         {
             _groundInfo.setGround(NULL);
@@ -246,7 +238,7 @@ void	GameEngine::run()
         _groundInfo.update();
         if (_groundInfo.isVisible())
             _groundInfo.draw(_textShader);
-        
+
         _playerInfo.update();
         if(_playerInfo.isVisible())
             _playerInfo.draw(_textShader);
@@ -259,15 +251,15 @@ void	GameEngine::run()
     }
 }
 
-void		GameEngine::selectObject(const sf::Event &mouseEvent)
+void		GameEngine::selectObject(int x, int y)
 {
-    int mouseX = mouseEvent.mouseButton.x;
-    int mouseY = _sizeY - mouseEvent.mouseButton.y;
+    int mouseX = x;
+    int mouseY = _sizeY - y;
 
     glm::vec3 vA = glm::unProject(glm::vec3(mouseX, mouseY, 0.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
     glm::vec3 vB = glm::unProject(glm::vec3(mouseX, mouseY, 1.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
 
-    if (mouseEvent.mouseButton.button == sf::Mouse::Right)
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
         for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
         {
@@ -282,7 +274,7 @@ void		GameEngine::selectObject(const sf::Event &mouseEvent)
         _playerInfo.setVisible(false);
         _camera.follow(NULL);
     }
-    else if (mouseEvent.mouseButton.button == sf::Mouse::Left)
+    else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
         {

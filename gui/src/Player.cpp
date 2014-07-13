@@ -27,6 +27,7 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
     
     updateSphereCenter();
     _sphereRadius = 0.5f;
+    _broadcasting = false;
     _broadcast.loadTexture("res/textures/broadcast.png");
     _broadcast.build();
 }
@@ -136,6 +137,11 @@ const glm::vec2 &Player::getPosition() const
 void Player::setPosition(const glm::vec2 &pos)
 {
     _position = pos;
+}
+
+const glm::vec3 &Player::getModelPos() const
+{
+    return (_clarkKent->getPos());
 }
 
 size_t Player::getNb() const

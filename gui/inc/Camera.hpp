@@ -20,7 +20,8 @@ public:
     void    lookAt();
     void    translate(glm::vec3 vec);
     
-    void	update();
+    void	updateView();
+    void	updateKeys();
     
     bool	isFollowing() const;
     void	follow(Player *player);
@@ -43,6 +44,13 @@ private:
     
     Player		*_player;
     bool		_following;
+    
+    int			_prevMouseX;
+    int			_prevMouseY;
+    float		_distance;
+    float		_sensivity;
+    float		_angley;
+    float		_anglez;
 };
 
 #endif /* _CAMERA_HPP_ */

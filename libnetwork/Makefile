@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Sat Jun  7 15:08:10 2014 Nicolas Bridoux
+## Last update Sun Jul 13 15:34:48 2014 Maxime
 ##
 
 SRC		=	ring_buffer.c \
@@ -31,7 +31,7 @@ INCDIR		=	inc/
 
 CFLAGS		+=	-I$(INCDIR)
 CFLAGS		+=	-Wall -Wextra -Winit-self
-CFLAGS		+=	-Wunused-function -pipe -Winit-self -g
+CFLAGS		+=	-Wunused-function -pipe -Winit-self
 CFLAGS		+=	-static
 
 

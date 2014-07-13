@@ -7,6 +7,12 @@ Camera::Camera(int sizeX, int sizeY)
     _projection = glm::perspective(glm::radians(50.0f), static_cast<float>(sizeX) / static_cast<float>(sizeY), 0.1f, 100.0f);
     _player = NULL;
     _following = false;
+    _prevMouseX = 0;
+    _prevMouseY = 0;
+    _distance = 5;
+    _sensivity = 0.4;
+    _angley = 0;
+    _anglez = 0;
 }
 
 
@@ -26,15 +32,20 @@ void	Camera::translate(glm::vec3 vec)
     _pos_view += vec;
 }
 
-void	Camera::update()
+void	Camera::updateView()
 {
- 
+    _pos_view = _player->getModelPos();
+}
+
+void	Camera::updateKeys()
+{
     if (_player != NULL && _player->getStatus() == Player::DYING)
     {
         _following = false;
         _player = NULL;
+        _pos_view = glm::vec3(0);
     }
- 
+    
     if (!_following)
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -49,12 +60,6 @@ void	Camera::update()
             translate(glm::vec3(0.1, 0.1, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
             translate(glm::vec3(-0.1, -0.1, -0.1));
-    }
-    else
-    {
-        std::cout << "following" << std::endl;
-        glm::vec2 temp = _player->getPosition();
-        setPos(glm::vec3(temp.x, 0.5f, temp.y));
     }
 }
 
@@ -72,9 +77,9 @@ void	Camera::follow(Player *player)
     }
     else
     {
-        std::cout << "NULL" << std::endl;
         _player = NULL;
         _following = false;
+        _pos_view = glm::vec3(0);
     }
 }
 
