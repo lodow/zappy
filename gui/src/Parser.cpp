@@ -1,4 +1,5 @@
 
+#include "utils.hpp"
 #include "Parser.hpp"
 #include "FormatException.hpp"
 
@@ -293,7 +294,7 @@ void Parser::parseTna(const std::string &cmd)
   _map->pushTeamName(cmd);
 }
 
-void Parser::parseTna(const std::string &cmd)
+void Parser::parseSeg(UNUSED const std::string &cmd)
 {
   // path of final picture : res/pictures/victory.jpg"
 }
