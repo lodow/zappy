@@ -61,7 +61,7 @@ public:
     void	run();
 
 private:
-    void	selectObject(const sf::Event &mouseEvent);
+    void	selectObject(int x, int y);
     
     sf::RenderWindow  	_window;
     float				_sizeX;

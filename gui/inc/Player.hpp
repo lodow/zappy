@@ -29,6 +29,7 @@ public:
     virtual const std::list<int> &getRecourse() const;
     virtual const glm::vec2 &getPosition() const;
     virtual void setPosition(const glm::vec2 &pos);
+    const glm::vec3 &getModelPos() const;
     bool moveTo(const glm::vec2 &pos);
     size_t getNb() const;
     void setOrientation(size_t orientation);

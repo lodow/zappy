@@ -139,6 +139,11 @@ void Player::setPosition(const glm::vec2 &pos)
     _position = pos;
 }
 
+const glm::vec3 &Player::getModelPos() const
+{
+    return (_clarkKent->getPos());
+}
+
 size_t Player::getNb() const
 {
     return _nb;

@@ -16,7 +16,7 @@ int	main(int argc, char **argv)
 {
   try
     {
-      if (argc == 3)
+      if (argc > 2)
         {
           signal(SIGPIPE, SIG_IGN);
           srand(cpu_cycle());
@@ -30,6 +30,8 @@ int	main(int argc, char **argv)
 
           graphic.run();
         }
+        else
+            std::cout << "Usage: ./graphic host port" << std::endl;
 
     }
   catch (std::exception& e)
