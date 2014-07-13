@@ -40,6 +40,7 @@ private:
     void parsePic(const std::string &cmd);
     void parsePie(const std::string &cmd);
     void parsePbc(const std::string &cmd);
+    void parseTna(const std::string &cmd);
     
 private:
     Map     *_map;

@@ -18,6 +18,7 @@ Parser::Parser(Map *map, Gem *gem, Player *player)
     _parse["pic"] = &Parser::parsePic;
     _parse["pie"] = &Parser::parsePie;
     _parse["pbc"] = &Parser::parsePbc;
+    _parse["tna"] = &Parser::parseTna;
 }
 
 Parser::~Parser()
@@ -284,4 +285,9 @@ void Parser::parsePbc(const std::string &cmd)
             return ;
         }
     }
+}
+
+void Parser::parseTna(const std::string &cmd)
+{
+  _map->pushTeamName(cmd);
 }
