@@ -1,6 +1,7 @@
 #include <signal.h>
 #include <iostream>
 #include <exception>
+#include <stdexcept>
 
 #include "GameEngine.hpp"
 
@@ -19,16 +20,16 @@ int	main(int argc, char **argv)
         {
             signal(SIGPIPE, SIG_IGN);
             srand(cpu_cycle());
-            
+
             GameEngine graphic(800, 600);
-            
+
             if (!graphic.initConnection(argv[1], argv[2]))
                 throw std::runtime_error("Connection failed");
-            
+
             graphic.initOpenGL();
-            
+
             graphic.run();
-            
+
         } catch (std::exception& e)
         {
             std::cerr << e.what() << std::endl;
