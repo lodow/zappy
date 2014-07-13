@@ -5,19 +5,18 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Mon Oct 22 09:20:28 2012 hugues morisset
-## Last update Sun May  4 11:45:41 2014 fabien.linardon
+## Last update Sun Jul 13 17:54:23 2014 Etienne
 ##
 
 NAME	=	zappy
 
 SUBDIRS	=	libnetwork \
 		server \
-		ia \
 		gui
 
 RULES	=	zappy \
 		client \
-		graphic \
+		graphic
 
 RM	=	rm -f
 
