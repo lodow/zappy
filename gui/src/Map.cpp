@@ -148,3 +148,13 @@ void Map::setTime(float time)
 {
   _time = time;
 }
+
+const std::list<std::string> &Map::getTeamList() const
+{
+  return _teamList;
+}
+
+void Map::pushTeamName(const std::string &teamName)
+{
+  _teamList.push_back(teamName);
+}

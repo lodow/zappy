@@ -37,6 +37,7 @@ private:
     void parsePlv(const std::string &cmd);
     void parseEnw(const std::string &cmd);
     void parseEht(const std::string &cmd);
+    void parseTna(const std::string &cmd);
     
 private:
     Map     *_map;

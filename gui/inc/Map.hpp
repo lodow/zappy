@@ -46,6 +46,8 @@ public:
   void setSize(const glm::vec2 &size);
   float getTime() const;
   void setTime(float time);
+  const std::list<std::string> &getTeamList() const;
+  void pushTeamName(const std::string &teamName);
 
 typedef std::list<Ground *> Maps;
 
@@ -55,6 +57,7 @@ private:
   Eggs _eggs;
   glm::vec2 _size;
   float _time;
+  std::list<std::string> _teamList;
 };
 
 #endif /* MAP_HPP_ */

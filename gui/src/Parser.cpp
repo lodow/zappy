@@ -15,6 +15,7 @@ Parser::Parser(Map *map, Gem *gem, Player *player)
   _parse["plv"] = &Parser::parsePlv;
   _parse["enw"] = &Parser::parseEnw;
   _parse["eht"] = &Parser::parseEht;
+  _parse["tna"] = &Parser::parseTna;
 }
 
 Parser::~Parser()
@@ -240,4 +241,9 @@ void Parser::parseEht(const std::string &cmd)
 	return ;
     }
 
+}
+
+void Parser::parseTna(const std::string &cmd)
+{
+  _map->pushTeamName(cmd);
 }
