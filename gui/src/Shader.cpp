@@ -56,8 +56,7 @@ void Shader::create()
         glGetProgramInfoLog(_programID, length, &length, error);
         error[length] = '\0';
         
-        //        throw Erreur(std::string("Shader file: ") + std::string(" failed to link: ") + std::string(erreur), -1);
-        std::cerr << std::string("Shader file: ") + std::string(" failed to link: ") + std::string(error) << std::endl;
+        throw std::runtime_error(std::string("Shader file: ") + std::string(" failed to link: ") + std::string(error));
         
         delete[] error;
     }
@@ -75,8 +74,7 @@ void Shader::initialize(GLuint &shader, GLenum type, const std::string &path)
     else
     {
         glDeleteShader(shader);
-        //        throw Erreur(std::string("Shader file: ") + source + std::string(" have a wrong type "), -1);
-        std::cerr << std::string("Shader file: ") + path + std::string(" have a wrong type ") << std::endl;
+        throw std::runtime_error(std::string("Shader file: ") + path + std::string(" have a wrong type: "));
     }
     
     std::string src, srcLine;
@@ -85,8 +83,7 @@ void Shader::initialize(GLuint &shader, GLenum type, const std::string &path)
     if(!fileStream)
     {
         glDeleteShader(shader);
-        //        throw Erreur(std::string("Shader file: ") + source+std::string(" can't be open "), -1);
-        std::cerr << std::string("Shader file: ") + path + std::string(" can't be open ") << std::endl;
+        throw std::runtime_error(std::string("Shader file: ") + path + std::string(" can't be opened: "));
     }
     
     while(getline(fileStream, srcLine))
@@ -115,8 +112,7 @@ void Shader::initialize(GLuint &shader, GLenum type, const std::string &path)
         
         glGetShaderInfoLog(shader, length, &length, error);
         
-        //        throw Erreur(std::string("Shader file: ") + source + std::string(" failed to compile: ") + std::string(erreur), -1);
-        std::cerr << std::string("Shader file: ") + path + std::string(" failed to compile: ") + std::string(error) << std::endl;
+        throw std::runtime_error(std::string("Shader file: ") + path + std::string(" failed to compile: ") + std::string(error));
         
         delete[] error;
     }

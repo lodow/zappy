@@ -1,0 +1,22 @@
+# Blender MTL File: 'egg.blend'
+# Material Count: 2
+
+newmtl 02_-_Default
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.602353 0.483137 0.310588
+Ks 0.449020 0.449020 0.449020
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd egg.png
+
+newmtl Material_#70
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.467451 0.467451 0.467451
+Ks 0.449020 0.449020 0.449020
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/gravie_j/Downloads/111.PNG

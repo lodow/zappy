@@ -14,6 +14,7 @@ public:
     virtual ~PlayerInfo();
     
     void	draw(Shader *shader);
+    void	update();
     
     void	setPlayer(Player *selectedPlayer);
     Player	*getPlayer() const;

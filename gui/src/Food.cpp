@@ -34,9 +34,9 @@ void Food::draw(Shader *shader) const
     _model->draw(shader);
 }
 
-void Food::update(const sf::Clock &clock, UNUSED float serverSpeed)
+void Food::update(UNUSED const sf::Clock &clock, UNUSED float serverSpeed)
 {
-    _model->rotate(glm::vec3(0, 1, 0), 1.0f * clock.getElapsedTime().asMilliseconds());
+    _model->rotate(glm::vec3(0, 1, 0), 1.0f);
 }
 
 void Food::setRecourse(UNUSED const std::list<int> &recourse)
@@ -56,7 +56,6 @@ void Food::setPosition(const glm::vec2 &pos)
 
 const glm::vec2 &Food::getPosition() const
 {
-    std::cout << "Food" << std::endl;
     return _pos;
 }
 

@@ -38,13 +38,10 @@ void    Model::loadObj(const std::string &objPath, const std::string &texturePat
     std::vector<unsigned int> normalIndices;
     
     
-    std::ifstream fichier(objPath.c_str(), std::ios::in);
+    std::ifstream file(objPath.c_str(), std::ios::in);
     
-    if(!fichier)
-    {
-//        throw Erreur(std::string("Can't open file ")+std::string(objPath),-1);
-        std::cerr << std::string("Can't open file ") + std::string(objPath) << std::endl;
-    }
+    if(!file)
+        throw std::runtime_error(std::string("Can't open file ") + std::string(objPath));
     else
     {
         
@@ -53,7 +50,7 @@ void    Model::loadObj(const std::string &objPath, const std::string &texturePat
         _load = 2; //2% done
         
         // read the first word of the line
-        while(getline(fichier,line)) // EOF = End Of File. Quit the loop.
+        while(getline(file,line)) // EOF = End Of File. Quit the loop.
         {
             if (line.substr(0,2) == "v ")
             {
@@ -160,35 +157,6 @@ void    Model::loadObj(const std::string &objPath, const std::string &texturePat
             {
                 temp_norm = glm::vec3(0.0f, 0.0f, 0.0f);
             }
-            
-            
-            //Make a new vertice only if it doesn't already exist:
-//            bool exist = false;
-//            unsigned int j = 0;
-//            for (j = 0; j < fin_vertices.size(); j++)
-//            {
-//                if((temp_vert == fin_vertices[j]) && (temp_uvs == fin_uvs[j]) &&(temp_norm == fin_normals[j]))
-//                {
-//                    exist = true;
-//                    break;
-//                }
-//                
-//            }
-//            
-//            if (exist)
-//            {
-//                fin_Indices.push_back(j);
-//            }
-//            else //we create a new vertice
-//            {
-//                
-//                fin_vertices.push_back(temp_vert);
-//                fin_uvs     .push_back(temp_uvs);
-//                fin_normals .push_back(temp_norm);
-//                fin_Indices.push_back(fin_vertices.size()-1);
-//                
-//            }
-            
             _geometry->pushVertex(temp_vert).pushUv(temp_uvs).pushNormal(temp_norm);
         }
         _texture = new sf::Texture;
@@ -197,7 +165,7 @@ void    Model::loadObj(const std::string &objPath, const std::string &texturePat
         _load = 90; //90% done
         
         std::cout << std::endl;
-        fichier.close();  // on ferme le fichier
+        file.close();  // on ferme le file
 
         _geometry->build(GL_STATIC_DRAW);
         

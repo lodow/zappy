@@ -2,13 +2,12 @@
 
 Map::Map()
 {
-  // TODO Auto-generated constructor stub
 
 }
 
 Map::~Map()
 {
-  // TODO Auto-generated destructor stub
+
 }
 
 Map::const_iterator Map::begin() const

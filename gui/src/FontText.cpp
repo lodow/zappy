@@ -10,7 +10,6 @@ FontText::FontText()
     _defSize = 40.0f;
     
     _font.loadFromFile(FONT);
-//    _font.setRepeated(true);
 }
 
 FontText::~FontText()

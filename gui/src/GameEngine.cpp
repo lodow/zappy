@@ -73,13 +73,6 @@ GameEngine::GameEngine(float x, float y)
     _parser = NULL;
     
     _window.setFramerateLimit(FPS);
-    
-    if (!initConnection("::1", "4242"))
-        return ;
-    
-    initOpenGL();
-    
-    run();
 }
 
 GameEngine::~GameEngine()
@@ -153,6 +146,11 @@ void	GameEngine::run()
     
     Deads clarksToRemove;
     
+    Model model;
+    
+    model.loadObj("res/models/egg/egg.obj", "res/models/egg/egg.png");
+    model.translate(glm::vec3(0, 0.5, 0));
+    
     _mainShader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     _textShader = new Shader("res/shaders/text.vert", "res/shaders/text.frag");
     
@@ -196,7 +194,6 @@ void	GameEngine::run()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
            _camera.translate(glm::vec3(-0.1, -0.1, -0.1));
         
-//        camera.update(event.key.code);
         _camera.lookAt();
         
         _mainShader->bind();
@@ -233,12 +230,20 @@ void	GameEngine::run()
                 clarksToRemove.push_back(it);
         }
         
+        _mainShader->setUniform("gColor", glm::vec4(1));
+        model.draw(_mainShader);
+        model.rotate(glm::vec3(0, 1, 0), 1.0f);
+        
         _textShader->bind();
         _textShader->setUniform("gColor", glm::vec4(1));
         _textShader->setUniform("projection", glm::ortho(0.0f, _sizeX, _sizeY, 0.0f, -1.0f, 1.0f));
         _textShader->setUniform("view", glm::mat4(1));
+        
+        _groundInfo.update();
         if (_groundInfo.isVisible())
             _groundInfo.draw(_textShader);
+        
+        _playerInfo.update();
         if(_playerInfo.isVisible())
             _playerInfo.draw(_textShader);
         
@@ -261,7 +266,7 @@ void		GameEngine::selectObject(const sf::Event &mouseEvent)
     glm::vec3 vA = glm::unProject(glm::vec3(mouseX, mouseY, 0.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
     glm::vec3 vB = glm::unProject(glm::vec3(mouseX, mouseY, 1.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
     
-    if (mouseEvent.mouseButton.button == sf::Mouse::Button::Right)
+    if (mouseEvent.mouseButton.button == sf::Mouse::Right)
     {
         for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
         {
@@ -275,7 +280,7 @@ void		GameEngine::selectObject(const sf::Event &mouseEvent)
                 _playerInfo.setVisible(false);
         }
     }
-    else if (mouseEvent.mouseButton.button == sf::Mouse::Button::Left)
+    else if (mouseEvent.mouseButton.button == sf::Mouse::Left)
     {
         for (Map::iterator it = _map.begin(), end = _map.end(); it != end; ++it)
         {

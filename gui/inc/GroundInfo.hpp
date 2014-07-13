@@ -14,6 +14,7 @@ public:
     virtual ~GroundInfo();
     
     void	draw(Shader *shader);
+    void	update();
     
     void	setGround(Ground *selectedGround);
     Ground	*getGround() const;

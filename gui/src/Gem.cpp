@@ -42,9 +42,9 @@ void	Gem::draw(Shader *shader) const
     _model->draw(shader);
 }
 
-void	Gem::update(const sf::Clock &clock, UNUSED float serverSpeed)
+void	Gem::update(UNUSED const sf::Clock &clock, UNUSED float serverSpeed)
 {
-    _model->rotate(glm::vec3(0, 1, 0), 1.0f * clock.getElapsedTime().asMilliseconds());
+    _model->rotate(glm::vec3(0, 1, 0), 1.0f);
 }
 
 void	Gem::destroyModel()

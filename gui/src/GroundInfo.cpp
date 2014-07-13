@@ -3,10 +3,10 @@
 #include "GroundInfo.hpp"
 
 GroundInfo::GroundInfo(int winSizeX, UNUSED int winSizeY)
-: _rect(winSizeX / 2 - (556 / 2), 10, 556, 50)
+: _rect(winSizeX / 2 - (556 / 2), 0, 556, 50)
 {
     _posX = winSizeX / 2 - (556 / 2);
-    _posY = 10;
+    _posY = 0;
     
     _rect.loadTexture("res/textures/on_top_map.png");
     _rect.build();
@@ -46,12 +46,17 @@ void	GroundInfo::draw(Shader *shader)
         
         ss << resourceAmmount[i - 1];
         
-        tempText.setText(ss.str(), _posX + space, _posY + 10, 30);
+        tempText.setText(ss.str(), _posX + space, _posY + 10, 31);
         tempText.draw(shader);
         ss.str("");
     }
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+}
+
+void	GroundInfo::update()
+{
+    
 }
 
 void	GroundInfo::setGround(Ground *selectedGround)

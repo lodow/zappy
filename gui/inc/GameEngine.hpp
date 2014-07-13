@@ -55,11 +55,11 @@ public:
     GameEngine(float x, float y);
     ~GameEngine();
     
+    bool	initConnection(const std::string &host, const std::string &port);
+    void	initOpenGL() const;
     void	run();
 
 private:
-    bool	initConnection(const std::string &host, const std::string &port);
-    void	initOpenGL() const;
     void	selectObject(const sf::Event &mouseEvent);
     
     sf::RenderWindow  	_window;

@@ -13,16 +13,24 @@ uint64_t cpu_cycle()
 
 int	main(UNUSED int ac, UNUSED char **av)
 {
-  try
+    try
     {
-      signal(SIGPIPE, SIG_IGN);
-      srand(cpu_cycle());
-
-      GameEngine lib(800, 600);
+        signal(SIGPIPE, SIG_IGN);
+        srand(cpu_cycle());
+        
+        GameEngine graphic(800, 600);
+        
+        if (!graphic.initConnection("::1", "4242"))
+            throw std::runtime_error("Connection failed");
+        
+        graphic.initOpenGL();
+        
+        graphic.run();
+        
     } catch (std::exception& e)
     {
-      std::cerr << e.what() << std::endl;
-      return 1;
+        std::cerr << e.what() << std::endl;
+        return 1;
     }
-  return 0;
+    return 0;
 }
