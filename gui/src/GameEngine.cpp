@@ -23,10 +23,10 @@ std::string get_command(t_selfd *fd)
     size_t size;
     char buff[512];
     static std::string tmp("");
-    std::string ret;
-    
+    std::string ret("");
+
     size = read_buffer(fd->rbuff, buff, sizeof(buff));
-    if (size && ((cmd = static_cast<char *>(memchr(buff, '\n', size))))) {
+    if (size > 0 && ((cmd = static_cast<char *>(memchr(buff, '\n', size))))) {
         rollback_read_buffer(fd->rbuff, size - (cmd - buff + 1));
         buff[(cmd - buff)] = '\0';
         if (tmp != "") {
@@ -36,11 +36,11 @@ std::string get_command(t_selfd *fd)
         }
         return (std::string(buff));
     }
-    else if (size) {
-        buff[size] = 0;
+    else if (size > 0) {
+        buff[size - 1] = '\0';
         tmp = std::string(buff);
     }
-    return (std::string(""));
+    return (ret);
 }
 
 GameEngine::GameEngine(const int &x, const int &y)

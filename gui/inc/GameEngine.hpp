@@ -18,6 +18,7 @@
 # include <SFML/Window.hpp>
 # include <list>
 # include <string>
+# include <exception>
 # include "utils.hpp"
 # include "Model.hpp"
 # include "Camera.hpp"

@@ -33,6 +33,7 @@ private:
     void parsePpo(const std::string &cmd);
     void parsePdi(const std::string &cmd);
     void parsePin(const std::string &cmd);
+    void parsePlv(const std::string &cmd);
     
 private:
     Map     *_map;

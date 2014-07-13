@@ -1,5 +1,6 @@
 
 #include "Parser.hpp"
+#include "FormatException.hpp"
 
 Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _player(player), _food(new Food)
 {
@@ -10,6 +11,7 @@ Parser::Parser(Map *map, Gem *gem, Player *player) : _map(map), _gem(gem), _play
   _parse["pdi"] = &Parser::parsePdi;
   _parse["pin"] = &Parser::parsePin;
   _parse["sgt"] = &Parser::parseSgt;
+  _parse["plv"] = &Parser::parsePlv;
 }
 
 Parser::~Parser()
@@ -19,10 +21,25 @@ Parser::~Parser()
 
 void Parser::parseCmd(const std::string &cmd)
 {
-    std::string tmp = cmd.substr(0, cmd.find_first_of(' '));
+  size_t pos = cmd.find_first_of(' ');
 
-    if (_parse.find(tmp) != _parse.end())
-        (this->*_parse[tmp])(cmd.substr(cmd.find_first_of(' ') + 1));
+  try {
+      if (pos == std::string::npos)
+	throw FormatException();
+      if (!cmd.size())
+	return ;
+      std::string tmp = cmd.substr(0, pos);
+      if (_parse.find(tmp) != _parse.end()) {
+	  if ((pos = cmd.find_first_of(' ')) == std::string::npos)
+	    throw FormatException();
+	  (this->*_parse[tmp])(cmd.substr(pos + 1));
+      }
+  }
+  catch (std::exception &e) {
+      if (cmd != "BIENVENUE")
+	std::cerr << e.what() << std::endl;
+      return ;
+  }
 }
 
 int Parser::getNbFromString(const std::string &str) const
@@ -30,8 +47,10 @@ int Parser::getNbFromString(const std::string &str) const
     std::stringstream ss;
     size_t rank = 0;
     int nb = 0;
-    
+
     rank = str.find_first_of(' ');
+    if (!str.size())
+      return 0;
     ss << str.substr(0, rank);
     ss >> nb;
     ss.clear();
@@ -42,15 +61,23 @@ void Parser::parseSgt(const std::string &cmd)
 {
   float time = getNbFromString(cmd);
 
-  _map->setTime(time);
+  if (!time)
+    _map->setTime(10);
+  else
+    _map->setTime(time);
 }
 
 void Parser::parseMsz(const std::string &cmd)
 {
   glm::vec2 pos;
+  size_t rank = cmd.find_first_of(' ');
 
+  if (rank == std::string::npos) {
+      _map->setSize(glm::vec2(1, 1));
+      throw FormatException();
+  }
   pos.x = getNbFromString(cmd);
-  pos.y = getNbFromString(cmd.substr(cmd.find_first_of(' ') + 1));
+  pos.y = getNbFromString(cmd.substr(rank + 1));
   _map->setSize(pos);
   if (_map->size()) {
       for (Map::iterator it = _map->begin(); it != _map->end();) {
@@ -67,12 +94,17 @@ void Parser::parseBct(const std::string &cmd)
     glm::vec2 pos;
     std::string tmp = cmd;
     std::list<int> recourse;
+    size_t rank = cmd.find_first_of(' ');
 
+    if (rank == std::string::npos)
+      throw FormatException();
     pos.x = getNbFromString(cmd);
-    pos.y = getNbFromString(cmd.substr(cmd.find_first_of(' ') + 1));
-    tmp = cmd.substr(cmd.find_first_of(' ') + 1);
+    pos.y = getNbFromString(cmd.substr(rank + 1));
+    tmp = cmd.substr(rank + 1);
     for (int i = 0; i != 7; ++i) {
-	tmp = tmp.substr(tmp.find_first_of(' ') + 1);
+	if ((rank = tmp.find_first_of(' ')) == std::string::npos)
+	  throw FormatException();
+	tmp = tmp.substr(rank + 1);
 	recourse.push_back(getNbFromString(tmp));
     }
     for (Map::const_iterator it = _map->begin(), end = _map->end();  it != end; ++it) {
@@ -91,6 +123,7 @@ void Parser::parsePnw(const std::string &cmd)
   glm::vec2 pos;
   size_t nb;
   std::string tmp = cmd;
+  std::string team;
   size_t lvl;
 
   nb = getNbFromString(cmd);
@@ -101,7 +134,8 @@ void Parser::parsePnw(const std::string &cmd)
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   tmp = tmp.substr(tmp.find_first_of(' ') + 1);
   lvl = getNbFromString(tmp);
-  _map->push_back(new Player(*_player, pos, nb, lvl));
+  team = tmp.substr(tmp.find_first_of(' ') + 1);
+  _map->push_back(new Player(*_player, pos, nb, lvl, team));
 }
 
 void Parser::parsePpo(const std::string &cmd)
@@ -160,4 +194,17 @@ void Parser::parsePin(const std::string &cmd)
       }
   }
 
+}
+
+void Parser::parsePlv(const std::string &cmd)
+{
+  size_t nb;
+  size_t lvl;
+
+  nb = getNbFromString(cmd);
+  lvl = getNbFromString(cmd.substr(cmd.find_first_of(' ') + 1));
+  for (Map::Players::const_iterator it = _map->playerBegin(), end = _map->playerEnd(); it != end; ++it) {
+      if ((*it)->getNb() == nb)
+	(*it)->setLvl(lvl);
+  }
 }

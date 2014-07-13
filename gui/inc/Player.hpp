@@ -18,7 +18,7 @@ public:
 
 public:
   Player();
-  Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl);
+  Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl, const std::string &team);
   virtual ~Player();
   void update(const sf::Clock &clock, float speedOfServer);
   virtual void draw(Shader *shader);
@@ -31,6 +31,10 @@ public:
   void setOrientation(size_t orientation);
   void setStatus(Status status);
   Status getStatus() const;
+  size_t getLvl() const;
+  void setLvl(size_t lvl);
+  const std::string &getTeam() const;
+  void setTeam(const std::string &team);
 
 typedef std::list<glm::vec2> PosList;
 typedef std::list<glm::vec3> Way;
@@ -42,11 +46,12 @@ private:
   Model *_clarkKent;
   std::list<int> _recourse;
   size_t _lvl;
+  float _distance;
+  glm::vec2 _previousPos;
+  std::string _team;
   PosList _posList;
   Way _way;
   std::list<size_t> _orientation;
-  float _distance;
-  glm::vec2 _previousPos;
 };
 
 #endif /* PLAYER_HPP_ */

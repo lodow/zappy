@@ -5,8 +5,8 @@ Player::Player() : _clarkKent(new Model)
   _clarkKent->loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
 }
 
-Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl)
-: _status(ALIVE), _nb(nb), _position(position), _lvl(lvl), _distance(0), _previousPos(position)
+Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl, const std::string &team)
+: _status(ALIVE), _nb(nb), _position(position), _lvl(lvl), _distance(0), _previousPos(position), _team(team)
 {
   _clarkKent = new Model(*player._clarkKent);
   _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
@@ -29,7 +29,7 @@ void Player::setOrientation(size_t orientation)
 
 void Player::update(const sf::Clock &clock, float speedOfServer)
 {
-  if (!_posList.empty() && _status == Player::ALIVE) {
+  if (!_posList.empty()) {
       Way::const_iterator it = _way.begin();
       for (size_t j = 0; j != 4 && j != _orientation.front(); ++j) {
 	  ++it;
@@ -120,4 +120,23 @@ void Player::setStatus(Status status)
 Player::Status Player::getStatus() const
 {
   return _status;
+}
+
+size_t Player::getLvl() const
+{
+  return _lvl;
+}
+
+void Player::setLvl(size_t lvl)
+{
+  _lvl = lvl;
+}
+
+const std::string &Player::getTeam() const
+{
+  return _team;
+}
+void Player::setTeam(const std::string &team)
+{
+  _team = team;
 }
