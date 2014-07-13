@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.zappy.Zappy;
 import com.zappy.assets.Assets;
 import com.zappy.network.Network;
-import com.zappy.screen.popup.ErrorPopUp;
+import com.zappy.popup.ErrorPopUp;
 
 import java.io.IOException;
 
