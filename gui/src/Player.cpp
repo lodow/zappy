@@ -18,6 +18,10 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
 : _status(ALIVE), _nb(nb), _position(position), _broadcast(0, 0, 48, 48), _lvl(lvl), _distance(0), _previousPos(position), _team(team)
 {
     _clarkKent = new Model(*player._clarkKent);
+    
+//    _position.x += ((rand() % 6) / 10.0f) - 0.25f;
+//    _position.y += ((rand() % 6) / 10.0f) - 0.25f;
+    
     _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
     _clarkKent->scale(glm::vec3(0.7, 0.7, 0.7));
     _way.push_back(glm::vec3(0, 0, -1));
@@ -102,7 +106,7 @@ void Player::draw(Shader *shader) const
 void	Player::drawBroadcast(Shader *shader, const glm::vec3 &position, int winY)
 {
     _broadcast.setPosition(glm::vec3(position.x, winY - position.y, 0));
-    _broadcast.translate(glm::vec3(0.375, 0.375, 0.0));
+    _broadcast.translate(glm::vec3(0.375, 50.0f, 0.0));
     
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);

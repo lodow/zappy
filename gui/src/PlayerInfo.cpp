@@ -23,6 +23,7 @@ void	PlayerInfo::draw(Shader *shader)
 {
     if (_player == NULL)
         return ;
+    
     std::stringstream	ss;
     
     FontText		tempText;
@@ -97,8 +98,9 @@ void	PlayerInfo::update()
 
 void	PlayerInfo::setPlayer(Player *selectedPlayer)
 {
-    if (selectedPlayer != NULL)
-        _player = selectedPlayer;
+    _player = selectedPlayer;
+    if (_player == NULL)
+        _visible = false;
 }
 
 Player	*PlayerInfo::getPlayer() const
