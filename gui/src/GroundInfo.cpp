@@ -22,6 +22,9 @@ GroundInfo::~GroundInfo()
 
 void	GroundInfo::draw(Shader *shader)
 {
+    if (_ground == NULL)
+        return ;
+    
     std::stringstream	ss;
     
     FontText		tempText;
@@ -56,7 +59,8 @@ void	GroundInfo::draw(Shader *shader)
 
 void	GroundInfo::update()
 {
-    
+    if (_ground == NULL)
+        _visible = false;
 }
 
 void	GroundInfo::setGround(Ground *selectedGround)

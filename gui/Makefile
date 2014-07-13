@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Sun Jul 13 05:05:06 2014 Jean Gravier
+## Last update Sun Jul 13 05:49:08 2014 Jean Gravier
 ##
 
 SRC		=	main.cpp \
@@ -29,6 +29,7 @@ SRC		=	main.cpp \
 			FontText.cpp \
 			GroundInfo.cpp \
 			PlayerInfo.cpp \
+			Egg.cpp \
 
 CC		=	g++
 FILETYPE	=	.cpp
@@ -42,7 +43,7 @@ SRCDIR		=	src/
 INCDIR		=	inc/
 
 CXXFLAGS	+=	-I$(INCDIR) -I../libnetwork/inc/
-CXXFLAGS	+=	-Wall -Wextra -W -g
+CXXFLAGS	+=	-Wall -Wextra -W
 
 LDFLAGS		+=	-Wl,-O1
 LDFLAGS		+=	-lsfml-graphics -lsfml-window -lsfml-system

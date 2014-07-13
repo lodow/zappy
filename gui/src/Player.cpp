@@ -2,16 +2,20 @@
 #include "utils.hpp"
 #include "Player.hpp"
 
-Player::Player() : _clarkKent(new Model)
+Player::Player() : _clarkKent(new Model), _broadcast(0, 0, 48, 48)
 {
     _clarkKent->loadObj("res/models/superman/superman.obj", "res/models/superman/superman_d.png");
     
     updateSphereCenter();
     _sphereRadius = 0.5f;
+    _broadcasting = false;
+    
+    _broadcast.loadTexture("res/textures/broadcast.png");
+    _broadcast.build();
 }
 
 Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl, const std::string &team)
-: _status(ALIVE), _nb(nb), _position(position), _lvl(lvl), _distance(0), _previousPos(position), _team(team)
+: _status(ALIVE), _nb(nb), _position(position), _broadcast(0, 0, 48, 48), _lvl(lvl), _distance(0), _previousPos(position), _team(team)
 {
     _clarkKent = new Model(*player._clarkKent);
     _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
@@ -23,6 +27,8 @@ Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int l
     
     updateSphereCenter();
     _sphereRadius = 0.5f;
+    _broadcast.loadTexture("res/textures/broadcast.png");
+    _broadcast.build();
 }
 
 Player::~Player()
@@ -32,12 +38,12 @@ Player::~Player()
 
 void	Player::destroyModel()
 {
-  _clarkKent->destroyGeometry();
+    _clarkKent->destroyGeometry();
 }
 
 void Player::setOrientation(size_t orientation)
 {
-  _orientation.push_back(orientation);
+    _orientation.push_back(orientation);
 }
 
 void Player::update(const sf::Clock &clock, float serverSpeed)
@@ -92,6 +98,20 @@ void Player::draw(Shader *shader) const
     _clarkKent->draw(shader);
 }
 
+void	Player::drawBroadcast(Shader *shader, const glm::vec3 &position, int winY)
+{
+    _broadcast.setPosition(glm::vec3(position.x, winY - position.y, 0));
+    _broadcast.translate(glm::vec3(0.375, 0.375, 0.0));
+    
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    
+    _broadcast.draw(shader);
+    
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+}
+
 void	Player::updateSphereCenter()
 {
     _sphereCenter = _clarkKent->getPos();
@@ -101,11 +121,6 @@ void	Player::updateSphereCenter()
 void Player::setRecourse(const std::list<int> &recourse)
 {
     _recourse = recourse;
-}
-
-const glm::mat4 &Player::getTransformation() const
-{
-    return (_clarkKent->getTransformation());
 }
 
 const std::list<int> &Player::getRecourse() const
@@ -158,21 +173,31 @@ Player::Status Player::getStatus() const
     return _status;
 }
 
+void	Player::setBroadcasting(bool broadcasting)
+{
+    _broadcasting = broadcasting;
+}
+
+bool	Player::isBroadcasting() const
+{
+    return (_broadcasting);
+}
+
 size_t Player::getLvl() const
 {
-  return _lvl;
+    return _lvl;
 }
 
 void Player::setLvl(size_t lvl)
 {
-  _lvl = lvl;
+    _lvl = lvl;
 }
 
 const std::string &Player::getTeam() const
 {
-  return _team;
+    return _team;
 }
 void Player::setTeam(const std::string &team)
 {
-  _team = team;
+    _team = team;
 }

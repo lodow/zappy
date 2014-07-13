@@ -31,6 +31,9 @@ public:
     
     void		setSelected(bool selected);
     
+    bool		isSummoning() const;
+    void		setSummoning(bool summoning);
+    
 private:
     Gem 			_gem;
     Food 			_food;
@@ -38,6 +41,7 @@ private:
     GemList 		_gemList;
     glm::vec2 		_position;
     bool			_selected;
+    bool			_summoning;
 
     glm::vec3 		_sphereCenter;
     float			_sphereRadius;

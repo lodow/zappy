@@ -9,6 +9,7 @@ Ground::Ground(const glm::vec2 &pos, const Gem &gem, const Food &food) : _gem(ge
     _sphereRadius = 0.5f;
     
     _selected = false;
+    _summoning = false;
     
     for (int i = 0; i < 6; ++i) {
         _gemList.push_back(new Gem(_gem, static_cast<GemType>(i), _position));
@@ -87,4 +88,14 @@ float		Ground::getSphereRadius() const
 void	Ground::setSelected(bool selected)
 {
     _selected = selected;
+}
+
+bool	Ground::isSummoning() const
+{
+    return (_summoning);
+}
+
+void	Ground::setSummoning(bool summoning)
+{
+    _summoning = summoning;
 }

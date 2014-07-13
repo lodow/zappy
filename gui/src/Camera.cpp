@@ -65,13 +65,14 @@ bool	Camera::isFollowing() const
 
 void	Camera::follow(Player *player)
 {
-    if (_player != NULL)
+    if (player != NULL)
     {
         _player = player;
         _following = true;
     }
     else
     {
+        std::cout << "NULL" << std::endl;
         _player = NULL;
         _following = false;
     }

@@ -11,26 +11,29 @@ uint64_t cpu_cycle()
     return (((uint64_t)hi << 32) | lo);
 }
 
-int	main(UNUSED int ac, UNUSED char **av)
+int	main(int argc, char **argv)
 {
-    try
+    if (argc > 2)
     {
-        signal(SIGPIPE, SIG_IGN);
-        srand(cpu_cycle());
-        
-        GameEngine graphic(800, 600);
-        
-        if (!graphic.initConnection("::1", "4242"))
-            throw std::runtime_error("Connection failed");
-        
-        graphic.initOpenGL();
-        
-        graphic.run();
-        
-    } catch (std::exception& e)
-    {
-        std::cerr << e.what() << std::endl;
-        return 1;
+        try
+        {
+            signal(SIGPIPE, SIG_IGN);
+            srand(cpu_cycle());
+            
+            GameEngine graphic(800, 600);
+            
+            if (!graphic.initConnection(argv[1], argv[2]))
+                throw std::runtime_error("Connection failed");
+            
+            graphic.initOpenGL();
+            
+            graphic.run();
+            
+        } catch (std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+            return 1;
+        }
     }
     return 0;
 }

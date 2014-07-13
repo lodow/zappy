@@ -16,15 +16,12 @@ public:
     
     virtual void draw(Shader *shader) const;
     virtual void update(const sf::Clock &clock, float serverSpeed);
-    
     virtual void setRecourse(const std::list<int> &recourse);
     virtual void setPosition(const glm::vec2 &pos);
-    
     virtual const std::list<int> &getRecourse() const;
     virtual const glm::vec2 &getPosition() const;
-    
-    virtual const glm::vec3	&getSphereCenter() const;
-    virtual float		getSphereRadius() const;
+    const glm::vec3	&getSphereCenter() const;
+    float		getSphereRadius() const;
     
 private:
     Model 			*_model;
