@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
           signal(SIGPIPE, SIG_IGN);
           srand(cpu_cycle());
 
-          GameEngine graphic(800, 600);
+          GameEngine graphic(1640, 1024);
 
           if (!graphic.initConnection(argv[1], argv[2]))
             throw std::runtime_error("Connection failed");
