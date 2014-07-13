@@ -161,7 +161,7 @@ int	get_timeout(t_server *ser, struct timeval *tv);
 */
 
 void	add_to_ordered_list(t_list **list, void *data,
-			    int (*sort)(void *, void *));
+                          int (*sort)(void *, void *));
 int	sort_instr(void *a, void *b);
 
 /*
@@ -176,7 +176,7 @@ void	push_instruction(t_server *serv, t_selfd *fd);
 */
 
 void	handle_callbacks(t_server *serv, t_selfd *fd,
-			 fd_set *setr, fd_set *stw);
+                       fd_set *setr, fd_set *stw);
 
 /*
 ** eggs.c
@@ -235,7 +235,8 @@ int	check_incant(t_server *serv, t_selfd *fd, char send);
 void	incantation(t_server *serv, t_selfd *fd, char **args);
 void	check_end_game(t_server *serv);
 size_t	nb_players_at(t_server *serv, size_t x, size_t y, int lvl);
-void	send_to_everyone_on_square(t_server *serv, size_t x, size_t y, char *msg);
+void	send_to_everyone_on_square(t_server *serv, size_t x,
+                                 size_t y, char *msg);
 void	ia_fork(t_server *serv, t_selfd *fd, char **args);
 void	connect_nbr(t_server *serv, t_selfd *fd, char **args);
 

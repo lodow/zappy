@@ -28,9 +28,6 @@ import com.zappy.map.entities.Egg;
 import com.zappy.map.entities.Player;
 import com.zappy.map.entities.Square;
 import com.zappy.network.Network;
-import com.zappy.screen.popup.PopUpInformation;
-import com.zappy.screen.popup.ReturnDialog;
-import com.zappy.screen.popup.winDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
