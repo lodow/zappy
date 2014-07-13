@@ -28,6 +28,9 @@ import com.zappy.map.entities.Egg;
 import com.zappy.map.entities.Player;
 import com.zappy.map.entities.Square;
 import com.zappy.network.Network;
+import com.zappy.screen.popup.PopUpInformation;
+import com.zappy.screen.popup.ReturnDialog;
+import com.zappy.screen.popup.winDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +55,7 @@ public class MapViewer implements Screen {
     private Player playerSelected = null;
     private boolean back = false, endOfGame = false;
     private ReturnDialog returnDialog;
-    private winDialog winDialog;
+    private com.zappy.screen.popup.winDialog winDialog;
     private Stage returnStage = new Stage(), winStage = new Stage();
     private List<Square.Incantation> incatationList = new ArrayList<Square.Incantation>();
     private List<Player.BroadCast> broadCastList = new ArrayList<Player.BroadCast>();
@@ -114,8 +117,6 @@ public class MapViewer implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         Gdx.gl.glClearColor(1, 1, 1, 1);
-
-        Assets.soundController.draw(batch, this);
 
         if (Gdx.input.isKeyPressed(Input.Keys.BACK) && !back) {
             back = true;
@@ -282,6 +283,8 @@ public class MapViewer implements Screen {
                 }
             }
         }
+
+        Assets.soundController.draw(batch, this);
     }
 
     private boolean checkTileTouched() {

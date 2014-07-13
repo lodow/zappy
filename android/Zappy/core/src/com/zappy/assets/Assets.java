@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.zappy.map.entities.Player;
 import com.zappy.map.entities.Square;
-import com.zappy.screen.sound.SoundController;
+import com.zappy.sound.SoundController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
