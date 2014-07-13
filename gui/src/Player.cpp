@@ -154,6 +154,7 @@ bool Player::moveTo(const glm::vec2 &pos)
     if (pos != _previousPos) {
         _posList.push_back(pos);
         _previousPos = pos;
+        _broadcasting = false;
         return true;
     }
     return false;

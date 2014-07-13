@@ -62,7 +62,7 @@ std::string get_command(t_selfd *fd)
 }
 
 GameEngine::GameEngine(float x, float y)
-: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(32, 8, 0, 3, 0)), _camera(x, y), _groundInfo(x, y), _playerInfo(x, y)
+: _window(sf::VideoMode(x, y), WINDOW_NAME, sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(24, 0, 0, 3, 0)), _camera(x, y), _groundInfo(x, y), _playerInfo(x, y)
 {
     _sizeX = x;
     _sizeY = y;
@@ -169,7 +169,7 @@ void	GameEngine::run()
             if (event.type == sf::Event::MouseWheelMoved)
                 _camera.translate(glm::vec3(-event.mouseWheel.delta / 30.0f));
         }
-
+        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         _camera.updateKeys();
