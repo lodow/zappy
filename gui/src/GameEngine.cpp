@@ -100,20 +100,10 @@ GameEngine::~GameEngine()
 
 bool	GameEngine::initConnection(const std::string &host, const std::string &port)
 {
-    _client = create_connection(host.c_str(), port.c_str(), SOCK_STREAM, &connect_nb);
+    _client = create_connection(host.c_str(), port.c_str(), SOCK_STREAM, &connect);
     if (!_client)
         return (false);
-    int status;
-    std::cout << "Connecting . ";
-    while ((status = is_connected(_client)) == 1) {
-        usleep(500);
-        std::cout << ".";
-    }
-    std::cout << std::endl;
-    if (status == -1) {
-        std::cerr << "Error on connection" << std::endl;
-        return (false);
-    }
+
     _elem = NULL;
 
     add_to_list(&_elem, static_cast<void *>(create_fd(_client->socket, NULL, (int (*)())(&handle_server))));
@@ -146,12 +136,12 @@ void	GameEngine::run()
     sf::Clock clock;
 
     Deads clarksToRemove;
-    
+
     Rectangle toto(0, 0, 50, 50);
-    
+
     toto.loadTexture("res/textures/broadcast.png");
     toto.build();
-    
+
     _mainShader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     _textShader = new Shader("res/shaders/text.vert", "res/shaders/text.frag");
 
@@ -181,9 +171,9 @@ void	GameEngine::run()
         }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         _camera.update();
-        
+
         _camera.lookAt();
 
         _mainShader->bind();
@@ -216,7 +206,7 @@ void	GameEngine::run()
             (*it)->draw(_mainShader);
             if ((*it)->isBroadcasting())
             {
-                
+
                 std::cout << "broadcast" << std::endl;
                 glm::vec2 temp = (*it)->getPosition();
                 glm::vec3 broadcastPos = glm::project(glm::vec3(temp.x, 2.0f, temp.y), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
@@ -234,12 +224,12 @@ void	GameEngine::run()
             (*it)->draw(_mainShader);
         }
         clock.restart();
-        
+
         _textShader->bind();
         _textShader->setUniform("gColor", glm::vec4(1));
         _textShader->setUniform("projection", glm::ortho(0.0f, _sizeX, _sizeY, 0.0f, -1.0f, 1.0f));
         _textShader->setUniform("view", glm::mat4(1));
-                
+
         if (_map.isResized())
         {
             _groundInfo.setGround(NULL);
@@ -248,7 +238,7 @@ void	GameEngine::run()
         _groundInfo.update();
         if (_groundInfo.isVisible())
             _groundInfo.draw(_textShader);
-        
+
         _playerInfo.update();
         if(_playerInfo.isVisible())
             _playerInfo.draw(_textShader);
