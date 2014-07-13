@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class winDialog extends Dialog {
     private Label win;
     private TextButton exit;
-    private boolean isShowing = true;
+    private boolean isShowing;
 
     public winDialog(String title, Skin skin) {
         super(title, skin);
