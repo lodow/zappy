@@ -26,7 +26,7 @@ void	PlayerInfo::draw(Shader *shader)
     FontText		tempText;
     std::list<int>	list = _player->getRecourse();
     unsigned int	resourceAmmount[7];
-    unsigned int	level = _player->getLevel();
+    unsigned int	level = _player->getLvl();
     int 			space = 0;
     int				i = 0;
     

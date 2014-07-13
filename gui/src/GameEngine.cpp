@@ -7,17 +7,17 @@ bool checkCollision(glm::vec3 sphereCenter, float sphereRadius, glm::vec3 vA, gl
     glm::vec3 vDirToSphere = sphereCenter - vA;
     glm::vec3 vLineDir = glm::normalize(vB - vA);
     glm::vec3 vClosestPoint;
-    
+
     float fLineLength = glm::distance(vA, vB);
     float t = glm::dot(vDirToSphere, vLineDir);
-    
+
     if (t <= 0.0f)
         vClosestPoint = vA;
     else if (t >= fLineLength)
         vClosestPoint = vB;
     else
         vClosestPoint = vA + vLineDir* t;
-    
+
     return (glm::distance(sphereCenter, vClosestPoint) <= sphereRadius);
 }
 
@@ -26,7 +26,7 @@ int             read_from_server(t_selfd *fd)
     char        buff[BUFSIZ];
     int         r;
     size_t      size;
-    
+
     r = 0;
     size = ring_buffer_left_write(fd->rbuff);
     size = (size < sizeof(buff)) ? size : sizeof(buff);
@@ -41,10 +41,10 @@ std::string get_command(t_selfd *fd)
     size_t size;
     char buff[512];
     static std::string tmp("");
-    std::string ret;
-    
+    std::string ret("");
+
     size = read_buffer(fd->rbuff, buff, sizeof(buff));
-    if (size && ((cmd = static_cast<char *>(memchr(buff, '\n', size))))) {
+    if (size > 0 && ((cmd = static_cast<char *>(memchr(buff, '\n', size))))) {
         rollback_read_buffer(fd->rbuff, size - (cmd - buff + 1));
         buff[(cmd - buff)] = '\0';
         if (tmp != "") {
@@ -54,11 +54,11 @@ std::string get_command(t_selfd *fd)
         }
         return (std::string(buff));
     }
-    else if (size) {
-        buff[size] = 0;
+    else if (size > 0) {
+        buff[size - 1] = '\0';
         tmp = std::string(buff);
     }
-    return (std::string(""));
+    return (ret);
 }
 
 GameEngine::GameEngine(float x, float y)
@@ -71,7 +71,8 @@ GameEngine::GameEngine(float x, float y)
     _mainShader = NULL;
     _textShader = NULL;
     _parser = NULL;
-    
+    _skybox = NULL;
+
     _window.setFramerateLimit(FPS);
 }
 
@@ -114,19 +115,19 @@ bool	GameEngine::initConnection(const std::string &host, const std::string &port
         return (false);
     }
     _elem = NULL;
-    
+
     add_to_list(&_elem, static_cast<void *>(create_fd(_client->socket, NULL, (int (*)())(&handle_server))));
-    
+
     _tv.tv_sec = 0;
     _tv.tv_usec = 1000;
-    
+
     _gem = new Gem(LINEMATE);
     _player = new Player;
     _parser = new Parser(&_map, _gem, _player);
-    
+
     do_select(_elem, &_tv, _parser);
     write(_client->socket, "GRAPHIC\n", 8);
-    
+
     while (!_map.getSize().x || !_map.getSize().y)
       do_select(_elem, &_tv, _parser);
     return (true);
@@ -143,30 +144,25 @@ void	GameEngine::initOpenGL() const
 void	GameEngine::run()
 {
     sf::Clock clock;
-    
+
     Deads clarksToRemove;
-    
-    Model model;
-    
-    model.loadObj("res/models/egg/egg.obj", "res/models/egg/egg.png");
-    model.translate(glm::vec3(0, 0.5, 0));
     
     _mainShader = new Shader("res/shaders/game.vert", "res/shaders/game.frag");
     _textShader = new Shader("res/shaders/text.vert", "res/shaders/text.frag");
-    
+
     _skybox = new SkyBox;
     _pan = new Pan(_map.getSize());
     _pan->build();
-    
+
     _mainShader->create();
     _textShader->create();
-    
+
     _camera.setPos(glm::vec3(6.0f, 8.0f, 6.0f));
     _camera.setPointView(glm::vec3(0.1f, 0.1f, 0.1f));
+    clock.restart();
 
     while (_window.isOpen())
     {
-        clock.restart();
         sf::Event event;
         while (_window.pollEvent(event))
         {
@@ -178,9 +174,9 @@ void	GameEngine::run()
             if (event.type == sf::Event::MouseButtonPressed)
                 selectObject(event);
         }
-        
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             _camera.translate(glm::vec3(-0.1, 0, -0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
@@ -193,9 +189,9 @@ void	GameEngine::run()
             _camera.translate(glm::vec3(0.1, 0.1, 0.1));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
            _camera.translate(glm::vec3(-0.1, -0.1, -0.1));
-        
+
         _camera.lookAt();
-        
+
         _mainShader->bind();
         _mainShader->setUniform("gColor", glm::vec4(1));
         _mainShader->setUniform("camPos", _camera.getPos());
@@ -209,7 +205,7 @@ void	GameEngine::run()
 
         _mainShader->setUniform("light", glm::vec4(0.1, 0.6, -0.1, 0));
         _mainShader->setUniform("ambientLight", glm::vec4(0.2, 0.2, 0.2, 1));
-        
+
         if (_pan->getSize() != _map.getSize()) {
             _pan->scale(glm::vec3(_map.getSize().x / _pan->getSize().x, _map.getSize().y / _pan->getSize().y, 1));
             _pan->translate(glm::vec3((_map.getSize().x - _pan->getSize().x) / 2, 0, (_map.getSize().y - _pan->getSize().y) / 2));
@@ -231,9 +227,8 @@ void	GameEngine::run()
         }
         
         _mainShader->setUniform("gColor", glm::vec4(1));
-        model.draw(_mainShader);
-        model.rotate(glm::vec3(0, 1, 0), 1.0f);
         
+        clock.restart();
         _textShader->bind();
         _textShader->setUniform("gColor", glm::vec4(1));
         _textShader->setUniform("projection", glm::ortho(0.0f, _sizeX, _sizeY, 0.0f, -1.0f, 1.0f));
@@ -246,11 +241,9 @@ void	GameEngine::run()
         _playerInfo.update();
         if(_playerInfo.isVisible())
             _playerInfo.draw(_textShader);
-        
+
         _window.display();
 
-        clock.restart();
-        
         for (Deads::const_iterator it = clarksToRemove.begin(), end = clarksToRemove.end(); it != end; ++it) {
             _map.removePlayer(*it);
         }
@@ -262,10 +255,10 @@ void		GameEngine::selectObject(const sf::Event &mouseEvent)
 {
     int mouseX = mouseEvent.mouseButton.x;
     int mouseY = _sizeY - mouseEvent.mouseButton.y;
-    
+
     glm::vec3 vA = glm::unProject(glm::vec3(mouseX, mouseY, 0.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
     glm::vec3 vB = glm::unProject(glm::vec3(mouseX, mouseY, 1.0f), _camera.getTransformation(), _camera.getProjection(), glm::vec4(0, 0, _sizeX, _sizeY));
-    
+
     if (mouseEvent.mouseButton.button == sf::Mouse::Right)
     {
         for (Map::Players::iterator it = _map.playerBegin(), end = _map.playerEnd(); it != end; ++it)
@@ -302,7 +295,7 @@ int handle_server(t_selfd *fd, void *parser)
     int r;
     ssize_t swr;
     Parser *cpy = static_cast<Parser *>(parser);
-    
+
     if (ISREADABLE(fd))
     {
         if (((r = read_from_server(fd)) < 0 && errno != EINTR) || (r == 0))

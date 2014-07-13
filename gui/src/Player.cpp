@@ -10,8 +10,8 @@ Player::Player() : _clarkKent(new Model)
     _sphereRadius = 0.5f;
 }
 
-Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl)
-: _status(ALIVE), _nb(nb), _position(position), _lvl(lvl), _distance(0), _previousPos(position)
+Player::Player(const Player &player, const glm::vec2 &position, size_t nb, int lvl, const std::string &team)
+: _status(ALIVE), _nb(nb), _position(position), _lvl(lvl), _distance(0), _previousPos(position), _team(team)
 {
     _clarkKent = new Model(*player._clarkKent);
     _clarkKent->translate(glm::vec3(_position.x, 0.5, _position.y));
@@ -32,54 +32,17 @@ Player::~Player()
 
 void	Player::destroyModel()
 {
-    _clarkKent->destroyGeometry();
+  _clarkKent->destroyGeometry();
 }
 
 void Player::setOrientation(size_t orientation)
 {
-    _orientation.push_back(orientation);
+  _orientation.push_back(orientation);
 }
-
-//void Player::update(UNUSED const sf::Clock &clock)
-//{
-//    if (!_posList.empty()) {
-//        Way::const_iterator it = _way.begin();
-//        for (size_t j = 0; j != _orientation.front() && j != 4; ++j) {
-//            ++it;
-//        }
-//        if (!_i) {
-//            _clarkKent->setRotation(glm::vec3(0, 0, 0));
-//            _clarkKent->rotate(glm::vec3(0, -1, 0), 90 * _orientation.front() + 180);
-//        }
-//        _clarkKent->translate(glm::vec3((*it).x * 0.05f, 0, (*it).z * 0.05f));
-//        ++_i;
-//        if (_i == 20) {
-//            if (std::abs(_position.x - _posList.front().x) > 1 + FLT_EPSILON) {
-//                float un = (_posList.front().x - _position.x) / std::abs(_posList.front().x - _position.x);
-//                _clarkKent->translate(glm::vec3(_posList.front().x - _position.x + un, 0, 0));
-//            }
-//            else if (std::abs(_position.y - _posList.front().y) > 1 + FLT_EPSILON) {
-//                float un = (_posList.front().y - _position.y) / std::abs(_posList.front().y - _position.y);
-//                _clarkKent->translate(glm::vec3(0, 0, _posList.front().y - _position.y + un));
-//            }
-//            _position = _posList.front();
-//            _posList.pop_front();
-//            _orientation.pop_front();
-//            _i = 0;
-//        }
-//    }
-//}
-//
-//void Player::draw(Shader *shader) const
-//{
-//    shader->setUniform("gColor", glm::vec4(1, 1, 1, 1));
-//    shader->setUniform("ambientLight", glm::vec4(0.02, 0.02, 0.02, 1));
-//    _clarkKent->draw(shader);
-//}
 
 void Player::update(const sf::Clock &clock, float serverSpeed)
 {
-    if (!_posList.empty() && _status == Player::ALIVE) {
+    if (!_posList.empty()) {
         Way::const_iterator it = _way.begin();
         for (size_t j = 0; j != 4 && j != _orientation.front(); ++j) {
             ++it;
@@ -195,7 +158,21 @@ Player::Status Player::getStatus() const
     return _status;
 }
 
-int	Player::getLevel()
+size_t Player::getLvl() const
 {
-    return (_lvl);
+  return _lvl;
+}
+
+void Player::setLvl(size_t lvl)
+{
+  _lvl = lvl;
+}
+
+const std::string &Player::getTeam() const
+{
+  return _team;
+}
+void Player::setTeam(const std::string &team)
+{
+  _team = team;
 }

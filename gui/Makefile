@@ -5,7 +5,7 @@
 ## Login   <moriss_h@epitech.net>
 ##
 ## Started on  Sun Jun  9 03:35:24 2013 Hugues
-## Last update Tue Jul  8 13:56:48 2014 Jean Gravier
+## Last update Sun Jul 13 05:05:06 2014 Jean Gravier
 ##
 
 SRC		=	main.cpp \
@@ -14,7 +14,7 @@ SRC		=	main.cpp \
 			Model.cpp \
 			Shader.cpp \
 			Cube.cpp \
-            Cube6Face.cpp \
+			Cube6Face.cpp \
 			Camera.cpp \
 			AObject.cpp \
 			Geometry.cpp \
@@ -23,12 +23,12 @@ SRC		=	main.cpp \
 			Player.cpp \
 			Map.cpp \
 			Pan.cpp \
-            Rectangle.cpp \
-            SkyBox.cpp \
-            Food.cpp \
-            FontText.cpp \
-            GroundInfo.cpp \
-            PlayerInfo.cpp \
+			Rectangle.cpp \
+			SkyBox.cpp \
+			Food.cpp \
+			FontText.cpp \
+			GroundInfo.cpp \
+			PlayerInfo.cpp \
 
 CC		=	g++
 FILETYPE	=	.cpp
@@ -42,7 +42,7 @@ SRCDIR		=	src/
 INCDIR		=	inc/
 
 CXXFLAGS	+=	-I$(INCDIR) -I../libnetwork/inc/
-CXXFLAGS	+=	-Wall -Wextra -W
+CXXFLAGS	+=	-Wall -Wextra -W -g
 
 LDFLAGS		+=	-Wl,-O1
 LDFLAGS		+=	-lsfml-graphics -lsfml-window -lsfml-system
